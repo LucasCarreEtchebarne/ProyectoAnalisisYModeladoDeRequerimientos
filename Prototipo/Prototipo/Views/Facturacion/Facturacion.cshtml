@@ -1,0 +1,225 @@
+@{
+    ViewBag.Title = "Facturacion";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link active">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Gestion de Facturacion</h1>
+            <a href="@Url.Action("Crear", "Facturacion")" class="btn-primary">Nueva Factura</a>
+        </div>
+
+        <!-- Resumen -->
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h3>128</h3>
+                <p>Facturas del Mes</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>14</h3>
+                <p>Pendientes de Pago</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>3</h3>
+                <p>Facturas Vencidas</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>$48,320</h3>
+                <p>Total Facturado</p>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="form-container">
+            <h3>Filtros de Busqueda</h3>
+            <form class="module-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="filtroEstadoFactura">Estado de la Factura</label>
+                        <select id="filtroEstadoFactura">
+                            <option value="">Todos</option>
+                            <option value="Pagada">Pagada</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Vencida">Vencida</option>
+                            <option value="Anulada">Anulada</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filtroTipoFactura">Tipo de Consumo</label>
+                        <select id="filtroTipoFactura">
+                            <option value="">Todos</option>
+                            <option value="Hospedaje">Hospedaje</option>
+                            <option value="Restaurante">Restaurante</option>
+                            <option value="Evento">Evento</option>
+                            <option value="Mixta">Mixta</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="filtroCliente">Cliente</label>
+                        <input type="text" id="filtroCliente" placeholder="Buscar por cliente..." />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filtroNumeroFactura">Numero de Factura</label>
+                        <input type="text" id="filtroNumeroFactura" placeholder="Ej: FAC-2024-0001" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla de Facturas -->
+        <div class="table-container">
+            <h3>Facturas Emitidas</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Numero</th>
+                        <th>Cliente</th>
+                        <th>Tipo</th>
+                        <th>Fecha Emision</th>
+                        <th>Fecha Vencimiento</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>FAC-2024-0001</td>
+                        <td>Maria Fernandez</td>
+                        <td>Hospedaje</td>
+                        <td>2024-01-15</td>
+                        <td>2024-01-30</td>
+                        <td>$1,240.00</td>
+                        <td><span class="badge badge-pagada">Pagada</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleFactura", "Facturacion")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Facturacion")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de anular esta factura?')) { alert('Factura anulada (Prototipo)'); window.location.reload(); }">Anular</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>FAC-2024-0002</td>
+                        <td>Roberto Jimenez</td>
+                        <td>Restaurante</td>
+                        <td>2024-01-16</td>
+                        <td>2024-01-31</td>
+                        <td>$688.62</td>
+                        <td><span class="badge badge-pendiente">Pendiente</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleFactura", "Facturacion")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Facturacion")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de anular esta factura?')) { alert('Factura anulada (Prototipo)'); window.location.reload(); }">Anular</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>FAC-2024-0003</td>
+                        <td>Corporacion Delta S.A.</td>
+                        <td>Evento</td>
+                        <td>2024-01-10</td>
+                        <td>2024-01-25</td>
+                        <td>$8,450.00</td>
+                        <td><span class="badge badge-vencida">Vencida</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleFactura", "Facturacion")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Facturacion")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de anular esta factura?')) { alert('Factura anulada (Prototipo)'); window.location.reload(); }">Anular</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>FAC-2024-0004</td>
+                        <td>Ana Lucia Vargas</td>
+                        <td>Mixta</td>
+                        <td>2024-01-18</td>
+                        <td>2024-02-02</td>
+                        <td>$2,180.50</td>
+                        <td><span class="badge badge-pagada">Pagada</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleFactura", "Facturacion")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Facturacion")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de anular esta factura?')) { alert('Factura anulada (Prototipo)'); window.location.reload(); }">Anular</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>FAC-2024-0005</td>
+                        <td>Jorge Castillo</td>
+                        <td>Hospedaje</td>
+                        <td>2024-01-20</td>
+                        <td>2024-02-04</td>
+                        <td>$960.00</td>
+                        <td><span class="badge badge-pendiente">Pendiente</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleFactura", "Facturacion")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Facturacion")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de anular esta factura?')) { alert('Factura anulada (Prototipo)'); window.location.reload(); }">Anular</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>FAC-2024-0006</td>
+                        <td>Patricia Rojas</td>
+                        <td>Restaurante</td>
+                        <td>2024-01-12</td>
+                        <td>2024-01-27</td>
+                        <td>$318.00</td>
+                        <td><span class="badge badge-anulada">Anulada</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleFactura", "Facturacion")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Facturacion")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de anular esta factura?')) { alert('Factura anulada (Prototipo)'); window.location.reload(); }">Anular</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

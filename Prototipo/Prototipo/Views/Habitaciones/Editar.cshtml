@@ -1,0 +1,129 @@
+@{
+    ViewBag.Title = "Editar Habitacion";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link active">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Editar Habitacion</h1>
+        </div>
+
+        <!-- Formulario de Edicion -->
+        <div class="form-container">
+            <form class="module-form" method="post" action="@Url.Action("Habitaciones", "Habitaciones")">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="numeroHabitacion">Numero de Habitacion</label>
+                        <input type="number" id="numeroHabitacion" name="numeroHabitacion" value="101" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipoHabitacion">Tipo de Habitacion</label>
+                        <select id="tipoHabitacion" name="tipoHabitacion" required>
+                            <option value="">Seleccione un tipo...</option>
+                            <option value="Individual" selected>Individual</option>
+                            <option value="Doble">Doble</option>
+                            <option value="Suite">Suite</option>
+                            <option value="Familiar">Familiar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="capacidad">Capacidad</label>
+                        <input type="number" id="capacidad" name="capacidad" value="1" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="precio">Precio por Noche</label>
+                        <input type="number" id="precio" name="precio" value="75.00" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="estadoHabitacion">Estado</label>
+                        <select id="estadoHabitacion" name="estadoHabitacion" required>
+                            <option value="">Seleccione un estado...</option>
+                            <option value="Disponible" selected>Disponible</option>
+                            <option value="Ocupada">Ocupada</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                            <option value="Limpieza">Limpieza</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="piso">Piso</label>
+                        <input type="text" id="piso" name="piso" value="Primer Piso" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripcion</label>
+                    <textarea id="descripcion" name="descripcion" rows="4">Habitacion con vista al jardin</textarea>
+                </div>
+
+                <div class="form-actions">
+                    <a href="@Url.Action("Habitaciones", "Habitaciones")" class="btn-secondary">Cancelar</a>
+                    <button type="button" class="btn-primary" onclick="alert('Habitacion actualizada exitosamente (Prototipo)'); window.location.href='@Url.Action("Habitaciones", "Habitaciones")';">Actualizar Habitacion</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Info adicional -->
+        <div class="info-box">
+            <h3>Informacion</h3>
+            <ul>
+                <li><strong>Numero de Habitacion:</strong> Identificador unico</li>
+                <li><strong>Tipo:</strong> Categoria de la habitacion</li>
+                <li><strong>Capacidad:</strong> Numero de huespedes</li>
+                <li><strong>Precio:</strong> Tarifa por noche</li>
+                <li><strong>Estado:</strong> Estado operativo</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,152 @@
+@{
+    ViewBag.Title = "Gestion de Clientes";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link active">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Gestion de Clientes</h1>
+            <a href="@Url.Action("Crear", "Clientes")" class="btn-primary">Nuevo Cliente</a>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filter-container">
+            <label for="filtroEstado">Filtrar por Estado:</label>
+            <select id="filtroEstado" class="filter-select">
+                <option value="">Todos</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+
+            <label for="filtroBusqueda">Buscar Cliente:</label>
+            <input type="text" id="filtroBusqueda" class="filter-select" placeholder="Nombre, Apellido o Identificacion" />
+        </div>
+
+        <!-- Tabla de clientes -->
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Identificacion</th>
+                        <th>Nombre Completo</th>
+                        <th>Telefono</th>
+                        <th>Correo Electronico</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>118230456</td>
+                        <td>Carlos Hernandez Martinez</td>
+                        <td>8765-4321</td>
+                        <td>carlos.hernandez@email.com</td>
+                        <td><span class="badge badge-activo">Activo</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleCliente", "Clientes")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Clientes")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este cliente?')) alert('Cliente eliminado exitosamente (Prototipo)');">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>205670123</td>
+                        <td>Maria Rodriguez Lopez</td>
+                        <td>8234-5678</td>
+                        <td>maria.rodriguez@email.com</td>
+                        <td><span class="badge badge-activo">Activo</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleCliente", "Clientes")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Clientes")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este cliente?')) alert('Cliente eliminado exitosamente (Prototipo)');">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>304120987</td>
+                        <td>Luis Sanchez Mora</td>
+                        <td>8876-1234</td>
+                        <td>luis.sanchez@email.com</td>
+                        <td><span class="badge badge-inactivo">Inactivo</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleCliente", "Clientes")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Clientes")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este cliente?')) alert('Cliente eliminado exitosamente (Prototipo)');">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>401230567</td>
+                        <td>Ana Martinez Cruz</td>
+                        <td>8123-9876</td>
+                        <td>ana.martinez@email.com</td>
+                        <td><span class="badge badge-activo">Activo</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleCliente", "Clientes")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Clientes")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este cliente?')) alert('Cliente eliminado exitosamente (Prototipo)');">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>507890234</td>
+                        <td>Jose Gonzalez Ramirez</td>
+                        <td>8567-2345</td>
+                        <td>jose.gonzalez@email.com</td>
+                        <td><span class="badge badge-activo">Activo</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleCliente", "Clientes")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Clientes")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este cliente?')) alert('Cliente eliminado exitosamente (Prototipo)');">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

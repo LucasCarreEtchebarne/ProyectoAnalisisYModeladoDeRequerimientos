@@ -1,0 +1,208 @@
+@{
+    ViewBag.Title = "Detalle de la Factura";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link active">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Detalle de la Factura</h1>
+            <div style="display: flex; gap: 0.8rem;">
+                <a href="@Url.Action("Facturacion", "Facturacion")" class="btn-secondary">Volver a Facturacion</a>
+                <a href="@Url.Action("Crear", "Pagos")" class="btn-primary">Registrar Pago</a>
+            </div>
+        </div>
+
+        <div class="detail-container">
+            <!-- Informacion General -->
+            <div class="detail-section">
+                <h3>Informacion de la Factura</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label>Numero de Factura:</label>
+                        <span class="detail-value">FAC-2024-0002</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Cliente:</label>
+                        <span class="detail-value">Roberto Jimenez</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Identificacion:</label>
+                        <span class="detail-value">1-0234-0567</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Tipo de Consumo:</label>
+                        <span class="detail-value">Restaurante</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Referencia:</label>
+                        <span class="detail-value">Pedido 1002 - Mesa 3</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Fecha de Emision:</label>
+                        <span class="detail-value">16 de Enero, 2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Fecha de Vencimiento:</label>
+                        <span class="detail-value">31 de Enero, 2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Estado:</label>
+                        <span class="badge badge-pendiente">Pendiente</span>
+                    </div>
+                </div>
+
+                <div class="detail-item-full">
+                    <label>Notas:</label>
+                    <p>Consumo correspondiente al pedido 1002 de la Mesa 3. El cliente solicito factura a nombre personal.</p>
+                </div>
+            </div>
+
+            <!-- Lineas de la Factura -->
+            <div class="detail-section">
+                <h3>Detalle de Consumo</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Descripcion</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>Lomito El Colibri</td>
+                            <td>$145.00</td>
+                            <td>$290.00</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Costillas BBQ</td>
+                            <td>$128.00</td>
+                            <td>$128.00</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Cerveza Artesanal</td>
+                            <td>$18.00</td>
+                            <td>$72.00</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Postre del Dia</td>
+                            <td>$32.00</td>
+                            <td>$64.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="totales-box">
+                    <div class="totales-row">
+                        <span>Subtotal</span>
+                        <span>$554.00</span>
+                    </div>
+                    <div class="totales-row">
+                        <span>Descuento (0%)</span>
+                        <span>$0.00</span>
+                    </div>
+                    <div class="totales-row">
+                        <span>Servicio (10%)</span>
+                        <span>$55.40</span>
+                    </div>
+                    <div class="totales-row">
+                        <span>Impuesto (13%)</span>
+                        <span>$79.22</span>
+                    </div>
+                    <div class="totales-row totales-final">
+                        <span>Total a Pagar</span>
+                        <span>$688.62</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagos Asociados -->
+            <div class="detail-section">
+                <h3>Pagos Asociados</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID Pago</th>
+                            <th>Fecha</th>
+                            <th>Metodo</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PAG-0087</td>
+                            <td>2024-01-16</td>
+                            <td>Tarjeta de Credito</td>
+                            <td>$300.00</td>
+                            <td><span class="badge badge-aprobado">Aprobado</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="totales-box">
+                    <div class="totales-row">
+                        <span>Total Facturado</span>
+                        <span>$688.62</span>
+                    </div>
+                    <div class="totales-row">
+                        <span>Total Pagado</span>
+                        <span>$300.00</span>
+                    </div>
+                    <div class="totales-row totales-final">
+                        <span>Saldo Pendiente</span>
+                        <span>$388.62</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

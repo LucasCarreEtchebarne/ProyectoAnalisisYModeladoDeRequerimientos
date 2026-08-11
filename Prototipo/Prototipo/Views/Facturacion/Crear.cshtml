@@ -1,0 +1,153 @@
+@{
+    ViewBag.Title = "Nueva Factura";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link active">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Nueva Factura</h1>
+        </div>
+
+        <!-- Formulario de Creacion -->
+        <div class="form-container">
+            <form class="module-form" method="post" action="@Url.Action("Facturacion", "Facturacion")">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cliente">Cliente</label>
+                        <select id="cliente" name="cliente" required>
+                            <option value="">Seleccione un cliente...</option>
+                            <option value="MariaFernandez">Maria Fernandez</option>
+                            <option value="RobertoJimenez">Roberto Jimenez</option>
+                            <option value="CorporacionDelta">Corporacion Delta S.A.</option>
+                            <option value="AnaLuciaVargas">Ana Lucia Vargas</option>
+                            <option value="JorgeCastillo">Jorge Castillo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="identificacion">Identificacion / Cedula Juridica</label>
+                        <input type="text" id="identificacion" name="identificacion" placeholder="Ej: 1-0234-0567" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tipoConsumo">Tipo de Consumo</label>
+                        <select id="tipoConsumo" name="tipoConsumo" required>
+                            <option value="">Seleccione un tipo...</option>
+                            <option value="Hospedaje">Hospedaje</option>
+                            <option value="Restaurante">Restaurante</option>
+                            <option value="Evento">Evento</option>
+                            <option value="Mixta">Mixta</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="referencia">Referencia (Reserva / Pedido)</label>
+                        <input type="text" id="referencia" name="referencia" placeholder="Ej: Pedido 1002" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fechaEmision">Fecha de Emision</label>
+                        <input type="date" id="fechaEmision" name="fechaEmision" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaVencimiento">Fecha de Vencimiento</label>
+                        <input type="date" id="fechaVencimiento" name="fechaVencimiento" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="subtotal">Subtotal</label>
+                        <input type="number" id="subtotal" name="subtotal" placeholder="Ej: 554.00" step="0.01" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descuento">Descuento (%)</label>
+                        <input type="number" id="descuento" name="descuento" placeholder="Ej: 0" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="impuesto">Impuesto (%)</label>
+                        <input type="number" id="impuesto" name="impuesto" value="13" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="servicio">Cargo por Servicio (%)</label>
+                        <input type="number" id="servicio" name="servicio" value="10" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notasFactura">Notas de la Factura</label>
+                    <textarea id="notasFactura" name="notasFactura" rows="4" placeholder="Condiciones de pago, detalles adicionales..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <a href="@Url.Action("Facturacion", "Facturacion")" class="btn-secondary">Cancelar</a>
+                    <button type="button" class="btn-primary" onclick="alert('Factura generada exitosamente (Prototipo)'); window.location.href='@Url.Action("Facturacion", "Facturacion")';">Generar Factura</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Info adicional -->
+        <div class="info-box">
+            <h3>Informacion</h3>
+            <ul>
+                <li><strong>Tipo Mixta:</strong> Agrupa consumos de hospedaje y restaurante en un solo documento</li>
+                <li><strong>Referencia:</strong> Vincula la factura con la reserva o el pedido que la origino</li>
+                <li><strong>Cargo por Servicio:</strong> Se aplica unicamente a consumos de restaurante y eventos</li>
+                <li><strong>Vencimiento:</strong> Al superarse la fecha, la factura pasa automaticamente a estado Vencida</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

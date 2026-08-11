@@ -1,0 +1,47 @@
+@{
+    ViewBag.Title = "Inicio";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+            <span>El Colibri Hotel & Steak House</span>
+        </a>
+        <div class="navbar-buttons">
+            <a href="@Url.Action("Login", "Account")" class="btn-nav-outline">Iniciar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>
+                    Bienvenido al Sistema El Colibri Hotel & Steak House
+                </h1>
+            </div>
+
+            <div class="stats-card">
+                <div class="stats-label">Habitaciones</div>
+                <div class="stats-number">45</div>
+                <div class="stats-subtitle">Disponibles para reservar</div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

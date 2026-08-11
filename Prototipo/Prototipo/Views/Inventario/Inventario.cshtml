@@ -1,0 +1,200 @@
+@{
+    ViewBag.Title = "Inventario";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link active">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Gestion de Inventario</h1>
+            <div style="display: flex; gap: 0.8rem;">
+                <a href="@Url.Action("Alertas", "Inventario")" class="btn-secondary">Consultar Alertas</a>
+                <a href="@Url.Action("Crear", "Inventario")" class="btn-primary">Agregar Producto</a>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="form-container">
+            <h3>Filtros de Busqueda</h3>
+            <form class="module-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="filtroCategoria">Categoria</label>
+                        <select id="filtroCategoria">
+                            <option value="">Todas</option>
+                            <option value="Alimentos">Alimentos</option>
+                            <option value="Bebidas">Bebidas</option>
+                            <option value="Limpieza">Limpieza</option>
+                            <option value="Amenidades">Amenidades</option>
+                            <option value="Cocina">Cocina</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filtroEstado">Estado del Producto</label>
+                        <select id="filtroEstado">
+                            <option value="">Todos</option>
+                            <option value="Disponible">Disponible</option>
+                            <option value="BajoStock">Bajo Stock</option>
+                            <option value="Agotado">Agotado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="filtroNombre">Nombre del Producto</label>
+                        <input type="text" id="filtroNombre" placeholder="Buscar por nombre..." />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla de Inventario -->
+        <div class="table-container">
+            <h3>Productos en Inventario</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre Producto</th>
+                        <th>Categoria</th>
+                        <th>Stock</th>
+                        <th>Stock Minimo</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Toallas de Bano</td>
+                        <td>Amenidades</td>
+                        <td>150</td>
+                        <td>50</td>
+                        <td>2024-01-10</td>
+                        <td><span class="badge badge-disponible">Disponible</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleProducto", "Inventario")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Inventario")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este producto?')) { alert('Producto eliminado (Prototipo)'); window.location.reload(); }">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Shampoo</td>
+                        <td>Amenidades</td>
+                        <td>30</td>
+                        <td>40</td>
+                        <td>2024-01-12</td>
+                        <td><span class="badge badge-bajostock">Bajo Stock</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleProducto", "Inventario")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Inventario")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este producto?')) { alert('Producto eliminado (Prototipo)'); window.location.reload(); }">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Cafe Gourmet</td>
+                        <td>Bebidas</td>
+                        <td>80</td>
+                        <td>20</td>
+                        <td>2024-01-05</td>
+                        <td><span class="badge badge-disponible">Disponible</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleProducto", "Inventario")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Inventario")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este producto?')) { alert('Producto eliminado (Prototipo)'); window.location.reload(); }">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Detergente Industrial</td>
+                        <td>Limpieza</td>
+                        <td>0</td>
+                        <td>15</td>
+                        <td>2023-12-20</td>
+                        <td><span class="badge badge-agotado">Agotado</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleProducto", "Inventario")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Inventario")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este producto?')) { alert('Producto eliminado (Prototipo)'); window.location.reload(); }">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Arroz Premium</td>
+                        <td>Alimentos</td>
+                        <td>120</td>
+                        <td>30</td>
+                        <td>2024-01-08</td>
+                        <td><span class="badge badge-disponible">Disponible</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleProducto", "Inventario")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Inventario")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este producto?')) { alert('Producto eliminado (Prototipo)'); window.location.reload(); }">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Cerveza Artesanal</td>
+                        <td>Bebidas</td>
+                        <td>25</td>
+                        <td>50</td>
+                        <td>2024-01-15</td>
+                        <td><span class="badge badge-bajostock">Bajo Stock</span></td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleProducto", "Inventario")" class="btn-view">Consultar</a>
+                            <a href="@Url.Action("Editar", "Inventario")" class="btn-edit">Editar</a>
+                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este producto?')) { alert('Producto eliminado (Prototipo)'); window.location.reload(); }">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

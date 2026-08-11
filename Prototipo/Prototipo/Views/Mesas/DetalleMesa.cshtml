@@ -1,0 +1,153 @@
+@{
+    ViewBag.Title = "Detalle de la Mesa";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link active">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Detalle de la Mesa</h1>
+            <a href="@Url.Action("Mesas", "Mesas")" class="btn-secondary">Volver al Salon</a>
+        </div>
+
+        <div class="detail-container">
+            <!-- Informacion de la Mesa -->
+            <div class="detail-section">
+                <h3>Informacion de la Mesa</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label>Numero de Mesa:</label>
+                        <span class="detail-value">Mesa 3</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Zona:</label>
+                        <span class="detail-value">Salon Principal</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Capacidad:</label>
+                        <span class="detail-value">6 personas</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Estado:</label>
+                        <span class="badge badge-cuentapendiente">Cuenta Pendiente</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Mesero Asignado:</label>
+                        <span class="detail-value">Carlos Ramirez</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Hora de Apertura:</label>
+                        <span class="detail-value">19:15</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pedido en Curso -->
+            <div class="detail-section">
+                <h3>Pedido en Curso</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Producto</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>Lomito El Colibri</td>
+                            <td>$145.00</td>
+                            <td>$290.00</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Costillas BBQ</td>
+                            <td>$128.00</td>
+                            <td>$128.00</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Cerveza Artesanal</td>
+                            <td>$18.00</td>
+                            <td>$72.00</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Postre del Dia</td>
+                            <td>$32.00</td>
+                            <td>$64.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="totales-box">
+                    <div class="totales-row">
+                        <span>Subtotal</span>
+                        <span>$554.00</span>
+                    </div>
+                    <div class="totales-row">
+                        <span>Servicio (10%)</span>
+                        <span>$55.40</span>
+                    </div>
+                    <div class="totales-row">
+                        <span>Impuesto (13%)</span>
+                        <span>$79.22</span>
+                    </div>
+                    <div class="totales-row totales-final">
+                        <span>Total</span>
+                        <span>$688.62</span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-secondary">Ver Pedido Completo</a>
+                    <a href="@Url.Action("Crear", "Facturacion")" class="btn-primary">Generar Factura</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

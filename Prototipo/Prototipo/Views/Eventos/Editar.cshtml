@@ -1,0 +1,143 @@
+@{
+    ViewBag.Title = "Editar Evento";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link active">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Editar Evento</h1>
+        </div>
+
+        <!-- Formulario de Edicion -->
+        <div class="form-container">
+            <form class="module-form" method="post" action="@Url.Action("Eventos", "Eventos")">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombreEvento">Nombre del Evento</label>
+                        <input type="text" id="nombreEvento" name="nombreEvento" value="Boda Martinez-Lopez" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idCliente">Cliente</label>
+                        <select id="idCliente" name="idCliente" required>
+                            <option value="">Seleccione un cliente...</option>
+                            <option value="1">Juan Perez</option>
+                            <option value="2">Maria Garcia</option>
+                            <option value="3">Carlos Lopez</option>
+                            <option value="4">Ana Martinez</option>
+                            <option value="5" selected>Luis Gonzalez</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fechaEvento">Fecha del Evento</label>
+                        <input type="date" id="fechaEvento" name="fechaEvento" value="2024-02-14" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="horaInicio">Hora de Inicio</label>
+                        <input type="time" id="horaInicio" name="horaInicio" value="18:00" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="horaFin">Hora de Fin</label>
+                        <input type="time" id="horaFin" name="horaFin" value="23:00" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="participantes">Numero de Participantes</label>
+                        <input type="number" id="participantes" name="participantes" value="150" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lugarEvento">Lugar del Evento</label>
+                        <input type="text" id="lugarEvento" name="lugarEvento" value="Salon Principal" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estadoEvento">Estado del Evento</label>
+                        <select id="estadoEvento" name="estadoEvento" required>
+                            <option value="">Seleccione un estado...</option>
+                            <option value="Programado" selected>Programado</option>
+                            <option value="EnCurso">En Curso</option>
+                            <option value="Completado">Completado</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripcion</label>
+                    <textarea id="descripcion" name="descripcion" rows="4">Evento de boda con cena y baile. Decoracion tematica romantica. Menu especial para 150 personas.</textarea>
+                </div>
+
+                <div class="form-actions">
+                    <a href="@Url.Action("Eventos", "Eventos")" class="btn-secondary">Cancelar</a>
+                    <button type="button" class="btn-primary" onclick="alert('Evento actualizado exitosamente (Prototipo)'); window.location.href='@Url.Action("Eventos", "Eventos")';">Actualizar Evento</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Info adicional -->
+        <div class="info-box">
+            <h3>Informacion</h3>
+            <ul>
+                <li><strong>Nombre del Evento:</strong> Titulo descriptivo del evento</li>
+                <li><strong>ID Cliente:</strong> Identificador del cliente que solicita el evento</li>
+                <li><strong>Fecha y Horario:</strong> Cuando se llevara a cabo el evento</li>
+                <li><strong>Participantes:</strong> Cantidad estimada de asistentes</li>
+                <li><strong>Lugar:</strong> Ubicacion especifica dentro del hotel</li>
+                <li><strong>Estado:</strong> Estado actual del evento</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

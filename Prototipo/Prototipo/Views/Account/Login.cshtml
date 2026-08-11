@@ -1,0 +1,80 @@
+@{
+    ViewBag.Title = "Iniciar Sesion";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+            <span>El Colibri Hotel & Steak House</span>
+        </a>
+        <div class="navbar-buttons">
+            <a href="@Url.Action("Login", "Account")" class="btn-nav-outline">Iniciar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="login-container">
+        <!-- Panel Izquierdo -->
+        <div class="login-left">
+            <div class="login-brand">
+                <h2>Inicio de Sesion</h2>
+                <div class="brand-underline"></div>
+            </div>
+
+            <div class="login-hero">
+                <p class="login-subtitle">ACCESO AL SISTEMA</p>
+                <h1 class="login-title">
+                    Gestiona<br />
+                    los procesos<br />
+                    desde un solo<br />
+                    lugar
+                </h1>
+                <p class="login-description">
+                    Accede al sistema administrativo y operativo.
+                </p>
+            </div>
+        </div>
+
+        <!-- Panel Derecho -->
+        <div class="login-right">
+            <div class="login-form-container">
+                <p class="form-welcome">BIENVENIDO</p>
+                <h2 class="form-title">Iniciar sesion</h2>
+                <p class="form-subtitle">Ingresa tus credenciales para continuar.</p>
+
+                <form class="login-form" action="@Url.Action("Main", "Main")" method="get">
+                    <div class="form-group">
+                        <label for="nombreUsuario">Nombre de Usuario</label>
+                        <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Nombre de Usuario" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contrasena">Contrasena</label>
+                        <input type="password" id="contrasena" name="contrasena" placeholder="Contrasena" required />
+                    </div>
+
+                    <button type="submit" class="btn-login">Iniciar sesion</button>
+
+                    <div class="form-links">
+                        <a href="javascript:void(0);" class="link-secondary" onclick="alert('Se enviara un enlace de recuperacion a su correo institucional (Prototipo)');">Olvido su contrasena?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

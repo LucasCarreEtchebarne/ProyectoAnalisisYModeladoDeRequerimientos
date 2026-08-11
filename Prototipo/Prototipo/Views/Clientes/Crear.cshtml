@@ -1,0 +1,125 @@
+@{
+    ViewBag.Title = "Crear Cliente";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link active">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Crear Nuevo Cliente</h1>
+            <a href="@Url.Action("Clientes", "Clientes")" class="btn-secondary">Volver</a>
+        </div>
+
+        <!-- Formulario -->
+        <div class="form-container">
+            <form>
+                <div class="form-group">
+                    <label for="identificacion">Identificacion</label>
+                    <input type="text" id="identificacion" name="identificacion" class="form-control" placeholder="Ingrese numero de identificacion" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="nombreCompleto">Nombre Completo</label>
+                    <input type="text" id="nombreCompleto" name="nombreCompleto" class="form-control" placeholder="Ingrese nombre completo" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="primerApellido">Primer Apellido</label>
+                    <input type="text" id="primerApellido" name="primerApellido" class="form-control" placeholder="Ingrese primer apellido" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="segundoApellido">Segundo Apellido</label>
+                    <input type="text" id="segundoApellido" name="segundoApellido" class="form-control" placeholder="Ingrese segundo apellido" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Telefono</label>
+                    <input type="tel" id="telefono" name="telefono" class="form-control" placeholder="8765-4321" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="correoElectronico">Correo Electronico</label>
+                    <input type="email" id="correoElectronico" name="correoElectronico" class="form-control" placeholder="cliente@email.com" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">Direccion</label>
+                    <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Ingrese direccion completa" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaRegistro">Fecha de Registro</label>
+                    <input type="date" id="fechaRegistro" name="fechaRegistro" class="form-control" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="estadoCliente">Estado del Cliente</label>
+                    <select id="estadoCliente" name="estadoCliente" class="form-control" required>
+                        <option value="">Seleccione un estado</option>
+                        <option value="Activo" selected>Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-primary" onclick="alert('Cliente creado exitosamente (Prototipo)'); window.location.href='@Url.Action("Clientes", "Clientes")';">Guardar Cliente</button>
+                    <a href="@Url.Action("Clientes", "Clientes")" class="btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Nota informativa -->
+        <div class="info-box">
+            <h3>Informacion Importante</h3>
+            <ul>
+                <li>El <strong>ID Cliente</strong> se genera automaticamente al crear el registro</li>
+                <li>La <strong>Identificacion</strong> debe ser unica en el sistema</li>
+                <li>El <strong>Correo Electronico</strong> debe tener un formato valido</li>
+                <li>Todos los campos marcados con asterisco son obligatorios</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

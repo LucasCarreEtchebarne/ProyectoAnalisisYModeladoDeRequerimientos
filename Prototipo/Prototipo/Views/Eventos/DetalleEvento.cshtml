@@ -1,0 +1,101 @@
+@{
+    ViewBag.Title = "Detalle del Evento";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link active">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Detalle del Evento</h1>
+            <a href="@Url.Action("Eventos", "Eventos")" class="btn-secondary">Volver al Listado</a>
+        </div>
+
+        <!-- Informacion General -->
+        <div class="detail-container">
+            <div class="detail-section">
+                <h3>Informacion General</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label>Nombre del Evento:</label>
+                        <span class="detail-value">Boda Martinez-Lopez</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Cliente:</label>
+                        <span class="detail-value">Luis Gonzalez</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Fecha del Evento:</label>
+                        <span class="detail-value">14 de Febrero, 2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Hora de Inicio:</label>
+                        <span class="detail-value">18:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Hora de Fin:</label>
+                        <span class="detail-value">23:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Numero de Participantes:</label>
+                        <span class="detail-value">150</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Lugar del Evento:</label>
+                        <span class="detail-value">Salon Principal</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Estado:</label>
+                        <span class="badge badge-programado">Programado</span>
+                    </div>
+                </div>
+
+                <div class="detail-item-full">
+                    <label>Descripcion:</label>
+                    <span class="detail-value">Evento de boda con cena y baile. Decoracion tematica romantica. Menu especial para 150 personas. Incluye servicio de fotografia y musica en vivo.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

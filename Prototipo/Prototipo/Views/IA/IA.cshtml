@@ -1,0 +1,165 @@
+@{
+    ViewBag.Title = "Asistente IA";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link active">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Asistente Inteligente</h1>
+            <a href="@Url.Action("Predicciones", "IA")" class="btn-primary">Ver Predicciones</a>
+        </div>
+
+        <!-- Insights Generados -->
+        <div class="ia-grid">
+            <div class="ia-card">
+                <h3>Ocupacion en Ascenso</h3>
+                <p>Se proyecta un 86% de ocupacion para el proximo fin de semana, 8 puntos por encima del promedio mensual. Considere habilitar las 2 habitaciones en mantenimiento.</p>
+                <span class="badge badge-alta">Confianza Alta</span>
+            </div>
+
+            <div class="ia-card">
+                <h3>Riesgo de Desabastecimiento</h3>
+                <p>Al ritmo de consumo actual, la Cerveza Artesanal y el Shampoo se agotaran en menos de 5 dias. Se recomienda generar la orden de compra hoy.</p>
+                <span class="badge badge-alta">Confianza Alta</span>
+            </div>
+
+            <div class="ia-card">
+                <h3>Oportunidad de Upselling</h3>
+                <p>El 34% de los huespedes de habitacion Doble aceptaria mejorar a Suite con un descuento del 15%. Impacto estimado: $4,200 mensuales.</p>
+                <span class="badge badge-media">Confianza Media</span>
+            </div>
+
+            <div class="ia-card">
+                <h3>Cuentas por Cobrar</h3>
+                <p>La factura FAC-2024-0003 lleva 6 dias vencida por $8,450.00. Historicamente este cliente paga al recibir un segundo recordatorio.</p>
+                <span class="badge badge-alta">Confianza Alta</span>
+            </div>
+
+            <div class="ia-card">
+                <h3>Optimizacion de Housekeeping</h3>
+                <p>Reasignar 2 tareas del piso 3 al turno de la manana reduciria el tiempo promedio de preparacion de habitaciones en 22 minutos.</p>
+                <span class="badge badge-media">Confianza Media</span>
+            </div>
+
+            <div class="ia-card">
+                <h3>Menu de Restaurante</h3>
+                <p>El Pescado a la Plancha muestra baja rotacion desde hace 3 semanas. Evaluar sustitucion o promocion en el menu del dia.</p>
+                <span class="badge badge-baja">Confianza Baja</span>
+            </div>
+        </div>
+
+        <!-- Asistente Conversacional -->
+        <div class="ia-chat">
+            <h3 style="margin-bottom: 1rem;">Consulta al Asistente</h3>
+
+            <div class="ia-chat-log" id="chatLog">
+                <div class="ia-mensaje ia-mensaje-bot">
+                    Hola, soy el asistente del sistema El Colibri. Puedo ayudarte a consultar ocupacion, ventas, inventario y estado de reservas. En que te ayudo?
+                </div>
+                <div class="ia-mensaje ia-mensaje-usuario">
+                    Cuantas habitaciones estan disponibles para este viernes?
+                </div>
+                <div class="ia-mensaje ia-mensaje-bot">
+                    Para el viernes 19 de Enero hay 11 habitaciones disponibles: 4 Individuales, 6 Dobles y 1 Suite. La Suite Presidencial ya esta reservada.
+                </div>
+                <div class="ia-mensaje ia-mensaje-usuario">
+                    Cual fue el plato mas vendido esta semana?
+                </div>
+                <div class="ia-mensaje ia-mensaje-bot">
+                    El plato mas vendido fue el Lomito El Colibri con 84 unidades, generando $12,180 en ingresos. Le sigue Costillas BBQ con 61 unidades.
+                </div>
+            </div>
+
+            <div class="ia-chat-input">
+                <input type="text" id="mensajeUsuario" placeholder="Escribe tu consulta..." />
+                <button type="button" class="btn-primary" onclick="enviarMensaje();">Enviar</button>
+            </div>
+        </div>
+
+        <!-- Info adicional -->
+        <div class="info-box">
+            <h3>Informacion</h3>
+            <ul>
+                <li><strong>Insights:</strong> Se recalculan automaticamente con los datos de ocupacion, ventas e inventario</li>
+                <li><strong>Nivel de Confianza:</strong> Indica cuanta evidencia historica respalda cada recomendacion</li>
+                <li><strong>Asistente:</strong> Responde consultas en lenguaje natural sobre los modulos del sistema</li>
+                <li><strong>Predicciones:</strong> Proyecciones de demanda y ocupacion para las proximas semanas</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function enviarMensaje() {
+            var input = document.getElementById('mensajeUsuario');
+            var texto = input.value.trim();
+
+            if (texto === '') {
+                return;
+            }
+
+            var log = document.getElementById('chatLog');
+
+            var mensajeUsuario = document.createElement('div');
+            mensajeUsuario.className = 'ia-mensaje ia-mensaje-usuario';
+            mensajeUsuario.textContent = texto;
+            log.appendChild(mensajeUsuario);
+
+            var respuesta = document.createElement('div');
+            respuesta.className = 'ia-mensaje ia-mensaje-bot';
+            respuesta.textContent = 'Esta es una respuesta simulada del prototipo. La integracion con el motor de IA aun no esta implementada.';
+            log.appendChild(respuesta);
+
+            input.value = '';
+            log.scrollTop = log.scrollHeight;
+        }
+
+        document.getElementById('mensajeUsuario').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                enviarMensaje();
+            }
+        });
+    </script>
+</body>
+</html>

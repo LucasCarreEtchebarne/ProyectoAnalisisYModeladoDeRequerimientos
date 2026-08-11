@@ -1,0 +1,49 @@
+@{
+    ViewBag.Title = "Error del Servidor";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="error-container">
+            <div class="error-code">500</div>
+            <h1>Error Interno del Servidor</h1>
+            <p>Ocurrio un problema al procesar su solicitud. El equipo tecnico ha sido notificado.</p>
+            <p>Intente nuevamente en unos minutos. Si el problema persiste, reportelo al administrador.</p>
+
+            <div class="error-detalle">
+                Codigo de referencia: ERR-2024-0148<br />
+                Fecha: 15/01/2024 20:14:32
+            </div>
+
+            <div class="error-actions">
+                <a href="javascript:history.back();" class="btn-secondary">Volver Atras</a>
+                <a href="@Url.Action("Main", "Main")" class="btn-primary">Ir al Dashboard</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

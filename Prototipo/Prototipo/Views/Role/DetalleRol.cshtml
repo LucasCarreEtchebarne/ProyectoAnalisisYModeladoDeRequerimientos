@@ -1,0 +1,202 @@
+@{
+    ViewBag.Title = "Detalle del Rol";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link active">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Detalle del Rol</h1>
+            <div style="display: flex; gap: 0.8rem;">
+                <a href="@Url.Action("Roles", "Role")" class="btn-secondary">Volver a Roles</a>
+                <a href="@Url.Action("Editar", "Role")" class="btn-primary">Editar Rol</a>
+            </div>
+        </div>
+
+        <div class="detail-container">
+            <!-- Informacion General -->
+            <div class="detail-section">
+                <h3>Informacion del Rol</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label>ID Rol:</label>
+                        <span class="detail-value">3</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Nombre del Rol:</label>
+                        <span class="detail-value">Recepcionista</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Usuarios Asignados:</label>
+                        <span class="detail-value">4</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Modulos con Acceso:</label>
+                        <span class="detail-value">6 de 14</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Fecha de Creacion:</label>
+                        <span class="detail-value">10 de Enero, 2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Estado:</label>
+                        <span class="badge badge-activo">Activo</span>
+                    </div>
+                </div>
+
+                <div class="detail-item-full">
+                    <label>Descripcion:</label>
+                    <p>Gestion de reservas, clientes y habitaciones. Puede registrar check-in y check-out, pero no accede a informacion financiera ni a la configuracion del sistema.</p>
+                </div>
+            </div>
+
+            <!-- Permisos por Modulo -->
+            <div class="detail-section">
+                <h3>Permisos por Modulo</h3>
+                <table class="data-table permisos-tabla">
+                    <thead>
+                        <tr>
+                            <th>Modulo</th>
+                            <th>Consultar</th>
+                            <th>Crear</th>
+                            <th>Editar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Habitaciones</td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                        </tr>
+                        <tr>
+                            <td>Reservas</td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                        </tr>
+                        <tr>
+                            <td>Clientes</td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                        </tr>
+                        <tr>
+                            <td>Eventos</td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                        </tr>
+                        <tr>
+                            <td>Punto de Venta</td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                        </tr>
+                        <tr>
+                            <td>Housekeeping</td>
+                            <td><span class="badge badge-activo">Si</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                            <td><span class="badge badge-inactivo">No</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Usuarios con este Rol -->
+            <div class="detail-section">
+                <h3>Usuarios con este Rol</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Completo</th>
+                            <th>Nombre Usuario</th>
+                            <th>Correo Electronico</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>Maria Rodriguez Lopez</td>
+                            <td>mrodriguez</td>
+                            <td>mrodriguez@colibri.com</td>
+                            <td><span class="badge badge-activo">Activo</span></td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Ana Solis Vega</td>
+                            <td>asolis</td>
+                            <td>asolis@colibri.com</td>
+                            <td><span class="badge badge-activo">Activo</span></td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>Luis Mora Castro</td>
+                            <td>lmora</td>
+                            <td>lmora@colibri.com</td>
+                            <td><span class="badge badge-activo">Activo</span></td>
+                        </tr>
+                        <tr>
+                            <td>14</td>
+                            <td>Sofia Herrera Blanco</td>
+                            <td>sherrera</td>
+                            <td>sherrera@colibri.com</td>
+                            <td><span class="badge badge-inactivo">Inactivo</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

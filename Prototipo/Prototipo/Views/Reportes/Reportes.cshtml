@@ -1,0 +1,253 @@
+@{
+    ViewBag.Title = "Reportes";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link active">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Reportes y Estadisticas</h1>
+            <a href="@Url.Action("Generar", "Reportes")" class="btn-primary">Generar Reporte</a>
+        </div>
+
+        <!-- Indicadores Clave -->
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h3>78%</h3>
+                <p>Ocupacion Promedio</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>$165,540</h3>
+                <p>Ingresos del Mes</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>$134.15</h3>
+                <p>Tarifa Promedio Diaria</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>342</h3>
+                <p>Reservas del Mes</p>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="form-container">
+            <h3>Filtros de Busqueda</h3>
+            <form class="module-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="filtroTipoReporte">Tipo de Reporte</label>
+                        <select id="filtroTipoReporte">
+                            <option value="">Todos</option>
+                            <option value="Ocupacion">Ocupacion</option>
+                            <option value="Ingresos">Ingresos</option>
+                            <option value="Ventas">Ventas de Restaurante</option>
+                            <option value="Inventario">Inventario</option>
+                            <option value="Housekeeping">Housekeeping</option>
+                            <option value="Clientes">Clientes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filtroPeriodo">Periodo</label>
+                        <select id="filtroPeriodo">
+                            <option value="">Todos</option>
+                            <option value="Diario">Diario</option>
+                            <option value="Semanal">Semanal</option>
+                            <option value="Mensual">Mensual</option>
+                            <option value="Anual">Anual</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="filtroFechaInicio">Fecha Inicio</label>
+                        <input type="date" id="filtroFechaInicio" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filtroFechaFin">Fecha Fin</label>
+                        <input type="date" id="filtroFechaFin" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Resumen de Ocupacion -->
+        <div class="table-container">
+            <h3>Ocupacion por Tipo de Habitacion</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tipo de Habitacion</th>
+                        <th>Total Habitaciones</th>
+                        <th>Noches Vendidas</th>
+                        <th>Ocupacion</th>
+                        <th>Tarifa Promedio</th>
+                        <th>Ingresos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Individual</td>
+                        <td>18</td>
+                        <td>412</td>
+                        <td>74%</td>
+                        <td>$75.00</td>
+                        <td>$30,900.00</td>
+                    </tr>
+                    <tr>
+                        <td>Doble</td>
+                        <td>24</td>
+                        <td>598</td>
+                        <td>80%</td>
+                        <td>$120.00</td>
+                        <td>$71,760.00</td>
+                    </tr>
+                    <tr>
+                        <td>Suite</td>
+                        <td>8</td>
+                        <td>186</td>
+                        <td>75%</td>
+                        <td>$240.00</td>
+                        <td>$44,640.00</td>
+                    </tr>
+                    <tr>
+                        <td>Suite Presidencial</td>
+                        <td>2</td>
+                        <td>38</td>
+                        <td>61%</td>
+                        <td>$480.00</td>
+                        <td>$18,240.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Reportes Generados -->
+        <div class="table-container">
+            <h3>Reportes Generados</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre del Reporte</th>
+                        <th>Tipo</th>
+                        <th>Periodo</th>
+                        <th>Fecha Generacion</th>
+                        <th>Generado Por</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Ocupacion Mensual Enero</td>
+                        <td>Ocupacion</td>
+                        <td>Mensual</td>
+                        <td>2024-02-01</td>
+                        <td>Admin</td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleReporte", "Reportes")" class="btn-view">Consultar</a>
+                            <button class="btn-edit" onclick="alert('Reporte exportado a PDF (Prototipo)');">Exportar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Ingresos por Departamento</td>
+                        <td>Ingresos</td>
+                        <td>Mensual</td>
+                        <td>2024-02-01</td>
+                        <td>Admin</td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleReporte", "Reportes")" class="btn-view">Consultar</a>
+                            <button class="btn-edit" onclick="alert('Reporte exportado a PDF (Prototipo)');">Exportar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Ventas de Restaurante Semana 4</td>
+                        <td>Ventas de Restaurante</td>
+                        <td>Semanal</td>
+                        <td>2024-01-29</td>
+                        <td>Gerencia</td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleReporte", "Reportes")" class="btn-view">Consultar</a>
+                            <button class="btn-edit" onclick="alert('Reporte exportado a PDF (Prototipo)');">Exportar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Consumo de Inventario</td>
+                        <td>Inventario</td>
+                        <td>Mensual</td>
+                        <td>2024-01-31</td>
+                        <td>Admin</td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleReporte", "Reportes")" class="btn-view">Consultar</a>
+                            <button class="btn-edit" onclick="alert('Reporte exportado a PDF (Prototipo)');">Exportar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Productividad de Housekeeping</td>
+                        <td>Housekeeping</td>
+                        <td>Semanal</td>
+                        <td>2024-01-29</td>
+                        <td>Supervisor</td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleReporte", "Reportes")" class="btn-view">Consultar</a>
+                            <button class="btn-edit" onclick="alert('Reporte exportado a PDF (Prototipo)');">Exportar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

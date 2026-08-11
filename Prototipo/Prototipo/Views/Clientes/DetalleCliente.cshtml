@@ -1,0 +1,112 @@
+@{
+    ViewBag.Title = "Detalle de Cliente";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link active">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Detalle de Cliente</h1>
+            <a href="@Url.Action("Clientes", "Clientes")" class="btn-secondary">Volver</a>
+        </div>
+
+        <!-- Detalle del cliente -->
+        <div class="detail-container">
+            <h2>Informacion del Cliente</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label">ID Cliente:</span>
+                    <span class="detail-value">1</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Identificacion:</span>
+                    <span class="detail-value">118230456</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Nombre Completo:</span>
+                    <span class="detail-value">Carlos Hernandez Martinez</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Primer Apellido:</span>
+                    <span class="detail-value">Hernandez</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Segundo Apellido:</span>
+                    <span class="detail-value">Martinez</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Telefono:</span>
+                    <span class="detail-value">8765-4321</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Correo Electronico:</span>
+                    <span class="detail-value">carlos.hernandez@email.com</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Direccion:</span>
+                    <span class="detail-value">San Jose, Costa Rica</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Fecha de Registro:</span>
+                    <span class="detail-value">15/01/2024</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Estado:</span>
+                    <span class="detail-value"><span class="badge badge-activo">Activo</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informacion adicional -->
+        <div class="info-box">
+            <h3>Historial del Cliente</h3>
+            <ul>
+                <li><strong>Total de Reservas:</strong> 5</li>
+                <li><strong>Ultima Reserva:</strong> 20/01/2024</li>
+                <li><strong>Eventos Registrados:</strong> 2</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

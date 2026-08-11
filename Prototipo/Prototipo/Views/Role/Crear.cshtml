@@ -1,0 +1,205 @@
+@{
+    ViewBag.Title = "Nuevo Rol";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+
+    <!-- Custom CSS -->
+    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel & Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>Admin</span>
+            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <!-- Menu de Modulos -->
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
+        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
+        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
+        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
+        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
+        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
+        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
+        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
+        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
+        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
+        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
+        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
+        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link active">Usuarios</a>
+        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content-area">
+        <div class="module-header">
+            <h1>Nuevo Rol</h1>
+        </div>
+
+        <!-- Formulario de Creacion -->
+        <div class="form-container">
+            <form class="module-form" method="post" action="@Url.Action("Roles", "Role")">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombreRol">Nombre del Rol</label>
+                        <input type="text" id="nombreRol" name="nombreRol" placeholder="Ej: Supervisor de Turno" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estadoRol">Estado</label>
+                        <select id="estadoRol" name="estadoRol" required>
+                            <option value="">Seleccione un estado...</option>
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcionRol">Descripcion</label>
+                    <textarea id="descripcionRol" name="descripcionRol" rows="3" placeholder="Describa el alcance y las responsabilidades de este rol..."></textarea>
+                </div>
+            </form>
+        </div>
+
+        <!-- Matriz de Permisos -->
+        <div class="table-container">
+            <h3>Permisos por Modulo</h3>
+            <table class="data-table permisos-tabla">
+                <thead>
+                    <tr>
+                        <th>Modulo</th>
+                        <th>Consultar</th>
+                        <th>Crear</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Habitaciones</td>
+                        <td><input type="checkbox" name="habitaciones_consultar" /></td>
+                        <td><input type="checkbox" name="habitaciones_crear" /></td>
+                        <td><input type="checkbox" name="habitaciones_editar" /></td>
+                        <td><input type="checkbox" name="habitaciones_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>Reservas</td>
+                        <td><input type="checkbox" name="reservas_consultar" /></td>
+                        <td><input type="checkbox" name="reservas_crear" /></td>
+                        <td><input type="checkbox" name="reservas_editar" /></td>
+                        <td><input type="checkbox" name="reservas_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>Eventos</td>
+                        <td><input type="checkbox" name="eventos_consultar" /></td>
+                        <td><input type="checkbox" name="eventos_crear" /></td>
+                        <td><input type="checkbox" name="eventos_editar" /></td>
+                        <td><input type="checkbox" name="eventos_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>Inventario</td>
+                        <td><input type="checkbox" name="inventario_consultar" /></td>
+                        <td><input type="checkbox" name="inventario_crear" /></td>
+                        <td><input type="checkbox" name="inventario_editar" /></td>
+                        <td><input type="checkbox" name="inventario_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>Punto de Venta</td>
+                        <td><input type="checkbox" name="pdv_consultar" /></td>
+                        <td><input type="checkbox" name="pdv_crear" /></td>
+                        <td><input type="checkbox" name="pdv_editar" /></td>
+                        <td><input type="checkbox" name="pdv_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>Reportes</td>
+                        <td><input type="checkbox" name="reportes_consultar" /></td>
+                        <td><input type="checkbox" name="reportes_crear" /></td>
+                        <td><input type="checkbox" name="reportes_editar" /></td>
+                        <td><input type="checkbox" name="reportes_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>Housekeeping</td>
+                        <td><input type="checkbox" name="housekeeping_consultar" /></td>
+                        <td><input type="checkbox" name="housekeeping_crear" /></td>
+                        <td><input type="checkbox" name="housekeeping_editar" /></td>
+                        <td><input type="checkbox" name="housekeeping_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>Facturacion</td>
+                        <td><input type="checkbox" name="facturacion_consultar" /></td>
+                        <td><input type="checkbox" name="facturacion_crear" /></td>
+                        <td><input type="checkbox" name="facturacion_editar" /></td>
+                        <td><input type="checkbox" name="facturacion_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>Pagos</td>
+                        <td><input type="checkbox" name="pagos_consultar" /></td>
+                        <td><input type="checkbox" name="pagos_crear" /></td>
+                        <td><input type="checkbox" name="pagos_editar" /></td>
+                        <td><input type="checkbox" name="pagos_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>Bitacora</td>
+                        <td><input type="checkbox" name="bitacora_consultar" /></td>
+                        <td><input type="checkbox" name="bitacora_crear" disabled /></td>
+                        <td><input type="checkbox" name="bitacora_editar" disabled /></td>
+                        <td><input type="checkbox" name="bitacora_eliminar" disabled /></td>
+                    </tr>
+                    <tr>
+                        <td>Clientes</td>
+                        <td><input type="checkbox" name="clientes_consultar" /></td>
+                        <td><input type="checkbox" name="clientes_crear" /></td>
+                        <td><input type="checkbox" name="clientes_editar" /></td>
+                        <td><input type="checkbox" name="clientes_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>Usuarios</td>
+                        <td><input type="checkbox" name="usuarios_consultar" /></td>
+                        <td><input type="checkbox" name="usuarios_crear" /></td>
+                        <td><input type="checkbox" name="usuarios_editar" /></td>
+                        <td><input type="checkbox" name="usuarios_eliminar" /></td>
+                    </tr>
+                    <tr>
+                        <td>IA</td>
+                        <td><input type="checkbox" name="ia_consultar" /></td>
+                        <td><input type="checkbox" name="ia_crear" disabled /></td>
+                        <td><input type="checkbox" name="ia_editar" disabled /></td>
+                        <td><input type="checkbox" name="ia_eliminar" disabled /></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="form-actions">
+                <a href="@Url.Action("Roles", "Role")" class="btn-secondary">Cancelar</a>
+                <button type="button" class="btn-primary" onclick="alert('Rol creado exitosamente (Prototipo)'); window.location.href='@Url.Action("Roles", "Role")';">Guardar Rol</button>
+            </div>
+        </div>
+
+        <!-- Info adicional -->
+        <div class="info-box">
+            <h3>Informacion</h3>
+            <ul>
+                <li><strong>Consultar:</strong> Permiso minimo requerido; sin el, el modulo no aparece en el menu</li>
+                <li><strong>Bitacora:</strong> Es un registro de solo lectura, no admite crear, editar ni eliminar</li>
+                <li><strong>IA:</strong> Solo admite consulta, ya que sus resultados se generan automaticamente</li>
+                <li><strong>Eliminar:</strong> Otorguelo con cuidado, ya que permite borrar registros de forma permanente</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
