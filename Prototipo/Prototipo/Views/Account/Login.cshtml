@@ -1,3 +1,4 @@
+@model Prototipo.ViewModels.LoginViewModel
 @{
     ViewBag.Title = "Iniciar Sesion";
     Layout = null;
@@ -8,19 +9,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
-
-    <!-- Font Awesome -->
+    <title>@ViewBag.Title - El Colibri Hotel &amp; Steak House</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Site.css?v=3" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
         <a href="@Url.Action("Index", "Home")" class="navbar-brand">
-            <span>El Colibri Hotel & Steak House</span>
+            <span>El Colibri Hotel &amp; Steak House</span>
         </a>
         <div class="navbar-buttons">
             <a href="@Url.Action("Login", "Account")" class="btn-nav-outline">Iniciar Sesion</a>
@@ -28,7 +24,6 @@
     </nav>
 
     <div class="login-container">
-        <!-- Panel Izquierdo -->
         <div class="login-left">
             <div class="login-brand">
                 <h2>Inicio de Sesion</h2>
@@ -49,30 +44,35 @@
             </div>
         </div>
 
-        <!-- Panel Derecho -->
         <div class="login-right">
             <div class="login-form-container">
                 <p class="form-welcome">BIENVENIDO</p>
                 <h2 class="form-title">Iniciar sesion</h2>
                 <p class="form-subtitle">Ingresa tus credenciales para continuar.</p>
 
-                <form class="login-form" action="@Url.Action("Main", "Main")" method="get">
+                @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "login-form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.ReturnUrl)
+
+                    @Html.ValidationSummary(false, null, new { @class = "alert-box alert-warning" })
+
                     <div class="form-group">
-                        <label for="nombreUsuario">Nombre de Usuario</label>
-                        <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Nombre de Usuario" required />
+                        @Html.LabelFor(m => m.NombreUsuario)
+                        @Html.TextBoxFor(m => m.NombreUsuario, new { placeholder = "Nombre de Usuario", autofocus = "autofocus" })
                     </div>
 
                     <div class="form-group">
-                        <label for="contrasena">Contrasena</label>
-                        <input type="password" id="contrasena" name="contrasena" placeholder="Contrasena" required />
+                        @Html.LabelFor(m => m.Contrasena)
+                        @Html.PasswordFor(m => m.Contrasena, new { placeholder = "Contrasena" })
                     </div>
 
                     <button type="submit" class="btn-login">Iniciar sesion</button>
 
                     <div class="form-links">
-                        <a href="javascript:void(0);" class="link-secondary" onclick="alert('Se enviara un enlace de recuperacion a su correo institucional (Prototipo)');">Olvido su contrasena?</a>
+                        <span class="link-secondary">Si olvido su contrasena, solicite al administrador que la restablezca.</span>
                     </div>
-                </form>
+                }
             </div>
         </div>
     </div>

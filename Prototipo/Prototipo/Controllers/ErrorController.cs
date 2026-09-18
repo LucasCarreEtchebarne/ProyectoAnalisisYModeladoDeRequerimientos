@@ -1,11 +1,11 @@
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
 
 namespace Prototipo.Controllers
 {
+    [AllowAnonymous]
     public class ErrorController : Controller
     {
-        // GET: Error/NoEncontrado (404)
         public ActionResult NoEncontrado()
         {
             Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -13,7 +13,6 @@ namespace Prototipo.Controllers
             return View();
         }
 
-        // GET: Error/AccesoDenegado (403)
         public ActionResult AccesoDenegado()
         {
             Response.StatusCode = (int)HttpStatusCode.Forbidden;
@@ -21,7 +20,6 @@ namespace Prototipo.Controllers
             return View();
         }
 
-        // GET: Error/ErrorServidor (500)
         public ActionResult ErrorServidor()
         {
             Response.StatusCode = (int)HttpStatusCode.InternalServerError;

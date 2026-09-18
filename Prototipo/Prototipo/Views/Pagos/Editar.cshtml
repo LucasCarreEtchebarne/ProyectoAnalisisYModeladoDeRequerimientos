@@ -1,126 +1,53 @@
+@using Prototipo.Common
+@model Prototipo.Models.Pago
 @{
-    ViewBag.Title = "Editar Pago";
-    Layout = null;
+    ViewBag.Title = "Reversar Pago";
+    ViewBag.Modulo = "Pagos";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Reversar Pago #@Model.IdPago</h1>
+    <a href="@Url.Action("DetallePago", "Pagos", new { id = Model.IdPago })" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link active">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Editar Pago PAG-0088</h1>
-        </div>
-
-        <!-- Formulario de Edicion -->
-        <div class="form-container">
-            <form class="module-form" method="post" action="@Url.Action("Pagos", "Pagos")">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="factura">Factura Asociada</label>
-                        <select id="factura" name="factura" required>
-                            <option value="FAC-2024-0003" selected>FAC-2024-0003 - Corporacion Delta S.A.</option>
-                            <option value="FAC-2024-0002">FAC-2024-0002 - Roberto Jimenez</option>
-                            <option value="FAC-2024-0005">FAC-2024-0005 - Jorge Castillo</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="metodoPago">Metodo de Pago</label>
-                        <select id="metodoPago" name="metodoPago" required>
-                            <option value="Transferencia" selected>Transferencia Bancaria</option>
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="TarjetaCredito">Tarjeta de Credito</option>
-                            <option value="TarjetaDebito">Tarjeta de Debito</option>
-                            <option value="Sinpe">SINPE Movil</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="montoPago">Monto del Pago</label>
-                        <input type="number" id="montoPago" name="montoPago" value="4000.00" step="0.01" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="fechaPago">Fecha del Pago</label>
-                        <input type="date" id="fechaPago" name="fechaPago" value="2024-01-24" required />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="estadoPago">Estado del Pago</label>
-                        <select id="estadoPago" name="estadoPago" required>
-                            <option value="Procesando" selected>Procesando</option>
-                            <option value="Aprobado">Aprobado</option>
-                            <option value="Rechazado">Rechazado</option>
-                            <option value="Reembolsado">Reembolsado</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="referenciaPago">Numero de Referencia</label>
-                        <input type="text" id="referenciaPago" name="referenciaPago" value="TRF-9928471" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="observacionesPago">Observaciones</label>
-                    <textarea id="observacionesPago" name="observacionesPago" rows="4">Abono parcial correspondiente al evento corporativo. Pendiente confirmacion del banco.</textarea>
-                </div>
-
-                <div class="form-actions">
-                    <a href="@Url.Action("Pagos", "Pagos")" class="btn-secondary">Cancelar</a>
-                    <button type="button" class="btn-primary" onclick="alert('Pago actualizado exitosamente (Prototipo)'); window.location.href='@Url.Action("Pagos", "Pagos")';">Guardar Cambios</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Advertencia -->
-        <div class="alert-box alert-warning">
-            <h3>Atencion</h3>
-            <p>Cambiar el estado de un pago afecta el saldo pendiente de la factura asociada. Todo cambio queda registrado en la Bitacora del sistema con el usuario responsable.</p>
-        </div>
+<div class="form-container">
+    <div class="detail-grid">
+        <div class="detail-item"><label>Factura</label><span>@Model.Factura.NumeroFactura</span></div>
+        <div class="detail-item"><label>Monto</label><span>@Formato.Colones(Model.MontoPagado)</span></div>
+        <div class="detail-item"><label>Metodo</label><span>@Model.MetodoPago</span></div>
+        <div class="detail-item"><label>Estado actual</label><span class="@Formato.BadgeEstado(Model.EstadoPago)">@Model.EstadoPago</span></div>
     </div>
-</body>
-</html>
+
+    @if (Model.EstadoPago != Estados.Pago.Aprobado)
+    {
+        <div class="alert-box alert-warning">Solo se puede reversar un pago aprobado.</div>
+    }
+    else
+    {
+        using (Html.BeginForm("Reversar", "Pagos", new { id = Model.IdPago }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label for="motivo">Motivo del reverso</label>
+                <input type="text" id="motivo" name="motivo" class="form-control" required />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-delete"
+                        onclick="return confirm('El pago quedara reversado y la factura volvera a quedar pendiente. Continuar?');">
+                    Reversar pago
+                </button>
+                <a href="@Url.Action("DetallePago", "Pagos", new { id = Model.IdPago })" class="btn-secondary">Cancelar</a>
+            </div>
+        }
+    }
+</div>
+
+<div class="info-box">
+    <h3>Por que no se edita un pago</h3>
+    <ul>
+        <li>Un pago registrado no se modifica: se reversa y se registra uno nuevo</li>
+        <li>Al reversar, el saldo de la factura se recalcula automaticamente</li>
+    </ul>
+</div>

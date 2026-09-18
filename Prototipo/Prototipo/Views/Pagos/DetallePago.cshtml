@@ -1,172 +1,45 @@
+@using Prototipo.Common
+@model Prototipo.Models.Pago
 @{
     ViewBag.Title = "Detalle del Pago";
-    Layout = null;
+    ViewBag.Modulo = "Pagos";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Pago #@Model.IdPago</h1>
+    <a href="@Url.Action("Pagos", "Pagos")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link active">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Detalle del Pago</h1>
-            <div style="display: flex; gap: 0.8rem;">
-                <a href="@Url.Action("Pagos", "Pagos")" class="btn-secondary">Volver a Pagos</a>
-                <button class="btn-primary" onclick="alert('Comprobante enviado al cliente (Prototipo)');">Enviar Comprobante</button>
-            </div>
-        </div>
-
-        <div class="detail-container">
-            <!-- Informacion General -->
-            <div class="detail-section">
-                <h3>Informacion del Pago</h3>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <label>ID Pago:</label>
-                        <span class="detail-value">PAG-0088</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Factura Asociada:</label>
-                        <span class="detail-value">FAC-2024-0003</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Cliente:</label>
-                        <span class="detail-value">Corporacion Delta S.A.</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Metodo de Pago:</label>
-                        <span class="detail-value">Transferencia Bancaria</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Monto:</label>
-                        <span class="detail-value detail-price">$4,000.00</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Moneda:</label>
-                        <span class="detail-value">Dolares (USD)</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Fecha del Pago:</label>
-                        <span class="detail-value">24 de Enero, 2024</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Numero de Referencia:</label>
-                        <span class="detail-value">TRF-9928471</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Cajero Responsable:</label>
-                        <span class="detail-value">Admin</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Estado:</label>
-                        <span class="badge badge-procesando">Procesando</span>
-                    </div>
-                </div>
-
-                <div class="detail-item-full">
-                    <label>Observaciones:</label>
-                    <p>Abono parcial correspondiente al evento corporativo del 10 de Enero. Pendiente confirmacion del banco para aprobar el pago.</p>
-                </div>
-            </div>
-
-            <!-- Estado de la Factura -->
-            <div class="detail-section">
-                <h3>Estado de la Factura Asociada</h3>
-                <div class="totales-box">
-                    <div class="totales-row">
-                        <span>Total Facturado</span>
-                        <span>$8,450.00</span>
-                    </div>
-                    <div class="totales-row">
-                        <span>Pagos Aprobados</span>
-                        <span>$0.00</span>
-                    </div>
-                    <div class="totales-row">
-                        <span>Pagos en Proceso</span>
-                        <span>$4,000.00</span>
-                    </div>
-                    <div class="totales-row totales-final">
-                        <span>Saldo Pendiente</span>
-                        <span>$8,450.00</span>
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <a href="@Url.Action("DetalleFactura", "Facturacion")" class="btn-secondary">Ver Factura</a>
-                    <a href="@Url.Action("Editar", "Pagos")" class="btn-primary">Editar Pago</a>
-                </div>
-            </div>
-
-            <!-- Historial -->
-            <div class="detail-section">
-                <h3>Historial del Pago</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>Accion</th>
-                            <th>Usuario</th>
-                            <th>Estado Resultante</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>2024-01-24</td>
-                            <td>10:42</td>
-                            <td>Registro del pago</td>
-                            <td>Admin</td>
-                            <td><span class="badge badge-procesando">Procesando</span></td>
-                        </tr>
-                        <tr>
-                            <td>2024-01-24</td>
-                            <td>10:45</td>
-                            <td>Comprobante adjuntado</td>
-                            <td>Admin</td>
-                            <td><span class="badge badge-procesando">Procesando</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+<div class="detail-container">
+    <div class="detail-section">
+        <h3>Datos del pago</h3>
+        <div class="detail-grid">
+            <div class="detail-item"><label>Factura</label><span>@Model.Factura.NumeroFactura</span></div>
+            <div class="detail-item"><label>Cliente</label><span>@Model.Factura.Cliente.NombreMostrar</span></div>
+            <div class="detail-item"><label>Fecha y hora</label><span>@Formato.FechaHora(Model.FechaHoraPago)</span></div>
+            <div class="detail-item"><label>Metodo</label><span>@Model.MetodoPago</span></div>
+            <div class="detail-item"><label>Monto pagado</label><span>@Formato.Colones(Model.MontoPagado)</span></div>
+            @if (Model.MetodoPago == Estados.MetodoPago.Efectivo)
+            {
+                <div class="detail-item"><label>Monto recibido</label><span>@Formato.Colones(Model.MontoRecibido)</span></div>
+                <div class="detail-item"><label>Cambio devuelto</label><span>@Formato.Colones(Model.CambioDevuelto)</span></div>
+            }
+            @if (Model.MetodoPago == Estados.MetodoPago.Tarjeta)
+            {
+                <div class="detail-item"><label>Tipo de tarjeta</label><span>@Model.TipoTarjeta</span></div>
+                <div class="detail-item"><label>Tarjeta</label><span>**** **** **** @Model.UltimosCuatroDigitos</span></div>
+            }
+            <div class="detail-item"><label>Referencia</label><span>@(string.IsNullOrEmpty(Model.NumeroReferencia) ? "-" : Model.NumeroReferencia)</span></div>
+            <div class="detail-item"><label>Registrado por</label><span>@(Model.Usuario != null ? Model.Usuario.NombreCompleto : "-")</span></div>
+            <div class="detail-item"><label>Estado</label><span class="@Formato.BadgeEstado(Model.EstadoPago)">@Model.EstadoPago</span></div>
         </div>
     </div>
-</body>
-</html>
+
+    <div class="form-actions">
+        <a href="@Url.Action("DetalleFactura", "Facturacion", new { id = Model.IdFactura })" class="btn-secondary">Ver factura</a>
+        @if (Model.EstadoPago == Estados.Pago.Aprobado)
+        {
+            <a href="@Url.Action("Editar", "Pagos", new { id = Model.IdPago })" class="btn-delete">Reversar pago</a>
+        }
+    </div>
+</div>

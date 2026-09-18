@@ -1,153 +1,120 @@
+@using Prototipo.Common
+@model Prototipo.Models.Pago
 @{
     ViewBag.Title = "Registrar Pago";
-    Layout = null;
+    ViewBag.Modulo = "Pagos";
+    var facturas = ViewBag.FacturasPendientes as List<Prototipo.Models.Factura> ?? new List<Prototipo.Models.Factura>();
+    var factura = ViewBag.Factura as Prototipo.Models.Factura;
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Registrar Pago</h1>
+    <a href="@Url.Action("Pagos", "Pagos")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link active">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Registrar Nuevo Pago</h1>
-        </div>
-
-        <!-- Formulario de Creacion -->
-        <div class="form-container">
-            <form class="module-form" method="post" action="@Url.Action("Pagos", "Pagos")">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="factura">Factura a Pagar</label>
-                        <select id="factura" name="factura" required>
-                            <option value="">Seleccione una factura...</option>
-                            <option value="FAC-2024-0002">FAC-2024-0002 - Roberto Jimenez - $688.62</option>
-                            <option value="FAC-2024-0003">FAC-2024-0003 - Corporacion Delta S.A. - $8,450.00</option>
-                            <option value="FAC-2024-0005">FAC-2024-0005 - Jorge Castillo - $960.00</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="metodoPago">Metodo de Pago</label>
-                        <select id="metodoPago" name="metodoPago" required>
-                            <option value="">Seleccione un metodo...</option>
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="TarjetaCredito">Tarjeta de Credito</option>
-                            <option value="TarjetaDebito">Tarjeta de Debito</option>
-                            <option value="Transferencia">Transferencia Bancaria</option>
-                            <option value="Sinpe">SINPE Movil</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="montoPago">Monto del Pago</label>
-                        <input type="number" id="montoPago" name="montoPago" placeholder="Ej: 688.62" step="0.01" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="moneda">Moneda</label>
-                        <select id="moneda" name="moneda" required>
-                            <option value="CRC">Colones (CRC)</option>
-                            <option value="USD">Dolares (USD)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fechaPago">Fecha del Pago</label>
-                        <input type="date" id="fechaPago" name="fechaPago" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="referenciaPago">Numero de Referencia</label>
-                        <input type="text" id="referenciaPago" name="referenciaPago" placeholder="Ej: AUTH-884512" />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="estadoPago">Estado del Pago</label>
-                        <select id="estadoPago" name="estadoPago" required>
-                            <option value="">Seleccione un estado...</option>
-                            <option value="Aprobado">Aprobado</option>
-                            <option value="Procesando">Procesando</option>
-                            <option value="Rechazado">Rechazado</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="cajero">Cajero Responsable</label>
-                        <select id="cajero" name="cajero" required>
-                            <option value="">Seleccione un cajero...</option>
-                            <option value="Admin">Admin</option>
-                            <option value="AnaSolis">Ana Solis</option>
-                            <option value="LuisMora">Luis Mora</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="observacionesPago">Observaciones</label>
-                    <textarea id="observacionesPago" name="observacionesPago" rows="4" placeholder="Detalles del pago, abonos parciales, comentarios..."></textarea>
-                </div>
-
-                <div class="form-actions">
-                    <a href="@Url.Action("Pagos", "Pagos")" class="btn-secondary">Cancelar</a>
-                    <button type="button" class="btn-primary" onclick="alert('Pago registrado exitosamente (Prototipo)'); window.location.href='@Url.Action("Pagos", "Pagos")';">Registrar Pago</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Info adicional -->
-        <div class="info-box">
-            <h3>Informacion</h3>
-            <ul>
-                <li><strong>Abonos Parciales:</strong> Se puede registrar un monto menor al total; la factura quedara con saldo pendiente</li>
-                <li><strong>Procesando:</strong> Usar para transferencias que aun no se reflejan en la cuenta bancaria</li>
-                <li><strong>Numero de Referencia:</strong> Codigo de autorizacion de la terminal o comprobante de transferencia</li>
-                <li><strong>Reembolsos:</strong> Se gestionan editando un pago ya aprobado y cambiando su estado</li>
-            </ul>
-        </div>
+@if (factura != null)
+{
+    <div class="alert-box">
+        Factura @factura.NumeroFactura - @factura.Cliente.NombreMostrar.
+        Total @Formato.Colones(factura.MontoTotal), saldo pendiente @Formato.Colones((decimal)ViewBag.Saldo).
     </div>
-</body>
-</html>
+}
+
+<div class="form-container">
+    @using (Html.BeginForm("Crear", "Pagos", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.IdFactura)
+            <select name="IdFactura" class="form-control" required onchange="location.href='@Url.Action("Crear", "Pagos")?idFactura=' + this.value;">
+                <option value="">Seleccione una factura pendiente</option>
+                @foreach (var f in facturas)
+                {
+                    <option value="@f.IdFactura" selected="@(Model.IdFactura == f.IdFactura)">
+                        @f.NumeroFactura - @f.Cliente.NombreMostrar - @Formato.Colones(f.MontoTotal)
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.MetodoPago)
+            @Html.DropDownListFor(m => m.MetodoPago,
+                new SelectList(Estados.MetodoPago.Todos, Model.MetodoPago), new { @class = "form-control", id = "metodoPago" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.MontoPagado)
+            @Html.TextBoxFor(m => m.MontoPagado, new { @class = "form-control", type = "number", step = "0.01", min = "0.01", required = "required" })
+        </div>
+
+        <div class="form-row" id="camposEfectivo">
+            <div class="form-group">
+                @Html.LabelFor(m => m.MontoRecibido)
+                @Html.TextBoxFor(m => m.MontoRecibido, new { @class = "form-control", type = "number", step = "0.01", min = "0" })
+                <small>El cambio lo calcula el sistema.</small>
+            </div>
+        </div>
+
+        <div class="form-row" id="camposTarjeta">
+            <div class="form-group">
+                @Html.LabelFor(m => m.TipoTarjeta)
+                <select name="TipoTarjeta" class="form-control">
+                    <option value="">Seleccione</option>
+                    @foreach (var tipo in Estados.TipoTarjeta.Todos)
+                    {
+                        <option value="@tipo">@tipo</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.UltimosCuatroDigitos)
+                @Html.TextBoxFor(m => m.UltimosCuatroDigitos, new { @class = "form-control", maxlength = "4", pattern = "[0-9]{4}" })
+                <small>Nunca se guarda el numero completo de la tarjeta.</small>
+            </div>
+        </div>
+
+        <div class="form-group" id="campoReferencia">
+            @Html.LabelFor(m => m.NumeroReferencia)
+            @Html.TextBoxFor(m => m.NumeroReferencia, new { @class = "form-control" })
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Registrar Pago</button>
+            <a href="@Url.Action("Pagos", "Pagos")" class="btn-secondary">Cancelar</a>
+        </div>
+    }
+</div>
+
+<div class="info-box">
+    <h3>Reglas de pago</h3>
+    <ul>
+        <li><strong>Efectivo:</strong> el monto recibido debe cubrir el monto a pagar; el cambio se calcula solo</li>
+        <li><strong>Tarjeta:</strong> se exige tipo y ultimos cuatro digitos</li>
+        <li><strong>Transferencia y SINPE:</strong> se exige numero de referencia</li>
+        <li>El pago no puede superar el saldo pendiente de la factura</li>
+        <li>Cuando los pagos aprobados cubren el total, la factura pasa a <strong>Pagada</strong></li>
+    </ul>
+</div>
+
+@section scripts {
+    <script>
+        (function () {
+            var metodo = document.getElementById('metodoPago');
+            var efectivo = document.getElementById('camposEfectivo');
+            var tarjeta = document.getElementById('camposTarjeta');
+            var referencia = document.getElementById('campoReferencia');
+
+            function actualizar() {
+                var valor = metodo.value;
+                efectivo.style.display = valor === 'Efectivo' ? '' : 'none';
+                tarjeta.style.display = valor === 'Tarjeta' ? '' : 'none';
+                referencia.style.display = (valor === 'Transferencia' || valor === 'SINPE') ? '' : 'none';
+            }
+
+            metodo.addEventListener('change', actualizar);
+            actualizar();
+        })();
+    </script>
+}

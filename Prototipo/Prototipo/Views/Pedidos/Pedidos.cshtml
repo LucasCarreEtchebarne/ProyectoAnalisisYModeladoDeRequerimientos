@@ -1,228 +1,97 @@
+@using Prototipo.Common
+@model List<Prototipo.Models.Pedido>
 @{
     ViewBag.Title = "Pedidos";
-    Layout = null;
+    ViewBag.Modulo = "Pedidos";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Gestion de Pedidos</h1>
+    <a href="@Url.Action("Crear", "Pedidos")" class="btn-primary">Nuevo Pedido</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
+<div class="filter-container">
+    @using (Html.BeginForm("Pedidos", "Pedidos", FormMethod.Get))
+    {
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado" class="filter-select">
+            <option value="">Todos</option>
+            @foreach (var estado in Estados.Pedido.Todos)
+            {
+                <option value="@estado" selected="@(((string)ViewBag.Estado) == estado)">@estado</option>
+            }
+        </select>
 
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link active">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" name="tipo" class="filter-select">
+            <option value="">Todos</option>
+            @foreach (var tipo in Estados.TipoPedido.Todos)
+            {
+                <option value="@tipo" selected="@(((string)ViewBag.Tipo) == tipo)">@tipo</option>
+            }
+        </select>
 
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Gestion de Pedidos</h1>
-            <div style="display: flex; gap: 0.8rem;">
-                <a href="@Url.Action("Mesas", "Mesas")" class="btn-secondary">Ver Salon</a>
-                <a href="@Url.Action("Crear", "Pedidos")" class="btn-primary">Nuevo Pedido</a>
-            </div>
-        </div>
+        <label for="desde">Desde:</label>
+        <input type="date" id="desde" name="desde" class="filter-select"
+               value="@(ViewBag.Desde != null ? ((DateTime)ViewBag.Desde).ToString("yyyy-MM-dd") : "")" />
 
-        <!-- Filtros -->
-        <div class="form-container">
-            <h3>Filtros de Busqueda</h3>
-            <form class="module-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="filtroEstadoPedido">Estado del Pedido</label>
-                        <select id="filtroEstadoPedido">
-                            <option value="">Todos</option>
-                            <option value="Abierto">Abierto</option>
-                            <option value="EnPreparacion">En Preparacion</option>
-                            <option value="Servido">Servido</option>
-                            <option value="Pagado">Pagado</option>
-                            <option value="Cancelado">Cancelado</option>
-                        </select>
-                    </div>
+        <label for="hasta">Hasta:</label>
+        <input type="date" id="hasta" name="hasta" class="filter-select"
+               value="@(ViewBag.Hasta != null ? ((DateTime)ViewBag.Hasta).ToString("yyyy-MM-dd") : "")" />
 
-                    <div class="form-group">
-                        <label for="filtroOrigen">Origen</label>
-                        <select id="filtroOrigen">
-                            <option value="">Todos</option>
-                            <option value="Restaurante">Restaurante</option>
-                            <option value="RoomService">Room Service</option>
-                            <option value="Bar">Bar</option>
-                            <option value="Evento">Evento</option>
-                        </select>
-                    </div>
-                </div>
+        <button type="submit" class="btn-primary">Filtrar</button>
+    }
+</div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="filtroFechaPedido">Fecha</label>
-                        <input type="date" id="filtroFechaPedido" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="filtroMesero">Mesero</label>
-                        <input type="text" id="filtroMesero" placeholder="Buscar por mesero..." />
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- Tabla de Pedidos -->
-        <div class="table-container">
-            <h3>Pedidos Registrados</h3>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Mesa / Habitacion</th>
-                        <th>Origen</th>
-                        <th>Mesero</th>
-                        <th>Hora</th>
-                        <th>Articulos</th>
-                        <th>Total</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1001</td>
-                        <td>Mesa 2</td>
-                        <td>Restaurante</td>
-                        <td>Carlos Ramirez</td>
-                        <td>19:05</td>
-                        <td>5</td>
-                        <td>$284.00</td>
-                        <td><span class="badge badge-servido">Servido</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Pedidos")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de cancelar este pedido?')) { alert('Pedido cancelado (Prototipo)'); window.location.reload(); }">Cancelar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1002</td>
-                        <td>Mesa 3</td>
-                        <td>Restaurante</td>
-                        <td>Carlos Ramirez</td>
-                        <td>19:15</td>
-                        <td>9</td>
-                        <td>$688.62</td>
-                        <td><span class="badge badge-abierto">Abierto</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Pedidos")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de cancelar este pedido?')) { alert('Pedido cancelado (Prototipo)'); window.location.reload(); }">Cancelar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1003</td>
-                        <td>Habitacion 204</td>
-                        <td>Room Service</td>
-                        <td>Ana Solis</td>
-                        <td>19:32</td>
-                        <td>3</td>
-                        <td>$156.00</td>
-                        <td><span class="badge badge-enpreparacion">En Preparacion</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Pedidos")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de cancelar este pedido?')) { alert('Pedido cancelado (Prototipo)'); window.location.reload(); }">Cancelar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1004</td>
-                        <td>Mesa 6</td>
-                        <td>Bar</td>
-                        <td>Luis Mora</td>
-                        <td>19:48</td>
-                        <td>4</td>
-                        <td>$96.50</td>
-                        <td><span class="badge badge-abierto">Abierto</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Pedidos")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de cancelar este pedido?')) { alert('Pedido cancelado (Prototipo)'); window.location.reload(); }">Cancelar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1005</td>
-                        <td>Mesa 8</td>
-                        <td>Restaurante</td>
-                        <td>Ana Solis</td>
-                        <td>20:02</td>
-                        <td>7</td>
-                        <td>$430.25</td>
-                        <td><span class="badge badge-enpreparacion">En Preparacion</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Pedidos")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de cancelar este pedido?')) { alert('Pedido cancelado (Prototipo)'); window.location.reload(); }">Cancelar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1006</td>
-                        <td>Mesa 1</td>
-                        <td>Restaurante</td>
-                        <td>Luis Mora</td>
-                        <td>18:20</td>
-                        <td>6</td>
-                        <td>$318.00</td>
-                        <td><span class="badge badge-pagado">Pagado</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Pedidos")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de cancelar este pedido?')) { alert('Pedido cancelado (Prototipo)'); window.location.reload(); }">Cancelar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1007</td>
-                        <td>Salon Privado</td>
-                        <td>Evento</td>
-                        <td>Carlos Ramirez</td>
-                        <td>17:45</td>
-                        <td>24</td>
-                        <td>$1,280.00</td>
-                        <td><span class="badge badge-pagado">Pagado</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Pedidos")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de cancelar este pedido?')) { alert('Pedido cancelado (Prototipo)'); window.location.reload(); }">Cancelar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</body>
-</html>
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Origen</th>
+                <th>Cliente</th>
+                <th>Atendido por</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="9">No hay pedidos que coincidan con el filtro.</td></tr>
+            }
+            @foreach (var pedido in Model)
+            {
+                <tr>
+                    <td>@pedido.IdPedido</td>
+                    <td>@Formato.FechaHora(pedido.FechaHoraPedido)</td>
+                    <td>@pedido.TipoPedido</td>
+                    <td>
+                        @if (pedido.Mesa != null)
+                        {
+                            <text>Mesa @pedido.Mesa.NumeroMesa</text>
+                        }
+                        else if (pedido.Habitacion != null)
+                        {
+                            <text>Hab. @pedido.Habitacion.NumeroHabitacion</text>
+                        }
+                        else
+                        {
+                            <text>Para llevar</text>
+                        }
+                    </td>
+                    <td>@(pedido.Cliente != null ? pedido.Cliente.NombreMostrar : "-")</td>
+                    <td>@(pedido.Usuario != null ? pedido.Usuario.NombreCompleto : "-")</td>
+                    <td>@Formato.Colones(pedido.Total)</td>
+                    <td><span class="@Formato.BadgeEstado(pedido.EstadoPedido)">@pedido.EstadoPedido</span></td>
+                    <td class="table-actions">
+                        <a href="@Url.Action("DetallePedido", "Pedidos", new { id = pedido.IdPedido })" class="btn-view">Consultar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

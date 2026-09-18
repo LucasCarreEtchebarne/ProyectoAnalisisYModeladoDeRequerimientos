@@ -1,183 +1,50 @@
+@using Prototipo.Common
+@model Prototipo.ViewModels.ReporteViewModel
 @{
     ViewBag.Title = "Detalle del Reporte";
-    Layout = null;
+    ViewBag.Modulo = "Reportes";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>@Model.Titulo</h1>
+    <a href="@Url.Action("Reportes", "Reportes")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
+<div class="detail-section">
+    <p>Periodo: @Formato.Fecha(Model.Desde) al @Formato.Fecha(Model.Hasta)</p>
 
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link active">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Detalle del Reporte</h1>
-            <div style="display: flex; gap: 0.8rem;">
-                <a href="@Url.Action("Reportes", "Reportes")" class="btn-secondary">Volver a Reportes</a>
-                <button class="btn-primary" onclick="alert('Reporte exportado a PDF (Prototipo)');">Exportar PDF</button>
-            </div>
-        </div>
-
-        <div class="detail-container">
-            <!-- Informacion General -->
-            <div class="detail-section">
-                <h3>Informacion del Reporte</h3>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <label>ID Reporte:</label>
-                        <span class="detail-value">1</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Nombre:</label>
-                        <span class="detail-value">Ocupacion Mensual Enero</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Tipo:</label>
-                        <span class="detail-value">Ocupacion</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Periodo:</label>
-                        <span class="detail-value">Mensual</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Rango de Fechas:</label>
-                        <span class="detail-value">01/01/2024 - 31/01/2024</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Fecha de Generacion:</label>
-                        <span class="detail-value">01 de Febrero, 2024</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Generado Por:</label>
-                        <span class="detail-value">Admin</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Formato:</label>
-                        <span class="detail-value">PDF</span>
-                    </div>
-                </div>
-
-                <div class="detail-item-full">
-                    <label>Notas:</label>
-                    <p>Enero cerro con una ocupacion superior a la proyectada gracias a los paquetes de temporada alta. La Suite Presidencial se mantiene como el tipo con menor rotacion.</p>
-                </div>
-            </div>
-
-            <!-- Indicadores -->
-            <div class="detail-section">
-                <h3>Indicadores del Periodo</h3>
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <h3>78%</h3>
-                        <p>Ocupacion Promedio</p>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <h3>1,234</h3>
-                        <p>Noches Vendidas</p>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <h3>$134.15</h3>
-                        <p>Tarifa Promedio Diaria</p>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <h3>$165,540</h3>
-                        <p>Ingresos Totales</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Desglose -->
-            <div class="detail-section">
-                <h3>Desglose Semanal</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Semana</th>
-                            <th>Noches Vendidas</th>
-                            <th>Ocupacion</th>
-                            <th>Tarifa Promedio</th>
-                            <th>Ingresos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Semana 1 (01 - 07)</td>
-                            <td>276</td>
-                            <td>73%</td>
-                            <td>$132.00</td>
-                            <td>$36,432.00</td>
-                        </tr>
-                        <tr>
-                            <td>Semana 2 (08 - 14)</td>
-                            <td>298</td>
-                            <td>79%</td>
-                            <td>$134.00</td>
-                            <td>$39,932.00</td>
-                        </tr>
-                        <tr>
-                            <td>Semana 3 (15 - 21)</td>
-                            <td>312</td>
-                            <td>82%</td>
-                            <td>$136.00</td>
-                            <td>$42,432.00</td>
-                        </tr>
-                        <tr>
-                            <td>Semana 4 (22 - 31)</td>
-                            <td>348</td>
-                            <td>77%</td>
-                            <td>$134.32</td>
-                            <td>$46,744.00</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Total Enero</strong></td>
-                            <td><strong>1,234</strong></td>
-                            <td><strong>78%</strong></td>
-                            <td><strong>$134.15</strong></td>
-                            <td><strong>$165,540.00</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    @foreach (var encabezado in Model.Encabezados)
+                    {
+                        <th>@encabezado</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Filas.Count == 0)
+                {
+                    <tr><td colspan="@(Model.Encabezados.Count == 0 ? 1 : Model.Encabezados.Count)">No hay datos para el periodo seleccionado.</td></tr>
+                }
+                @foreach (var fila in Model.Filas)
+                {
+                    <tr>
+                        @foreach (var celda in fila)
+                        {
+                            <td>@celda</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-</body>
-</html>
+
+    @if (!string.IsNullOrEmpty(Model.Resumen))
+    {
+        <div class="totales-box">
+            <div class="totales-row"><strong>@Model.Resumen</strong></div>
+        </div>
+    }
+</div>

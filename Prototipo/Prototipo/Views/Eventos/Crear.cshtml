@@ -1,143 +1,89 @@
+@using Prototipo.Common
+@model Prototipo.Models.Evento
 @{
     ViewBag.Title = "Crear Evento";
-    Layout = null;
+    ViewBag.Modulo = "Eventos";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Crear Nuevo Evento</h1>
+    <a href="@Url.Action("Eventos", "Eventos")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
+<div class="form-container">
+    @using (Html.BeginForm("Crear", "Eventos", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(false, null, new { @class = "alert-box alert-warning" })
 
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link active">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Crear Nuevo Evento</h1>
+        <div class="form-group">
+            @Html.LabelFor(m => m.NombreEvento)
+            @Html.TextBoxFor(m => m.NombreEvento, new { @class = "form-control", required = "required" })
         </div>
 
-        <!-- Formulario de Creacion -->
-        <div class="form-container">
-            <form class="module-form" method="post" action="@Url.Action("Eventos", "Eventos")">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nombreEvento">Nombre del Evento</label>
-                        <input type="text" id="nombreEvento" name="nombreEvento" placeholder="Ej: Boda Martinez-Lopez" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="idCliente">Cliente</label>
-                        <select id="idCliente" name="idCliente" required>
-                            <option value="">Seleccione un cliente...</option>
-                            <option value="1">Juan Perez</option>
-                            <option value="2">Maria Garcia</option>
-                            <option value="3">Carlos Lopez</option>
-                            <option value="4">Ana Martinez</option>
-                            <option value="5">Luis Gonzalez</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fechaEvento">Fecha del Evento</label>
-                        <input type="date" id="fechaEvento" name="fechaEvento" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="horaInicio">Hora de Inicio</label>
-                        <input type="time" id="horaInicio" name="horaInicio" placeholder="Ej: 18:00" required />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="horaFin">Hora de Fin</label>
-                        <input type="time" id="horaFin" name="horaFin" placeholder="Ej: 23:00" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="participantes">Numero de Participantes</label>
-                        <input type="number" id="participantes" name="participantes" placeholder="Ej: 150" required />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="lugarEvento">Lugar del Evento</label>
-                        <input type="text" id="lugarEvento" name="lugarEvento" placeholder="Ej: Salon Principal" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="estadoEvento">Estado del Evento</label>
-                        <select id="estadoEvento" name="estadoEvento" required>
-                            <option value="">Seleccione un estado...</option>
-                            <option value="Programado">Programado</option>
-                            <option value="EnCurso">En Curso</option>
-                            <option value="Completado">Completado</option>
-                            <option value="Cancelado">Cancelado</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="descripcion">Descripcion</label>
-                    <textarea id="descripcion" name="descripcion" rows="4" placeholder="Detalles adicionales sobre el evento..."></textarea>
-                </div>
-
-                <div class="form-actions">
-                    <a href="@Url.Action("Eventos", "Eventos")" class="btn-secondary">Cancelar</a>
-                    <button type="button" class="btn-primary" onclick="alert('Evento creado exitosamente (Prototipo)'); window.location.href='@Url.Action("Eventos", "Eventos")';">Guardar Evento</button>
-                </div>
-            </form>
+        <div class="form-group">
+            @Html.LabelFor(m => m.IdCliente)
+            @Html.DropDownListFor(m => m.IdCliente, (SelectList)ViewBag.Clientes,
+                "Seleccione un cliente", new { @class = "form-control", required = "required" })
         </div>
 
-        <!-- Info adicional -->
-        <div class="info-box">
-            <h3>Informacion</h3>
-            <ul>
-                <li><strong>Nombre del Evento:</strong> Titulo descriptivo del evento</li>
-                <li><strong>Cliente:</strong> Seleccione el cliente que solicita el evento</li>
-                <li><strong>Fecha y Horario:</strong> Cuando se llevara a cabo el evento</li>
-                <li><strong>Participantes:</strong> Cantidad estimada de asistentes</li>
-                <li><strong>Lugar:</strong> Ubicacion especifica dentro del hotel</li>
-                <li><strong>Estado:</strong> Estado actual del evento</li>
-            </ul>
+        <div class="form-group">
+            @Html.LabelFor(m => m.IdEspacio)
+            @Html.DropDownListFor(m => m.IdEspacio, (SelectList)ViewBag.Espacios,
+                "Seleccione un espacio", new { @class = "form-control", required = "required" })
         </div>
-    </div>
-</body>
-</html>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.FechaEvento)
+            <input type="date" name="FechaEvento" class="form-control" value="@Model.FechaEvento.ToString("yyyy-MM-dd")" required />
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                @Html.LabelFor(m => m.HoraInicio)
+                <input type="time" name="HoraInicio" class="form-control" value="@Model.HoraInicio.ToString(@"hh\:mm")" required />
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.HoraFin)
+                <input type="time" name="HoraFin" class="form-control" value="@Model.HoraFin.ToString(@"hh\:mm")" required />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Participantes)
+                @Html.TextBoxFor(m => m.Participantes, new { @class = "form-control", type = "number", min = "1", required = "required" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.MontoAcordado)
+                @Html.TextBoxFor(m => m.MontoAcordado, new { @class = "form-control", type = "number", step = "0.01", min = "0", required = "required" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.EstadoEvento)
+            @Html.DropDownListFor(m => m.EstadoEvento,
+                new SelectList(Estados.Evento.Todos, Model.EstadoEvento), new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Descripcion)
+            @Html.TextBoxFor(m => m.Descripcion, new { @class = "form-control" })
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Guardar Evento</button>
+            <a href="@Url.Action("Eventos", "Eventos")" class="btn-secondary">Cancelar</a>
+        </div>
+    }
+</div>
+
+<div class="info-box">
+    <h3>Validaciones que aplica el sistema</h3>
+    <ul>
+        <li>La hora de fin debe ser posterior a la de inicio</li>
+        <li>No se permiten dos eventos traslapados en el mismo espacio y fecha</li>
+        <li>Los participantes no pueden superar la capacidad del espacio</li>
+        <li>El monto acordado queda congelado para la facturacion</li>
+    </ul>
+</div>

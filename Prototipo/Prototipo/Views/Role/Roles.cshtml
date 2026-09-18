@@ -1,164 +1,44 @@
+@model string[]
 @{
-    ViewBag.Title = "Roles y Permisos";
-    Layout = null;
+    ViewBag.Title = "Roles";
+    ViewBag.Modulo = "Usuarios";
+    var conteos = ViewBag.Conteos as Dictionary<string, int> ?? new Dictionary<string, int>();
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Roles del Sistema</h1>
+    <a href="@Url.Action("Usuarios", "Usuarios")" class="btn-secondary">Volver a Usuarios</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Rol</th>
+                <th>Usuarios asignados</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rol in Model)
+            {
+                <tr>
+                    <td>@rol</td>
+                    <td>@(conteos.ContainsKey(rol) ? conteos[rol] : 0)</td>
+                    <td class="table-actions">
+                        <a href="@Url.Action("DetalleRol", "Role", new { rol = rol })" class="btn-view">Ver usuarios</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link active">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Roles y Permisos</h1>
-            <div style="display: flex; gap: 0.8rem;">
-                <a href="@Url.Action("Usuarios", "Usuarios")" class="btn-secondary">Volver a Usuarios</a>
-                <a href="@Url.Action("Crear", "Role")" class="btn-primary">Nuevo Rol</a>
-            </div>
-        </div>
-
-        <!-- Filtros -->
-        <div class="filter-container">
-            <label for="filtroEstadoRol">Filtrar por Estado:</label>
-            <select id="filtroEstadoRol" class="filter-select">
-                <option value="">Todos</option>
-                <option value="Activo">Activo</option>
-                <option value="Inactivo">Inactivo</option>
-            </select>
-        </div>
-
-        <!-- Tabla de Roles -->
-        <div class="table-container">
-            <h3>Roles Definidos</h3>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre del Rol</th>
-                        <th>Descripcion</th>
-                        <th>Usuarios Asignados</th>
-                        <th>Modulos con Acceso</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Administrador</td>
-                        <td>Acceso total al sistema y configuracion</td>
-                        <td>2</td>
-                        <td>14 de 14</td>
-                        <td><span class="badge badge-activo">Activo</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleRol", "Role")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Role")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="alert('El rol Administrador no se puede eliminar (Prototipo)');">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Gerente</td>
-                        <td>Supervision operativa y acceso a reportes</td>
-                        <td>1</td>
-                        <td>11 de 14</td>
-                        <td><span class="badge badge-activo">Activo</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleRol", "Role")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Role")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este rol?')) { alert('Rol eliminado (Prototipo)'); window.location.reload(); }">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Recepcionista</td>
-                        <td>Gestion de reservas, clientes y habitaciones</td>
-                        <td>4</td>
-                        <td>6 de 14</td>
-                        <td><span class="badge badge-activo">Activo</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleRol", "Role")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Role")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este rol?')) { alert('Rol eliminado (Prototipo)'); window.location.reload(); }">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Personal</td>
-                        <td>Acceso a housekeeping y punto de venta</td>
-                        <td>8</td>
-                        <td>3 de 14</td>
-                        <td><span class="badge badge-activo">Activo</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleRol", "Role")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Role")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este rol?')) { alert('Rol eliminado (Prototipo)'); window.location.reload(); }">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Auditor</td>
-                        <td>Consulta de bitacora y reportes, sin edicion</td>
-                        <td>0</td>
-                        <td>2 de 14</td>
-                        <td><span class="badge badge-inactivo">Inactivo</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleRol", "Role")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Role")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar este rol?')) { alert('Rol eliminado (Prototipo)'); window.location.reload(); }">Eliminar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Info adicional -->
-        <div class="info-box">
-            <h3>Informacion</h3>
-            <ul>
-                <li><strong>Administrador:</strong> Rol protegido del sistema, no puede eliminarse ni quedarse sin usuarios</li>
-                <li><strong>Modulos con Acceso:</strong> Cantidad de modulos habilitados sobre el total disponible</li>
-                <li><strong>Rol Inactivo:</strong> Se conserva la definicion pero ningun usuario puede iniciar sesion con el</li>
-                <li><strong>Eliminar:</strong> Solo es posible si el rol no tiene usuarios asignados</li>
-            </ul>
-        </div>
-    </div>
-</body>
-</html>
+<div class="info-box">
+    <h3>Por que los roles no se crean aqui</h3>
+    <ul>
+        <li>Los roles no son una tabla: son el CHECK de <strong>USUARIO.Rol</strong> en la base de datos</li>
+        <li>Agregar un rol nuevo exige modificar ese CHECK en el script de la base</li>
+        <li>Para cambiar el rol de una persona use el modulo de <strong>Usuarios</strong></li>
+    </ul>
+</div>

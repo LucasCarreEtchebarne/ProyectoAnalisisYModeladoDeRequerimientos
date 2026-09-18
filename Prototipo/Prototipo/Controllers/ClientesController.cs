@@ -1,31 +1,115 @@
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Prototipo.Common;
+using Prototipo.Infrastructure;
+using Prototipo.Models;
+using Prototipo.Services;
 
 namespace Prototipo.Controllers
 {
-    public class ClientesController : Controller
+    [Autorizar(Roles = "Administrador,Recepcionista")]
+    public class ClientesController : ControladorBase
     {
-        // GET: Clientes (Lista de clientes)
-        public ActionResult Clientes()
+        private ClienteService Servicio
         {
-            return View();
+            get { return new ClienteService(Db); }
         }
 
-        // GET: Clientes/Crear
+        public ActionResult Clientes(string estado, string busqueda)
+        {
+            ViewBag.Estado = estado;
+            ViewBag.Busqueda = busqueda;
+            return View(Servicio.Listar(estado, busqueda));
+        }
+
+        public ActionResult Index()
+        {
+            return RedirectToAction("Clientes");
+        }
+
+        public ActionResult DetalleCliente(int id)
+        {
+            var cliente = Servicio.Obtener(id);
+            if (cliente == null)
+            {
+                MensajeError(Mensajes.NoEncontrado);
+                return RedirectToAction("Clientes");
+            }
+
+            return View(cliente);
+        }
+
         public ActionResult Crear()
         {
-            return View();
+            return View(new Cliente { EstadoCliente = Estados.Cliente.Activo });
         }
 
-        // GET: Clientes/Editar
-        public ActionResult Editar()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Crear(Cliente cliente)
         {
-            return View();
+            if (!ModelState.IsValid)
+            {
+                return View(cliente);
+            }
+
+            var resultado = Servicio.Crear(cliente);
+            if (!resultado.Exito)
+            {
+                ModelState.AddModelError(string.Empty, resultado.Mensaje);
+                return View(cliente);
+            }
+
+            MensajeExito(resultado.Mensaje);
+            return RedirectToAction("Clientes");
         }
 
-        // GET: Clientes/DetalleCliente
-        public ActionResult DetalleCliente()
+        public ActionResult Editar(int id)
         {
-            return View();
+            var cliente = Servicio.Obtener(id);
+            if (cliente == null)
+            {
+                MensajeError(Mensajes.NoEncontrado);
+                return RedirectToAction("Clientes");
+            }
+
+            return View(cliente);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Editar(Cliente cliente)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(cliente);
+            }
+
+            var resultado = Servicio.Actualizar(cliente);
+            if (!resultado.Exito)
+            {
+                ModelState.AddModelError(string.Empty, resultado.Mensaje);
+                return View(cliente);
+            }
+
+            MensajeExito(resultado.Mensaje);
+            return RedirectToAction("Clientes");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Inactivar(int id)
+        {
+            var resultado = Servicio.Inactivar(id);
+            if (resultado.Exito)
+            {
+                MensajeExito(resultado.Mensaje);
+            }
+            else
+            {
+                MensajeError(resultado.Mensaje);
+            }
+
+            return RedirectToAction("Clientes");
         }
     }
 }

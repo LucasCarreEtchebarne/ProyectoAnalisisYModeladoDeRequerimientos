@@ -1,253 +1,76 @@
+@using Prototipo.Common
 @{
-    ViewBag.Title = "Predicciones";
-    Layout = null;
+    ViewBag.Title = "Proyecciones";
+    ViewBag.Modulo = "IA";
+    var criticos = ViewBag.InsumosCriticos as List<Prototipo.Models.Inventario> ?? new List<Prototipo.Models.Inventario>();
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Proyecciones Operativas</h1>
+    <a href="@Url.Action("IA", "IA")" class="btn-secondary">Volver al asistente</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link active">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Predicciones de Demanda</h1>
-            <a href="@Url.Action("IA", "IA")" class="btn-secondary">Volver al Asistente</a>
-        </div>
-
-        <!-- Resumen de Proyecciones -->
-        <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <h3>86%</h3>
-                <p>Ocupacion Proyectada</p>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>$54,600</h3>
-                <p>Ingresos Estimados</p>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>+12%</h3>
-                <p>Variacion vs Mes Anterior</p>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>7</h3>
-                <p>Alertas Preventivas</p>
-            </div>
-        </div>
-
-        <!-- Filtros -->
-        <div class="form-container">
-            <h3>Parametros de Prediccion</h3>
-            <form class="module-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="horizonte">Horizonte de Prediccion</label>
-                        <select id="horizonte">
-                            <option value="7">Proximos 7 dias</option>
-                            <option value="14">Proximos 14 dias</option>
-                            <option value="30">Proximos 30 dias</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="areaPrediccion">Area</label>
-                        <select id="areaPrediccion">
-                            <option value="">Todas</option>
-                            <option value="Hospedaje">Hospedaje</option>
-                            <option value="Restaurante">Restaurante</option>
-                            <option value="Inventario">Inventario</option>
-                        </select>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- Prediccion de Ocupacion -->
-        <div class="table-container">
-            <h3>Ocupacion Proyectada por Dia</h3>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Dia</th>
-                        <th>Ocupacion Estimada</th>
-                        <th>Habitaciones Ocupadas</th>
-                        <th>Ingresos Estimados</th>
-                        <th>Confianza</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2024-01-18</td>
-                        <td>Jueves</td>
-                        <td>72%</td>
-                        <td>37</td>
-                        <td>$6,882</td>
-                        <td><span class="badge badge-alta">Alta</span></td>
-                    </tr>
-                    <tr>
-                        <td>2024-01-19</td>
-                        <td>Viernes</td>
-                        <td>86%</td>
-                        <td>45</td>
-                        <td>$8,370</td>
-                        <td><span class="badge badge-alta">Alta</span></td>
-                    </tr>
-                    <tr>
-                        <td>2024-01-20</td>
-                        <td>Sabado</td>
-                        <td>94%</td>
-                        <td>49</td>
-                        <td>$9,114</td>
-                        <td><span class="badge badge-alta">Alta</span></td>
-                    </tr>
-                    <tr>
-                        <td>2024-01-21</td>
-                        <td>Domingo</td>
-                        <td>68%</td>
-                        <td>35</td>
-                        <td>$6,510</td>
-                        <td><span class="badge badge-media">Media</span></td>
-                    </tr>
-                    <tr>
-                        <td>2024-01-22</td>
-                        <td>Lunes</td>
-                        <td>54%</td>
-                        <td>28</td>
-                        <td>$5,208</td>
-                        <td><span class="badge badge-media">Media</span></td>
-                    </tr>
-                    <tr>
-                        <td>2024-01-23</td>
-                        <td>Martes</td>
-                        <td>58%</td>
-                        <td>30</td>
-                        <td>$5,580</td>
-                        <td><span class="badge badge-baja">Baja</span></td>
-                    </tr>
-                    <tr>
-                        <td>2024-01-24</td>
-                        <td>Miercoles</td>
-                        <td>63%</td>
-                        <td>33</td>
-                        <td>$6,138</td>
-                        <td><span class="badge badge-baja">Baja</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Prediccion de Inventario -->
-        <div class="table-container">
-            <h3>Consumo Proyectado de Inventario</h3>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Stock Actual</th>
-                        <th>Consumo Semanal Estimado</th>
-                        <th>Dias de Cobertura</th>
-                        <th>Reposicion Sugerida</th>
-                        <th>Prioridad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Cerveza Artesanal</td>
-                        <td>25</td>
-                        <td>42</td>
-                        <td>4</td>
-                        <td>80 unidades</td>
-                        <td><span class="badge badge-agotado">Urgente</span></td>
-                    </tr>
-                    <tr>
-                        <td>Shampoo</td>
-                        <td>30</td>
-                        <td>48</td>
-                        <td>4</td>
-                        <td>100 unidades</td>
-                        <td><span class="badge badge-agotado">Urgente</span></td>
-                    </tr>
-                    <tr>
-                        <td>Detergente Industrial</td>
-                        <td>0</td>
-                        <td>12</td>
-                        <td>0</td>
-                        <td>40 unidades</td>
-                        <td><span class="badge badge-agotado">Urgente</span></td>
-                    </tr>
-                    <tr>
-                        <td>Toallas de Bano</td>
-                        <td>150</td>
-                        <td>35</td>
-                        <td>30</td>
-                        <td>No requerida</td>
-                        <td><span class="badge badge-disponible">Normal</span></td>
-                    </tr>
-                    <tr>
-                        <td>Cafe Gourmet</td>
-                        <td>80</td>
-                        <td>28</td>
-                        <td>20</td>
-                        <td>50 unidades</td>
-                        <td><span class="badge badge-bajostock">Media</span></td>
-                    </tr>
-                    <tr>
-                        <td>Arroz Premium</td>
-                        <td>120</td>
-                        <td>30</td>
-                        <td>28</td>
-                        <td>No requerida</td>
-                        <td><span class="badge badge-disponible">Normal</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Advertencia -->
-        <div class="alert-box alert-warning">
-            <h3>Atencion</h3>
-            <p>Las predicciones se basan en datos historicos y pueden variar ante eventos no previstos como cancelaciones masivas, feriados o promociones. Utilicelas como apoyo a la decision, no como valores definitivos.</p>
-        </div>
+<div class="dashboard-grid">
+    <div class="dashboard-card">
+        <h3>@ViewBag.ReservasProximaSemana</h3>
+        <p>Reservas con entrada en los proximos 7 dias</p>
     </div>
-</body>
-</html>
+    <div class="dashboard-card">
+        <h3>@ViewBag.OcupacionProyectada %</h3>
+        <p>Ocupacion proyectada de la semana</p>
+    </div>
+    <div class="dashboard-card">
+        <h3>@Formato.Colones((decimal)ViewBag.IngresoMesActual)</h3>
+        <p>Ingreso acumulado del mes</p>
+    </div>
+    <div class="dashboard-card">
+        <h3>@Formato.Colones((decimal)ViewBag.IngresoProyectado)</h3>
+        <p>Proyeccion de cierre del mes</p>
+    </div>
+    <div class="dashboard-card">
+        <h3>@Formato.Colones((decimal)ViewBag.IngresoMesAnterior)</h3>
+        <p>Ingreso del mes anterior</p>
+    </div>
+</div>
+
+<div class="detail-section">
+    <h3>Insumos a reponer</h3>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Stock actual</th>
+                    <th>Stock minimo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (criticos.Count == 0)
+                {
+                    <tr><td colspan="4">No hay insumos bajo el minimo.</td></tr>
+                }
+                @foreach (var producto in criticos)
+                {
+                    <tr>
+                        <td>@producto.NombreProducto</td>
+                        <td>@producto.Stock @producto.UnidadMedida</td>
+                        <td>@producto.StockMinimo</td>
+                        <td class="table-actions">
+                            <a href="@Url.Action("DetalleProducto", "Inventario", new { id = producto.IdProducto })" class="btn-view">Reponer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="info-box">
+    <h3>Como se calculan estas cifras</h3>
+    <ul>
+        <li><strong>Ocupacion proyectada:</strong> noches comprometidas de la semana entre habitaciones por 7 dias</li>
+        <li><strong>Proyeccion de cierre:</strong> proyeccion lineal del ingreso acumulado sobre los dias del mes</li>
+        <li>Son estimaciones directas sobre el historico de la base, no un modelo de inferencia</li>
+    </ul>
+</div>

@@ -1,149 +1,96 @@
+@using Prototipo.Common
+@model List<Prototipo.Models.Usuario>
 @{
-    ViewBag.Title = "Gestion de Usuarios";
-    Layout = null;
+    ViewBag.Title = "Usuarios";
+    ViewBag.Modulo = "Usuarios";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
-
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link active">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Gestion de Usuarios</h1>
-            <div style="display: flex; gap: 0.8rem;">
-                <a href="@Url.Action("Roles", "Role")" class="btn-secondary">Roles y Permisos</a>
-                <a href="@Url.Action("Crear", "Usuarios")" class="btn-primary">Nuevo Usuario</a>
-            </div>
-        </div>
-
-        <!-- Filtros -->
-        <div class="filter-container">
-            <label for="filtroRol">Filtrar por Rol:</label>
-            <select id="filtroRol" class="filter-select">
-                <option value="">Todos</option>
-                <option value="Administrador">Administrador</option>
-                <option value="Recepcionista">Recepcionista</option>
-                <option value="Gerente">Gerente</option>
-                <option value="Personal">Personal</option>
-            </select>
-
-            <label for="filtroEstado">Filtrar por Estado:</label>
-            <select id="filtroEstado" class="filter-select">
-                <option value="">Todos</option>
-                <option value="Activo">Activo</option>
-                <option value="Bloqueado">Bloqueado</option>
-                <option value="Inactivo">Inactivo</option>
-            </select>
-        </div>
-
-        <!-- Tabla de usuarios -->
-        <div class="table-container">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre Completo</th>
-                        <th>Nombre Usuario</th>
-                        <th>Correo Electronico</th>
-                        <th>Rol</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Juan Perez Gomez</td>
-                        <td>jperez</td>
-                        <td>jperez@colibri.com</td>
-                        <td>Administrador</td>
-                        <td><span class="badge badge-activo">Activo</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleUsuario", "Usuarios")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Usuarios")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de bloquear este usuario?')) alert('Usuario bloqueado exitosamente (Prototipo)');">Bloquear</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Maria Rodriguez Lopez</td>
-                        <td>mrodriguez</td>
-                        <td>mrodriguez@colibri.com</td>
-                        <td>Recepcionista</td>
-                        <td><span class="badge badge-activo">Activo</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleUsuario", "Usuarios")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Usuarios")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de bloquear este usuario?')) alert('Usuario bloqueado exitosamente (Prototipo)');">Bloquear</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Carlos Sanchez Mora</td>
-                        <td>csanchez</td>
-                        <td>csanchez@colibri.com</td>
-                        <td>Gerente</td>
-                        <td><span class="badge badge-bloqueado">Bloqueado</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleUsuario", "Usuarios")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Usuarios")" class="btn-edit">Editar</a>
-                            <button class="btn-secondary" onclick="if(confirm('Esta seguro de desbloquear este usuario?')) alert('Usuario desbloqueado exitosamente (Prototipo)');">Desbloquear</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Ana Martinez Cruz</td>
-                        <td>amartinez</td>
-                        <td>amartinez@colibri.com</td>
-                        <td>Personal</td>
-                        <td><span class="badge badge-activo">Activo</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleUsuario", "Usuarios")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Usuarios")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de bloquear este usuario?')) alert('Usuario bloqueado exitosamente (Prototipo)');">Bloquear</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<div class="module-header">
+    <h1>Gestion de Usuarios</h1>
+    <div>
+        <a href="@Url.Action("Roles", "Role")" class="btn-secondary">Ver roles</a>
+        <a href="@Url.Action("Crear", "Usuarios")" class="btn-primary">Nuevo Usuario</a>
     </div>
-</body>
-</html>
+</div>
+
+<div class="filter-container">
+    @using (Html.BeginForm("Usuarios", "Usuarios", FormMethod.Get))
+    {
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado" class="filter-select">
+            <option value="">Todos</option>
+            @foreach (var estado in Estados.Usuario.Todos)
+            {
+                <option value="@estado" selected="@(((string)ViewBag.Estado) == estado)">@estado</option>
+            }
+        </select>
+
+        <label for="rol">Rol:</label>
+        <select id="rol" name="rol" class="filter-select">
+            <option value="">Todos</option>
+            @foreach (var rol in Estados.Roles.Todos)
+            {
+                <option value="@rol" selected="@(((string)ViewBag.Rol) == rol)">@rol</option>
+            }
+        </select>
+
+        <label for="busqueda">Buscar:</label>
+        <input type="text" id="busqueda" name="busqueda" class="filter-select" value="@ViewBag.Busqueda" placeholder="Nombre, usuario o correo" />
+
+        <button type="submit" class="btn-primary">Filtrar</button>
+    }
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre completo</th>
+                <th>Usuario</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Ultimo acceso</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="8">No hay usuarios que coincidan con el filtro.</td></tr>
+            }
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>@usuario.IdUsuario</td>
+                    <td>@usuario.NombreCompleto</td>
+                    <td>@usuario.NombreUsuario</td>
+                    <td>@usuario.CorreoElectronico</td>
+                    <td>@usuario.Rol</td>
+                    <td>@Formato.FechaHora(usuario.FechaUltimoAcceso)</td>
+                    <td>
+                        <span class="@Formato.BadgeEstado(usuario.Estado)">@usuario.Estado</span>
+                        @if (usuario.IntentosFallidos > 0)
+                        {
+                            <text>(@usuario.IntentosFallidos intento(s) fallido(s))</text>
+                        }
+                    </td>
+                    <td class="table-actions">
+                        <a href="@Url.Action("DetalleUsuario", "Usuarios", new { id = usuario.IdUsuario })" class="btn-view">Consultar</a>
+                        <a href="@Url.Action("Editar", "Usuarios", new { id = usuario.IdUsuario })" class="btn-edit">Editar</a>
+                        @if (usuario.Estado != Estados.Usuario.Inactivo)
+                        {
+                            using (Html.BeginForm("Inactivar", "Usuarios", new { id = usuario.IdUsuario }, FormMethod.Post, new { style = "display:inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-delete"
+                                        onclick="return confirm('El usuario se inactiva, no se elimina. Continuar?');">Inactivar</button>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

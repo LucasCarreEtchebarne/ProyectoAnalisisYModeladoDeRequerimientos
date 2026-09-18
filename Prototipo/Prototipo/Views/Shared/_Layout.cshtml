@@ -1,15 +1,94 @@
+@using Prototipo.Common
+@using Prototipo.Infrastructure
+@{
+    var rol = SesionActual.Rol;
+    Func<string[], bool> puede = roles => roles.Contains(rol);
+}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
-
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <title>@ViewBag.Title - El Colibri Hotel &amp; Steak House</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="~/Content/Site.css?v=3" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    @RenderBody()
+    <nav class="navbar-main">
+        <div class="navbar-main-brand">
+            <h2>El Colibri Hotel &amp; Steak House</h2>
+            <span class="navbar-subtitle">Sistema de Gestion</span>
+        </div>
+        <div class="navbar-main-user">
+            <span>@SesionActual.NombreCompleto (@rol)</span>
+            @using (Html.BeginForm("CerrarSesion", "Account", FormMethod.Post, new { style = "display:inline" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-logout">Cerrar Sesion</button>
+            }
+        </div>
+    </nav>
+
+    <nav class="modules-navbar">
+        <a href="@Url.Action("Main", "Main")" class="module-link @(ViewBag.Modulo == "Dashboard" ? "active" : "")">Dashboard</a>
+        @if (puede(new[] { Estados.Roles.Administrador, Estados.Roles.Recepcionista }))
+        {
+            <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link @(ViewBag.Modulo == "Habitaciones" ? "active" : "")">Habitaciones</a>
+            <a href="@Url.Action("Reservas", "Reservas")" class="module-link @(ViewBag.Modulo == "Reservas" ? "active" : "")">Reservas</a>
+            <a href="@Url.Action("Eventos", "Eventos")" class="module-link @(ViewBag.Modulo == "Eventos" ? "active" : "")">Eventos</a>
+        }
+        @if (puede(new[] { Estados.Roles.Administrador, Estados.Roles.Mesero }))
+        {
+            <a href="@Url.Action("Inventario", "Inventario")" class="module-link @(ViewBag.Modulo == "Inventario" ? "active" : "")">Inventario</a>
+            <a href="@Url.Action("Mesas", "Mesas")" class="module-link @(ViewBag.Modulo == "Mesas" ? "active" : "")">Punto de Venta</a>
+        }
+        @if (puede(new[] { Estados.Roles.Administrador, Estados.Roles.Mesero, Estados.Roles.Recepcionista }))
+        {
+            <a href="@Url.Action("Pedidos", "Pedidos")" class="module-link @(ViewBag.Modulo == "Pedidos" ? "active" : "")">Pedidos</a>
+        }
+        @if (puede(new[] { Estados.Roles.Administrador, Estados.Roles.Recepcionista }))
+        {
+            <a href="@Url.Action("Reportes", "Reportes")" class="module-link @(ViewBag.Modulo == "Reportes" ? "active" : "")">Reportes</a>
+        }
+        @if (puede(new[] { Estados.Roles.Administrador, Estados.Roles.Housekeeping, Estados.Roles.Recepcionista }))
+        {
+            <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link @(ViewBag.Modulo == "Housekeeping" ? "active" : "")">Housekeeping</a>
+        }
+        @if (puede(new[] { Estados.Roles.Administrador, Estados.Roles.Recepcionista }))
+        {
+            <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link @(ViewBag.Modulo == "Facturacion" ? "active" : "")">Facturacion</a>
+        }
+        @if (puede(new[] { Estados.Roles.Administrador, Estados.Roles.Recepcionista, Estados.Roles.Mesero }))
+        {
+            <a href="@Url.Action("Pagos", "Pagos")" class="module-link @(ViewBag.Modulo == "Pagos" ? "active" : "")">Pagos</a>
+        }
+        @if (rol == Estados.Roles.Administrador)
+        {
+            <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link @(ViewBag.Modulo == "Bitacora" ? "active" : "")">Bitacora</a>
+        }
+        @if (puede(new[] { Estados.Roles.Administrador, Estados.Roles.Recepcionista }))
+        {
+            <a href="@Url.Action("Clientes", "Clientes")" class="module-link @(ViewBag.Modulo == "Clientes" ? "active" : "")">Clientes</a>
+        }
+        @if (rol == Estados.Roles.Administrador)
+        {
+            <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link @(ViewBag.Modulo == "Usuarios" ? "active" : "")">Usuarios</a>
+        }
+        <a href="@Url.Action("IA", "IA")" class="module-link @(ViewBag.Modulo == "IA" ? "active" : "")">IA</a>
+    </nav>
+
+    <div class="main-content-area">
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert-box">@TempData["MensajeExito"]</div>
+        }
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert-box alert-warning">@TempData["MensajeError"]</div>
+        }
+
+        @RenderBody()
+    </div>
 
     @RenderSection("scripts", required: false)
 </body>

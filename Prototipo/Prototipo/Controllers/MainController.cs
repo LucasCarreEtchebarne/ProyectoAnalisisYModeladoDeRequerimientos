@@ -1,13 +1,20 @@
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Prototipo.Infrastructure;
+using Prototipo.Services;
 
 namespace Prototipo.Controllers
 {
-    public class MainController : Controller
+    public class MainController : ControladorBase
     {
-        // GET: Main/Main
         public ActionResult Main()
         {
-            return View();
+            var modelo = new ReporteService(Db).ObtenerDashboard();
+            return View(modelo);
+        }
+
+        public ActionResult Index()
+        {
+            return RedirectToAction("Main");
         }
     }
 }

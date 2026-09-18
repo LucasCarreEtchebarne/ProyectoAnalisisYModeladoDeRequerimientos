@@ -1,31 +1,53 @@
+﻿using System.Linq;
 using System.Web.Mvc;
+using Prototipo.Common;
+using Prototipo.Infrastructure;
 
 namespace Prototipo.Controllers
 {
-    public class RoleController : Controller
+    [Autorizar(Roles = "Administrador")]
+    public class RoleController : ControladorBase
     {
-        // GET: Role/Roles
         public ActionResult Roles()
         {
-            return View();
+            var conteos = Db.Usuarios
+                .GroupBy(u => u.Rol)
+                .Select(g => new { Rol = g.Key, Cantidad = g.Count() })
+                .ToDictionary(g => g.Rol, g => g.Cantidad);
+
+            ViewBag.Conteos = conteos;
+            return View(Estados.Roles.Todos);
         }
 
-        // GET: Role/Crear
+        public ActionResult Index()
+        {
+            return RedirectToAction("Roles");
+        }
+
+        public ActionResult DetalleRol(string rol)
+        {
+            if (string.IsNullOrEmpty(rol) || !Estados.Roles.Todos.Contains(rol))
+            {
+                MensajeError("El rol indicado no existe.");
+                return RedirectToAction("Roles");
+            }
+
+            ViewBag.Rol = rol;
+            return View(Db.Usuarios.Where(u => u.Rol == rol).OrderBy(u => u.NombreCompleto).ToList());
+        }
+
         public ActionResult Crear()
         {
-            return View();
+            MensajeError("Los roles estan fijados por la base de datos (CHECK de USUARIO.Rol) " +
+                         "y no se crean desde la aplicacion.");
+            return RedirectToAction("Roles");
         }
 
-        // GET: Role/Editar
         public ActionResult Editar()
         {
-            return View();
-        }
-
-        // GET: Role/DetalleRol
-        public ActionResult DetalleRol()
-        {
-            return View();
+            MensajeError("Los roles estan fijados por la base de datos y no se editan desde la aplicacion. " +
+                         "Para cambiar el rol de una persona use el modulo de Usuarios.");
+            return RedirectToAction("Roles");
         }
     }
 }

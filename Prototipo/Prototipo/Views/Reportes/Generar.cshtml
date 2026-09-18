@@ -1,137 +1,83 @@
+@using Prototipo.Common
+@model Prototipo.ViewModels.ReporteViewModel
 @{
     ViewBag.Title = "Generar Reporte";
-    Layout = null;
+    ViewBag.Modulo = "Reportes";
+    var tipos = ViewBag.Tipos as Dictionary<string, string> ?? Prototipo.ViewModels.ReporteViewModel.Tipos;
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>@(string.IsNullOrEmpty(Model.Tipo) ? "Generar Reporte" : Model.Titulo)</h1>
+    <a href="@Url.Action("Reportes", "Reportes")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
+<div class="filter-container">
+    @using (Html.BeginForm("Generar", "Reportes", FormMethod.Get))
+    {
+        <label for="tipo">Reporte:</label>
+        <select id="tipo" name="tipo" class="filter-select" required>
+            <option value="">Seleccione</option>
+            @foreach (var tipo in tipos)
+            {
+                <option value="@tipo.Key" selected="@(Model.Tipo == tipo.Key)">@tipo.Value</option>
+            }
+        </select>
 
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link active">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
+        <label for="desde">Desde:</label>
+        <input type="date" id="desde" name="desde" class="filter-select" value="@Model.Desde.ToString("yyyy-MM-dd")" />
 
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Generar Nuevo Reporte</h1>
-        </div>
+        <label for="hasta">Hasta:</label>
+        <input type="date" id="hasta" name="hasta" class="filter-select" value="@Model.Hasta.ToString("yyyy-MM-dd")" />
 
-        <!-- Formulario de Generacion -->
-        <div class="form-container">
-            <form class="module-form" method="post" action="@Url.Action("Reportes", "Reportes")">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nombreReporte">Nombre del Reporte</label>
-                        <input type="text" id="nombreReporte" name="nombreReporte" placeholder="Ej: Ocupacion Mensual Febrero" required />
-                    </div>
+        <button type="submit" class="btn-primary">Generar</button>
+    }
+</div>
 
-                    <div class="form-group">
-                        <label for="tipoReporte">Tipo de Reporte</label>
-                        <select id="tipoReporte" name="tipoReporte" required>
-                            <option value="">Seleccione un tipo...</option>
-                            <option value="Ocupacion">Ocupacion</option>
-                            <option value="Ingresos">Ingresos</option>
-                            <option value="Ventas">Ventas de Restaurante</option>
-                            <option value="Inventario">Inventario</option>
-                            <option value="Housekeeping">Housekeeping</option>
-                            <option value="Clientes">Clientes</option>
-                        </select>
-                    </div>
-                </div>
+@if (!string.IsNullOrEmpty(Model.Tipo) && Model.Encabezados.Count > 0)
+{
+    <div class="detail-section">
+        <p>
+            Periodo: @Formato.Fecha(Model.Desde) al @Formato.Fecha(Model.Hasta)
+            &mdash; @Model.Filas.Count fila(s)
+        </p>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="periodo">Periodo</label>
-                        <select id="periodo" name="periodo" required>
-                            <option value="">Seleccione un periodo...</option>
-                            <option value="Diario">Diario</option>
-                            <option value="Semanal">Semanal</option>
-                            <option value="Mensual">Mensual</option>
-                            <option value="Anual">Anual</option>
-                            <option value="Personalizado">Personalizado</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="formato">Formato de Salida</label>
-                        <select id="formato" name="formato" required>
-                            <option value="">Seleccione un formato...</option>
-                            <option value="PDF">PDF</option>
-                            <option value="Excel">Excel</option>
-                            <option value="CSV">CSV</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fechaInicio">Fecha Inicio</label>
-                        <input type="date" id="fechaInicio" name="fechaInicio" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="fechaFin">Fecha Fin</label>
-                        <input type="date" id="fechaFin" name="fechaFin" required />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="notas">Notas del Reporte</label>
-                    <textarea id="notas" name="notas" rows="4" placeholder="Contexto o comentarios que acompanaran al reporte..."></textarea>
-                </div>
-
-                <div class="form-actions">
-                    <a href="@Url.Action("Reportes", "Reportes")" class="btn-secondary">Cancelar</a>
-                    <button type="button" class="btn-primary" onclick="alert('Reporte generado exitosamente (Prototipo)'); window.location.href='@Url.Action("Reportes", "Reportes")';">Generar Reporte</button>
-                </div>
-            </form>
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        @foreach (var encabezado in Model.Encabezados)
+                        {
+                            <th>@encabezado</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Filas.Count == 0)
+                    {
+                        <tr><td colspan="@Model.Encabezados.Count">No hay datos para el periodo seleccionado.</td></tr>
+                    }
+                    @foreach (var fila in Model.Filas)
+                    {
+                        <tr>
+                            @foreach (var celda in fila)
+                            {
+                                <td>@celda</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
 
-        <!-- Info adicional -->
-        <div class="info-box">
-            <h3>Informacion</h3>
-            <ul>
-                <li><strong>Ocupacion:</strong> Noches vendidas, porcentaje de ocupacion y tarifa promedio diaria</li>
-                <li><strong>Ingresos:</strong> Desglose de ingresos por departamento y forma de pago</li>
-                <li><strong>Ventas de Restaurante:</strong> Consumo del salon, bar y room service</li>
-                <li><strong>Inventario:</strong> Consumo, mermas y productos bajo el stock minimo</li>
-                <li><strong>Periodo Personalizado:</strong> Permite definir un rango de fechas libre</li>
-            </ul>
-        </div>
+        @if (!string.IsNullOrEmpty(Model.Resumen))
+        {
+            <div class="totales-box">
+                <div class="totales-row"><strong>@Model.Resumen</strong></div>
+            </div>
+        }
     </div>
-</body>
-</html>
+}
+else if (!string.IsNullOrEmpty(Model.Resumen))
+{
+    <div class="alert-box">@Model.Resumen</div>
+}

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="packages\EntityFramework.6.5.2\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.5.2\build\EntityFramework.props')" />
   <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
@@ -46,6 +46,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BCrypt.Net-Next">
+      <HintPath>packages\BCrypt.Net-Next.4.0.3\lib\net48\BCrypt.Net-Next.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.5.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -375,6 +378,55 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Infrastructure\AutorizarAttribute.cs" />
+    <Compile Include="Infrastructure\ControladorBase.cs" />
+    <Compile Include="Services\ClienteService.cs" />
+    <Compile Include="Services\ConsultaIAService.cs" />
+    <Compile Include="Services\EventoService.cs" />
+    <Compile Include="Services\FacturaService.cs" />
+    <Compile Include="Services\HabitacionService.cs" />
+    <Compile Include="Services\HousekeepingService.cs" />
+    <Compile Include="Services\InventarioService.cs" />
+    <Compile Include="Services\MenuService.cs" />
+    <Compile Include="Services\MesaService.cs" />
+    <Compile Include="Services\PagoService.cs" />
+    <Compile Include="Services\PedidoService.cs" />
+    <Compile Include="Services\ReporteService.cs" />
+    <Compile Include="Services\ReservaService.cs" />
+    <Compile Include="ViewModels\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\PedidoFormViewModel.cs" />
+    <Compile Include="ViewModels\ReporteViewModel.cs" />
+    <Compile Include="Common\Estados.cs" />
+    <Compile Include="Common\Formato.cs" />
+    <Compile Include="Common\Mensajes.cs" />
+    <Compile Include="Data\HotelColibriContext.cs" />
+    <Compile Include="Infrastructure\Seguridad.cs" />
+    <Compile Include="Infrastructure\SesionActual.cs" />
+    <Compile Include="Models\Bitacora.cs" />
+    <Compile Include="Models\Cliente.cs" />
+    <Compile Include="Models\ConsultaIA.cs" />
+    <Compile Include="Models\DetalleFactura.cs" />
+    <Compile Include="Models\DetallePedido.cs" />
+    <Compile Include="Models\EspacioEvento.cs" />
+    <Compile Include="Models\Evento.cs" />
+    <Compile Include="Models\Factura.cs" />
+    <Compile Include="Models\Habitacion.cs" />
+    <Compile Include="Models\Inventario.cs" />
+    <Compile Include="Models\Mesa.cs" />
+    <Compile Include="Models\MovimientoInventario.cs" />
+    <Compile Include="Models\Pago.cs" />
+    <Compile Include="Models\Pedido.cs" />
+    <Compile Include="Models\ProductoMenu.cs" />
+    <Compile Include="Models\RecetaProducto.cs" />
+    <Compile Include="Models\Reserva.cs" />
+    <Compile Include="Models\ReservaMesa.cs" />
+    <Compile Include="Models\TareaHousekeeping.cs" />
+    <Compile Include="Models\Usuario.cs" />
+    <Compile Include="Services\BitacoraService.cs" />
+    <Compile Include="Services\ResultadoOperacion.cs" />
+    <Compile Include="Services\ServicioBase.cs" />
+    <Compile Include="Services\UsuarioService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BitacoraController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />

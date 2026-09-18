@@ -1,211 +1,52 @@
+@using Prototipo.Common
+@model List<Prototipo.Models.Mesa>
 @{
     ViewBag.Title = "Punto de Venta";
-    Layout = null;
+    ViewBag.Modulo = "Mesas";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Punto de Venta - Mesas</h1>
+    <a href="@Url.Action("Crear", "Pedidos")" class="btn-primary">Nuevo Pedido</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
+<div class="filter-container">
+    @using (Html.BeginForm("Mesas", "Mesas", FormMethod.Get))
+    {
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado" class="filter-select">
+            <option value="">Todas</option>
+            @foreach (var estado in Estados.Mesa.Todos)
+            {
+                <option value="@estado" selected="@(((string)ViewBag.Estado) == estado)">@estado</option>
+            }
+        </select>
+        <button type="submit" class="btn-primary">Filtrar</button>
+    }
+</div>
 
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link active">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Punto de Venta - Salon</h1>
-            <div style="display: flex; gap: 0.8rem;">
-                <a href="@Url.Action("Pedidos", "Pedidos")" class="btn-secondary">Ver Pedidos</a>
-                <a href="@Url.Action("Crear", "Pedidos")" class="btn-primary">Nuevo Pedido</a>
+<div class="mesas-grid">
+    @foreach (var mesa in Model)
+    {
+        <div class="mesa-card">
+            <h3>Mesa @mesa.NumeroMesa</h3>
+            <p>Capacidad: @mesa.Capacidad persona(s)</p>
+            <p><span class="@Formato.BadgeEstado(mesa.EstadoMesa)">@mesa.EstadoMesa</span></p>
+            @if (!string.IsNullOrEmpty(mesa.Descripcion))
+            {
+                <p>@mesa.Descripcion</p>
+            }
+            <div class="mesa-card-actions">
+                <a href="@Url.Action("DetalleMesa", "Mesas", new { id = mesa.IdMesa })" class="btn-view">Consultar</a>
+                @if (mesa.EstadoMesa != Estados.Mesa.Ocupada)
+                {
+                    <a href="@Url.Action("Crear", "Pedidos", new { idMesa = mesa.IdMesa })" class="btn-primary">Tomar pedido</a>
+                }
             </div>
         </div>
-
-        <!-- Resumen del Turno -->
-        <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <h3>6</h3>
-                <p>Mesas Ocupadas</p>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>4</h3>
-                <p>Mesas Libres</p>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>9</h3>
-                <p>Pedidos Abiertos</p>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>$1,845.50</h3>
-                <p>Ventas del Turno</p>
-            </div>
-        </div>
-
-        <!-- Filtros -->
-        <div class="form-container">
-            <h3>Filtros de Busqueda</h3>
-            <form class="module-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="filtroZona">Zona del Salon</label>
-                        <select id="filtroZona">
-                            <option value="">Todas</option>
-                            <option value="Terraza">Terraza</option>
-                            <option value="SalonPrincipal">Salon Principal</option>
-                            <option value="Bar">Bar</option>
-                            <option value="Privado">Salon Privado</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="filtroEstadoMesa">Estado de la Mesa</label>
-                        <select id="filtroEstadoMesa">
-                            <option value="">Todos</option>
-                            <option value="Libre">Libre</option>
-                            <option value="Ocupada">Ocupada</option>
-                            <option value="Reservada">Reservada</option>
-                            <option value="CuentaPendiente">Cuenta Pendiente</option>
-                        </select>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- Mapa de Mesas -->
-        <div class="table-container">
-            <h3>Mapa de Mesas</h3>
-            <div class="mesas-grid">
-                <div class="mesa-card mesa-libre">
-                    <h3>Mesa 1</h3>
-                    <p class="mesa-info">Terraza - 2 personas</p>
-                    <span class="badge badge-libre">Libre</span>
-                    <div class="mesa-card-actions">
-                        <a href="@Url.Action("Crear", "Pedidos")" class="btn-primary">Abrir Pedido</a>
-                        <a href="@Url.Action("DetalleMesa", "Mesas")" class="btn-view">Consultar</a>
-                    </div>
-                </div>
-
-                <div class="mesa-card mesa-ocupada">
-                    <h3>Mesa 2</h3>
-                    <p class="mesa-info">Terraza - 4 personas</p>
-                    <span class="badge badge-ocupada">Ocupada</span>
-                    <p class="mesa-total">$284.00</p>
-                    <div class="mesa-card-actions">
-                        <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Ver Pedido</a>
-                        <a href="@Url.Action("Crear", "Facturacion")" class="btn-edit">Facturar</a>
-                    </div>
-                </div>
-
-                <div class="mesa-card mesa-ocupada">
-                    <h3>Mesa 3</h3>
-                    <p class="mesa-info">Salon Principal - 6 personas</p>
-                    <span class="badge badge-cuentapendiente">Cuenta Pendiente</span>
-                    <p class="mesa-total">$688.62</p>
-                    <div class="mesa-card-actions">
-                        <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Ver Pedido</a>
-                        <a href="@Url.Action("Crear", "Facturacion")" class="btn-edit">Facturar</a>
-                    </div>
-                </div>
-
-                <div class="mesa-card mesa-libre">
-                    <h3>Mesa 4</h3>
-                    <p class="mesa-info">Salon Principal - 4 personas</p>
-                    <span class="badge badge-libre">Libre</span>
-                    <div class="mesa-card-actions">
-                        <a href="@Url.Action("Crear", "Pedidos")" class="btn-primary">Abrir Pedido</a>
-                        <a href="@Url.Action("DetalleMesa", "Mesas")" class="btn-view">Consultar</a>
-                    </div>
-                </div>
-
-                <div class="mesa-card mesa-reservada">
-                    <h3>Mesa 5</h3>
-                    <p class="mesa-info">Salon Privado - 8 personas</p>
-                    <span class="badge badge-reservada">Reservada</span>
-                    <div class="mesa-card-actions">
-                        <a href="@Url.Action("DetalleMesa", "Mesas")" class="btn-view">Consultar</a>
-                    </div>
-                </div>
-
-                <div class="mesa-card mesa-ocupada">
-                    <h3>Mesa 6</h3>
-                    <p class="mesa-info">Bar - 2 personas</p>
-                    <span class="badge badge-ocupada">Ocupada</span>
-                    <p class="mesa-total">$96.50</p>
-                    <div class="mesa-card-actions">
-                        <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Ver Pedido</a>
-                        <a href="@Url.Action("Crear", "Facturacion")" class="btn-edit">Facturar</a>
-                    </div>
-                </div>
-
-                <div class="mesa-card mesa-libre">
-                    <h3>Mesa 7</h3>
-                    <p class="mesa-info">Bar - 4 personas</p>
-                    <span class="badge badge-libre">Libre</span>
-                    <div class="mesa-card-actions">
-                        <a href="@Url.Action("Crear", "Pedidos")" class="btn-primary">Abrir Pedido</a>
-                        <a href="@Url.Action("DetalleMesa", "Mesas")" class="btn-view">Consultar</a>
-                    </div>
-                </div>
-
-                <div class="mesa-card mesa-ocupada">
-                    <h3>Mesa 8</h3>
-                    <p class="mesa-info">Terraza - 6 personas</p>
-                    <span class="badge badge-ocupada">Ocupada</span>
-                    <p class="mesa-total">$430.25</p>
-                    <div class="mesa-card-actions">
-                        <a href="@Url.Action("DetallePedido", "Pedidos")" class="btn-view">Ver Pedido</a>
-                        <a href="@Url.Action("Crear", "Facturacion")" class="btn-edit">Facturar</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Info adicional -->
-        <div class="info-box">
-            <h3>Informacion</h3>
-            <ul>
-                <li><strong>Libre:</strong> Mesa disponible para asignar un nuevo pedido</li>
-                <li><strong>Ocupada:</strong> Mesa con pedido en curso, aun se pueden agregar productos</li>
-                <li><strong>Cuenta Pendiente:</strong> El cliente solicito la cuenta y espera el cobro</li>
-                <li><strong>Reservada:</strong> Mesa apartada para una reserva o evento proximo</li>
-            </ul>
-        </div>
-    </div>
-</body>
-</html>
+    }
+    @if (Model.Count == 0)
+    {
+        <p>No hay mesas registradas.</p>
+    }
+</div>

@@ -1,97 +1,91 @@
+@using Prototipo.Common
+@model Prototipo.Models.Inventario
 @{
     ViewBag.Title = "Detalle del Producto";
-    Layout = null;
+    ViewBag.Modulo = "Inventario";
+    var movimientos = ViewBag.Movimientos as List<Prototipo.Models.MovimientoInventario>
+        ?? new List<Prototipo.Models.MovimientoInventario>();
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>@Model.NombreProducto</h1>
+    <a href="@Url.Action("Inventario", "Inventario")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link active">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Detalle del Producto</h1>
-            <a href="@Url.Action("Inventario", "Inventario")" class="btn-secondary">Volver al Inventario</a>
+<div class="detail-container">
+    <div class="detail-section">
+        <h3>Datos del producto</h3>
+        <div class="detail-grid">
+            <div class="detail-item"><label>ID</label><span>@Model.IdProducto</span></div>
+            <div class="detail-item"><label>Categoria</label><span>@Model.CategoriaProducto</span></div>
+            <div class="detail-item"><label>Stock actual</label><span>@Model.Stock @Model.UnidadMedida</span></div>
+            <div class="detail-item"><label>Stock minimo</label><span>@Model.StockMinimo @Model.UnidadMedida</span></div>
+            <div class="detail-item"><label>Fecha de ingreso</label><span>@Formato.Fecha(Model.FechaIngreso)</span></div>
+            <div class="detail-item"><label>Estado</label><span class="@Formato.BadgeEstado(Model.EstadoProducto)">@Model.EstadoProducto</span></div>
+            <div class="detail-item-full"><label>Descripcion</label><span>@(string.IsNullOrEmpty(Model.Descripcion) ? "-" : Model.Descripcion)</span></div>
         </div>
 
-        <!-- Informacion General -->
-        <div class="detail-container">
-            <div class="detail-section">
-                <h3>Informacion del Producto</h3>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <label>ID Producto:</label>
-                        <span class="detail-value">1</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Nombre del Producto:</label>
-                        <span class="detail-value">Toallas de Bano</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Categoria:</label>
-                        <span class="detail-value">Amenidades</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Stock Actual:</label>
-                        <span class="detail-value">150 unidades</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Stock Minimo:</label>
-                        <span class="detail-value">50 unidades</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Fecha de Ingreso:</label>
-                        <span class="detail-value">10 de Enero, 2024</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Estado del Producto:</label>
-                        <span class="badge badge-disponible">Disponible</span>
-                    </div>
+        @if (Model.StockBajo)
+        {
+            <div class="alert-box alert-warning">Este producto esta en o bajo el stock minimo.</div>
+        }
+    </div>
+
+    <div class="detail-section">
+        <h3>Registrar entrada</h3>
+        @using (Html.BeginForm("RegistrarEntrada", "Inventario", new { id = Model.IdProducto }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cantidad">Cantidad (@Model.UnidadMedida)</label>
+                    <input type="number" id="cantidad" name="cantidad" class="form-control" step="0.001" min="0.001" required />
                 </div>
-
-                <div class="detail-item-full">
-                    <label>Descripcion:</label>
-                    <span class="detail-value">Toallas de algodon suave para habitaciones. Color blanco. Tamano grande. Material de alta calidad importado. Aptas para uso intensivo en servicios de hoteleria.</span>
+                <div class="form-group">
+                    <label for="motivo">Motivo</label>
+                    <input type="text" id="motivo" name="motivo" class="form-control" placeholder="Compra a proveedor" />
                 </div>
             </div>
+            <button type="submit" class="btn-primary">Registrar entrada</button>
+        }
+    </div>
+
+    <div class="detail-section">
+        <h3>Movimientos</h3>
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Cantidad</th>
+                        <th>Stock resultante</th>
+                        <th>Pedido</th>
+                        <th>Motivo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (movimientos.Count == 0)
+                    {
+                        <tr><td colspan="6">El producto no tiene movimientos registrados.</td></tr>
+                    }
+                    @foreach (var movimiento in movimientos)
+                    {
+                        <tr>
+                            <td>@Formato.FechaHora(movimiento.FechaHora)</td>
+                            <td>@movimiento.TipoMovimiento</td>
+                            <td>@movimiento.Cantidad</td>
+                            <td>@movimiento.StockResultante</td>
+                            <td>@(movimiento.IdPedido.HasValue ? movimiento.IdPedido.Value.ToString() : "-")</td>
+                            <td>@movimiento.Motivo</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
-</body>
-</html>
+
+    <div class="form-actions">
+        <a href="@Url.Action("Editar", "Inventario", new { id = Model.IdProducto })" class="btn-primary">Editar</a>
+    </div>
+</div>

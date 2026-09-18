@@ -1,23 +1,47 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using Prototipo.Common;
+using Prototipo.Infrastructure;
+using Prototipo.Services;
 
 namespace Prototipo.Controllers
 {
-    public class BitacoraController : Controller
+    [Autorizar(Roles = "Administrador")]
+    public class BitacoraController : ControladorBase
     {
-        // GET: Bitacora
-        public ActionResult Bitacora()
+        private BitacoraService Servicio
         {
-            return View();
+            get { return new BitacoraService(Db); }
         }
 
-        // GET: Bitacora/DetalleBitacora
-        public ActionResult DetalleBitacora()
+        public ActionResult Bitacora(string modulo, DateTime? desde, DateTime? hasta, int? idUsuario)
         {
-            return View();
+            ViewBag.ModuloFiltro = modulo;
+            ViewBag.Desde = desde;
+            ViewBag.Hasta = hasta;
+            ViewBag.IdUsuario = idUsuario;
+            ViewBag.Modulos = Estados.Modulos.Nombres;
+            ViewBag.Usuarios = Db.Usuarios.OrderBy(u => u.NombreCompleto).ToList();
+
+            return View(Servicio.Listar(modulo, desde, hasta, idUsuario));
+        }
+
+        public ActionResult Index()
+        {
+            return RedirectToAction("Bitacora");
+        }
+
+        public ActionResult DetalleBitacora(long id)
+        {
+            var registro = Servicio.Obtener(id);
+            if (registro == null)
+            {
+                MensajeError(Mensajes.NoEncontrado);
+                return RedirectToAction("Bitacora");
+            }
+
+            return View(registro);
         }
     }
 }

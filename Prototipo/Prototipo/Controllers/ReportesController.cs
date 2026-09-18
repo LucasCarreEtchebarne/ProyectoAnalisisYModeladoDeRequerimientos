@@ -1,25 +1,50 @@
+﻿using System;
 using System.Web.Mvc;
+using Prototipo.Infrastructure;
+using Prototipo.Services;
+using Prototipo.ViewModels;
 
 namespace Prototipo.Controllers
 {
-    public class ReportesController : Controller
+    [Autorizar(Roles = "Administrador,Recepcionista")]
+    public class ReportesController : ControladorBase
     {
-        // GET: Reportes/Reportes
+        private ReporteService Servicio
+        {
+            get { return new ReporteService(Db); }
+        }
+
         public ActionResult Reportes()
         {
-            return View();
+            ViewBag.Dashboard = Servicio.ObtenerDashboard();
+            return View(ReporteViewModel.Tipos);
         }
 
-        // GET: Reportes/Generar
-        public ActionResult Generar()
+        public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Reportes");
         }
 
-        // GET: Reportes/DetalleReporte
-        public ActionResult DetalleReporte()
+        public ActionResult Generar(string tipo, DateTime? desde, DateTime? hasta)
         {
-            return View();
+            var inicio = desde ?? DateTime.Today.AddDays(-30);
+            var fin = hasta ?? DateTime.Today;
+
+            ViewBag.Tipos = ReporteViewModel.Tipos;
+
+            if (string.IsNullOrEmpty(tipo))
+            {
+                return View(new ReporteViewModel { Desde = inicio, Hasta = fin });
+            }
+
+            return View(Servicio.Generar(tipo, inicio, fin));
+        }
+
+        public ActionResult DetalleReporte(string tipo, DateTime? desde, DateTime? hasta)
+        {
+            var inicio = desde ?? DateTime.Today.AddDays(-30);
+            var fin = hasta ?? DateTime.Today;
+            return View(Servicio.Generar(tipo, inicio, fin));
         }
     }
 }

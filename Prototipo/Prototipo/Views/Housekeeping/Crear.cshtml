@@ -1,137 +1,65 @@
+@using Prototipo.Common
+@model Prototipo.Models.TareaHousekeeping
 @{
-    ViewBag.Title = "Crear Tarea de Housekeeping";
-    Layout = null;
+    ViewBag.Title = "Crear Tarea";
+    ViewBag.Modulo = "Housekeeping";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Crear Tarea de Housekeeping</h1>
+    <a href="@Url.Action("Housekeeping", "Housekeeping")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
+<div class="form-container">
+    @using (Html.BeginForm("Crear", "Housekeeping", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(false, null, new { @class = "alert-box alert-warning" })
 
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link active">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Crear Nueva Tarea de Housekeeping</h1>
-            <a href="@Url.Action("Housekeeping", "Housekeeping")" class="btn-secondary">Volver</a>
+        <div class="form-group">
+            @Html.LabelFor(m => m.IdHabitacion)
+            @Html.DropDownListFor(m => m.IdHabitacion, (SelectList)ViewBag.Habitaciones,
+                "Seleccione una habitacion", new { @class = "form-control", required = "required" })
         </div>
 
-        <!-- Formulario -->
-        <div class="form-container">
-            <form>
-                <div class="form-group">
-                    <label for="tipoTarea">Tipo de Tarea</label>
-                    <select id="tipoTarea" name="tipoTarea" class="form-control" required>
-                        <option value="">Seleccione un tipo</option>
-                        <option value="Limpieza">Limpieza</option>
-                        <option value="Mantenimiento">Mantenimiento</option>
-                        <option value="Revision">Revision</option>
-                        <option value="Reabastecimiento">Reabastecimiento</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="idHabitacion">Habitacion</label>
-                    <select id="idHabitacion" name="idHabitacion" class="form-control" required>
-                        <option value="">Seleccione una habitacion</option>
-                        <option value="101">101 - Individual</option>
-                        <option value="102">102 - Familiar</option>
-                        <option value="201">201 - Doble</option>
-                        <option value="205">205 - Doble</option>
-                        <option value="301">301 - Suite</option>
-                        <option value="302">302 - Suite</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="idUsuario">Usuario Asignado</label>
-                    <select id="idUsuario" name="idUsuario" class="form-control" required>
-                        <option value="">Seleccione un usuario</option>
-                        <option value="1">Maria Rodriguez - Personal de Limpieza</option>
-                        <option value="2">Carlos Sanchez - Mantenimiento</option>
-                        <option value="3">Ana Martinez - Personal de Limpieza</option>
-                        <option value="4">Luis Gonzalez - Personal de Limpieza</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="fechaAsignacion">Fecha de Asignacion</label>
-                    <input type="datetime-local" id="fechaAsignacion" name="fechaAsignacion" class="form-control" required />
-                </div>
-
-                <div class="form-group">
-                    <label for="fechaLimite">Fecha Limite</label>
-                    <input type="datetime-local" id="fechaLimite" name="fechaLimite" class="form-control" required />
-                </div>
-
-                <div class="form-group">
-                    <label for="estadoTarea">Estado de la Tarea</label>
-                    <select id="estadoTarea" name="estadoTarea" class="form-control" required>
-                        <option value="">Seleccione un estado</option>
-                        <option value="Pendiente" selected>Pendiente</option>
-                        <option value="EnProgreso">En Progreso</option>
-                        <option value="Completada">Completada</option>
-                        <option value="Cancelada">Cancelada</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="observaciones">Observaciones</label>
-                    <textarea id="observaciones" name="observaciones" class="form-control" rows="4" placeholder="Ingrese observaciones o instrucciones especiales"></textarea>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn-primary" onclick="alert('Tarea creada exitosamente (Prototipo)'); window.location.href='@Url.Action("Housekeeping", "Housekeeping")';">Guardar Tarea</button>
-                    <a href="@Url.Action("Housekeeping", "Housekeeping")" class="btn-secondary">Cancelar</a>
-                </div>
-            </form>
+        <div class="form-group">
+            @Html.LabelFor(m => m.IdUsuario)
+            @Html.DropDownListFor(m => m.IdUsuario, (SelectList)ViewBag.Usuarios,
+                "Seleccione el responsable", new { @class = "form-control", required = "required" })
         </div>
 
-        <!-- Nota informativa -->
-        <div class="info-box">
-            <h3>Informacion Importante</h3>
-            <ul>
-                <li>El <strong>ID Tarea</strong> se genera automaticamente al crear el registro</li>
-                <li>La <strong>Fecha Limite</strong> debe ser posterior a la fecha de asignacion</li>
-                <li>Asegurese de asignar la tarea al usuario correcto segun el <strong>Tipo de Tarea</strong></li>
-                <li>Las <strong>Observaciones</strong> son opcionales pero recomendadas para tareas especiales</li>
-            </ul>
+        <div class="form-group">
+            @Html.LabelFor(m => m.TipoTarea)
+            @Html.TextBoxFor(m => m.TipoTarea, new { @class = "form-control", placeholder = "Limpieza general, Mantenimiento", required = "required" })
         </div>
-    </div>
-</body>
-</html>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.FechaLimite)
+            <input type="datetime-local" name="FechaLimite" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.EstadoTarea)
+            @Html.DropDownListFor(m => m.EstadoTarea,
+                new SelectList(Estados.Tarea.Todos, Model.EstadoTarea), new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Observaciones)
+            @Html.TextBoxFor(m => m.Observaciones, new { @class = "form-control" })
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Guardar Tarea</button>
+            <a href="@Url.Action("Housekeeping", "Housekeeping")" class="btn-secondary">Cancelar</a>
+        </div>
+    }
+</div>
+
+<div class="info-box">
+    <h3>Tareas automaticas</h3>
+    <ul>
+        <li>Al registrar un check-out el sistema crea la tarea de limpieza automaticamente</li>
+        <li>Al completar una tarea, si la habitacion estaba en Limpieza vuelve a Disponible</li>
+    </ul>
+</div>

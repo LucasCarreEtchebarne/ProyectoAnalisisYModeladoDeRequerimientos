@@ -1,41 +1,144 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Prototipo.Common;
+using Prototipo.Infrastructure;
+using Prototipo.Models;
+using Prototipo.Services;
 
 namespace Prototipo.Controllers
 {
-    public class InventarioController : Controller
+    [Autorizar(Roles = "Administrador,Mesero")]
+    public class InventarioController : ControladorBase
     {
-        // GET: Inventario
-        public ActionResult Inventario()
+        private InventarioService Servicio
         {
-            return View();
+            get { return new InventarioService(Db); }
         }
 
-        // GET: Inventario/Crear
-        public ActionResult Crear()
+        public ActionResult Inventario(string estado, string categoria, string busqueda)
         {
-            return View();
+            ViewBag.Estado = estado;
+            ViewBag.Categoria = categoria;
+            ViewBag.Busqueda = busqueda;
+            ViewBag.Categorias = Servicio.ListarCategorias();
+            return View(Servicio.Listar(estado, categoria, busqueda));
         }
 
-        // GET: Inventario/Editar
-        public ActionResult Editar()
+        public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Inventario");
         }
 
-        // GET: Inventario/DetalleProducto
-        public ActionResult DetalleProducto()
-        {
-            return View();
-        }
-
-        // GET: Inventario/Alertas
         public ActionResult Alertas()
         {
-            return View();
+            return View(Servicio.ListarAlertas());
+        }
+
+        public ActionResult DetalleProducto(int id)
+        {
+            var producto = Servicio.Obtener(id);
+            if (producto == null)
+            {
+                MensajeError(Mensajes.NoEncontrado);
+                return RedirectToAction("Inventario");
+            }
+
+            ViewBag.Movimientos = Servicio.ListarMovimientos(id);
+            return View(producto);
+        }
+
+        public ActionResult Crear()
+        {
+            return View(new Models.Inventario
+            {
+                EstadoProducto = Estados.Producto.Activo,
+                UnidadMedida = "Unidad"
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Crear(Models.Inventario producto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(producto);
+            }
+
+            var resultado = Servicio.Crear(producto);
+            if (!resultado.Exito)
+            {
+                ModelState.AddModelError(string.Empty, resultado.Mensaje);
+                return View(producto);
+            }
+
+            MensajeExito(resultado.Mensaje);
+            return RedirectToAction("Inventario");
+        }
+
+        public ActionResult Editar(int id)
+        {
+            var producto = Servicio.Obtener(id);
+            if (producto == null)
+            {
+                MensajeError(Mensajes.NoEncontrado);
+                return RedirectToAction("Inventario");
+            }
+
+            return View(producto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Editar(Models.Inventario producto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(producto);
+            }
+
+            var resultado = Servicio.Actualizar(producto);
+            if (!resultado.Exito)
+            {
+                ModelState.AddModelError(string.Empty, resultado.Mensaje);
+                return View(producto);
+            }
+
+            MensajeExito(resultado.Mensaje);
+            return RedirectToAction("Inventario");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegistrarEntrada(int id, decimal cantidad, string motivo)
+        {
+            var resultado = Servicio.RegistrarEntrada(id, cantidad, motivo);
+            if (resultado.Exito)
+            {
+                MensajeExito(resultado.Mensaje);
+            }
+            else
+            {
+                MensajeError(resultado.Mensaje);
+            }
+
+            return RedirectToAction("DetalleProducto", new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Inactivar(int id)
+        {
+            var resultado = Servicio.Inactivar(id);
+            if (resultado.Exito)
+            {
+                MensajeExito(resultado.Mensaje);
+            }
+            else
+            {
+                MensajeError(resultado.Mensaje);
+            }
+
+            return RedirectToAction("Inventario");
         }
     }
 }

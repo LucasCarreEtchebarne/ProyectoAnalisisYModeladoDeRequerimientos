@@ -1,127 +1,86 @@
+@using Prototipo.Common
+@model List<Prototipo.Models.Habitacion>
 @{
     ViewBag.Title = "Habitaciones";
-    Layout = null;
+    ViewBag.Modulo = "Habitaciones";
+    var tipos = ViewBag.Tipos as List<string> ?? new List<string>();
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
-
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link active">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Gestion de Habitaciones</h1>
-            <div style="display: flex; gap: 0.8rem;">
-                <a href="@Url.Action("Consultar", "Habitaciones")" class="btn-secondary">Busqueda Avanzada</a>
-                <a href="@Url.Action("Crear", "Habitaciones")" class="btn-primary">Nueva Habitacion</a>
-            </div>
-        </div>
-
-        <!-- Filtro por Estado -->
-        <div class="filter-container">
-            <label for="filtroEstado">Filtrar por Estado:</label>
-            <select id="filtroEstado" class="filter-select">
-                <option value="">Todos</option>
-                <option value="Disponible">Disponible</option>
-                <option value="Ocupada">Ocupada</option>
-                <option value="Mantenimiento">Mantenimiento</option>
-                <option value="Limpieza">Limpieza</option>
-            </select>
-        </div>
-
-        <!-- Tabla de habitaciones -->
-        <div class="table-container">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Numero</th>
-                        <th>Tipo</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaHabitaciones">
-                    <!-- Datos de ejemplo -->
-                    <tr>
-                        <td>101</td>
-                        <td>Individual</td>
-                        <td><span class="badge badge-disponible">Disponible</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleHabitacion", "Habitaciones")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Habitaciones")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar esta habitacion?')) alert('Habitacion eliminada exitosamente (Prototipo)');">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>201</td>
-                        <td>Doble</td>
-                        <td><span class="badge badge-ocupada">Ocupada</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleHabitacion", "Habitaciones")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Habitaciones")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar esta habitacion?')) alert('Habitacion eliminada exitosamente (Prototipo)');">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>301</td>
-                        <td>Suite</td>
-                        <td><span class="badge badge-disponible">Disponible</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleHabitacion", "Habitaciones")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Habitaciones")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar esta habitacion?')) alert('Habitacion eliminada exitosamente (Prototipo)');">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>102</td>
-                        <td>Familiar</td>
-                        <td><span class="badge badge-mantenimiento">Mantenimiento</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleHabitacion", "Habitaciones")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Habitaciones")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar esta habitacion?')) alert('Habitacion eliminada exitosamente (Prototipo)');">Eliminar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<div class="module-header">
+    <h1>Gestion de Habitaciones</h1>
+    <div>
+        <a href="@Url.Action("Consultar", "Habitaciones")" class="btn-secondary">Consultar disponibilidad</a>
+        <a href="@Url.Action("Crear", "Habitaciones")" class="btn-primary">Nueva Habitacion</a>
     </div>
-</body>
-</html>
+</div>
+
+<div class="filter-container">
+    @using (Html.BeginForm("Habitaciones", "Habitaciones", FormMethod.Get))
+    {
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado" class="filter-select">
+            <option value="">Todos</option>
+            @foreach (var estado in Estados.Habitacion.Todos)
+            {
+                <option value="@estado" selected="@(((string)ViewBag.Estado) == estado)">@estado</option>
+            }
+        </select>
+
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" name="tipo" class="filter-select">
+            <option value="">Todos</option>
+            @foreach (var tipo in tipos)
+            {
+                <option value="@tipo" selected="@(((string)ViewBag.Tipo) == tipo)">@tipo</option>
+            }
+        </select>
+
+        <button type="submit" class="btn-primary">Filtrar</button>
+    }
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Tipo</th>
+                <th>Capacidad</th>
+                <th>Piso</th>
+                <th>Precio por noche</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="7">No hay habitaciones que coincidan con el filtro.</td></tr>
+            }
+            @foreach (var habitacion in Model)
+            {
+                <tr>
+                    <td>@habitacion.NumeroHabitacion</td>
+                    <td>@habitacion.TipoHabitacion</td>
+                    <td>@habitacion.Capacidad</td>
+                    <td>@habitacion.Piso</td>
+                    <td>@Formato.Colones(habitacion.Precio)</td>
+                    <td><span class="@Formato.BadgeEstado(habitacion.EstadoHabitacion)">@habitacion.EstadoHabitacion</span></td>
+                    <td class="table-actions">
+                        <a href="@Url.Action("DetalleHabitacion", "Habitaciones", new { id = habitacion.IdHabitacion })" class="btn-view">Consultar</a>
+                        <a href="@Url.Action("Editar", "Habitaciones", new { id = habitacion.IdHabitacion })" class="btn-edit">Editar</a>
+                        @if (habitacion.EstadoHabitacion != Estados.Habitacion.Mantenimiento)
+                        {
+                            using (Html.BeginForm("Mantenimiento", "Habitaciones", new { id = habitacion.IdHabitacion }, FormMethod.Post, new { style = "display:inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-delete"
+                                        onclick="return confirm('La habitacion pasara a Mantenimiento. Continuar?');">Mantenimiento</button>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

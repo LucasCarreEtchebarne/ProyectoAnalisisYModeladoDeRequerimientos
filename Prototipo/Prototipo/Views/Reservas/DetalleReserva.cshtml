@@ -1,99 +1,69 @@
+@using Prototipo.Common
+@model Prototipo.Models.Reserva
 @{
-    ViewBag.Title = "Detalle Reserva";
-    Layout = null;
+    ViewBag.Title = "Detalle de Reserva";
+    ViewBag.Modulo = "Reservas";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Reserva #@Model.IdReserva</h1>
+    <a href="@Url.Action("Reservas", "Reservas")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link active">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Detalle de Reserva</h1>
-            <a href="@Url.Action("Reservas", "Reservas")" class="btn-secondary">Volver al Listado</a>
-        </div>
-
-        <!-- Informacion basica de la Reserva -->
-        <div class="detail-container">
-            <div class="detail-section">
-                <h2>Informacion de la Reserva</h2>
-
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <label>ID Habitacion:</label>
-                        <span>101</span>
-                    </div>
-
-                    <div class="detail-item">
-                        <label>Cliente:</label>
-                        <span>Juan Perez</span>
-                    </div>
-
-                    <div class="detail-item">
-                        <label>Fecha de Entrada:</label>
-                        <span>2024-01-15</span>
-                    </div>
-
-                    <div class="detail-item">
-                        <label>Fecha de Salida:</label>
-                        <span>2024-01-18</span>
-                    </div>
-
-                    <div class="detail-item">
-                        <label>Cantidad de Huespedes:</label>
-                        <span>2 personas</span>
-                    </div>
-
-                    <div class="detail-item">
-                        <label>Estado de Reserva:</label>
-                        <span class="badge badge-confirmada">Confirmada</span>
-                    </div>
-                </div>
-
-                <div class="detail-item-full">
-                    <label>Observaciones:</label>
-                    <p>Reserva para aniversario. Requiere decoracion especial.</p>
-                </div>
-            </div>
+<div class="detail-container">
+    <div class="detail-section">
+        <h3>Datos de la reserva</h3>
+        <div class="detail-grid">
+            <div class="detail-item"><label>Cliente</label><span>@Model.Cliente.NombreMostrar</span></div>
+            <div class="detail-item"><label>Identificacion</label><span>@Model.Cliente.Identificacion</span></div>
+            <div class="detail-item"><label>Habitacion</label><span>@Model.Habitacion.NumeroHabitacion - @Model.Habitacion.TipoHabitacion</span></div>
+            <div class="detail-item"><label>Estado de la habitacion</label><span class="@Formato.BadgeEstado(Model.Habitacion.EstadoHabitacion)">@Model.Habitacion.EstadoHabitacion</span></div>
+            <div class="detail-item"><label>Entrada</label><span>@Formato.Fecha(Model.FechaEntrada)</span></div>
+            <div class="detail-item"><label>Salida</label><span>@Formato.Fecha(Model.FechaSalida)</span></div>
+            <div class="detail-item"><label>Noches</label><span>@Model.CantidadNoches</span></div>
+            <div class="detail-item"><label>Huespedes</label><span>@Model.CantidadHuespedes</span></div>
+            <div class="detail-item"><label>Tarifa por noche</label><span>@Formato.Colones(Model.PrecioNoche)</span></div>
+            <div class="detail-item"><label>Monto de hospedaje</label><span>@Formato.Colones(Model.MontoHospedaje)</span></div>
+            <div class="detail-item"><label>Estado</label><span class="@Formato.BadgeEstado(Model.EstadoReserva)">@Model.EstadoReserva</span></div>
+            <div class="detail-item"><label>Registrada</label><span>@Formato.FechaHora(Model.FechaRegistro)</span></div>
+            <div class="detail-item-full"><label>Observaciones</label><span>@(string.IsNullOrEmpty(Model.Observaciones) ? "-" : Model.Observaciones)</span></div>
         </div>
     </div>
-</body>
-</html>
+
+    <div class="form-actions">
+        @if (Model.EstadoReserva == Estados.Reserva.Confirmada)
+        {
+            using (Html.BeginForm("CheckIn", "Reservas", new { id = Model.IdReserva }, FormMethod.Post, new { style = "display:inline" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-primary">Registrar Check-In</button>
+            }
+        }
+
+        @if (Model.EstadoReserva == Estados.Reserva.CheckIn)
+        {
+            using (Html.BeginForm("CheckOut", "Reservas", new { id = Model.IdReserva }, FormMethod.Post, new { style = "display:inline" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-primary"
+                        onclick="return confirm('Se dejara la habitacion en Limpieza y se creara la tarea de housekeeping. Continuar?');">
+                    Registrar Check-Out
+                </button>
+            }
+        }
+
+        @if (Model.EstadoReserva != Estados.Reserva.Cancelada && Model.EstadoReserva != Estados.Reserva.CheckOut)
+        {
+            <a href="@Url.Action("Editar", "Reservas", new { id = Model.IdReserva })" class="btn-edit">Editar</a>
+
+            using (Html.BeginForm("Cancelar", "Reservas", new { id = Model.IdReserva }, FormMethod.Post, new { style = "display:inline" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-delete"
+                        onclick="return confirm('Cancelar esta reserva?');">Cancelar reserva</button>
+            }
+        }
+
+        <a href="@Url.Action("Crear", "Facturacion")" class="btn-secondary">Facturar</a>
+    </div>
+</div>

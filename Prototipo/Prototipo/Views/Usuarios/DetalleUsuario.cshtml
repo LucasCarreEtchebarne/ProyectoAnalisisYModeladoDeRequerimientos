@@ -1,105 +1,34 @@
+@using Prototipo.Common
+@model Prototipo.Models.Usuario
 @{
-    ViewBag.Title = "Detalle de Usuario";
-    Layout = null;
+    ViewBag.Title = "Detalle del Usuario";
+    ViewBag.Modulo = "Usuarios";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>@Model.NombreCompleto</h1>
+    <a href="@Url.Action("Usuarios", "Usuarios")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
+<div class="detail-container">
+    <div class="detail-section">
+        <h3>Datos del usuario</h3>
+        <div class="detail-grid">
+            <div class="detail-item"><label>ID</label><span>@Model.IdUsuario</span></div>
+            <div class="detail-item"><label>Nombre de usuario</label><span>@Model.NombreUsuario</span></div>
+            <div class="detail-item"><label>Correo electronico</label><span>@Model.CorreoElectronico</span></div>
+            <div class="detail-item"><label>Rol</label><span>@Model.Rol</span></div>
+            <div class="detail-item"><label>Estado</label><span class="@Formato.BadgeEstado(Model.Estado)">@Model.Estado</span></div>
+            <div class="detail-item"><label>Intentos fallidos</label><span>@Model.IntentosFallidos</span></div>
+            <div class="detail-item"><label>Fecha de bloqueo</label><span>@Formato.FechaHora(Model.FechaBloqueo)</span></div>
+            <div class="detail-item"><label>Ultimo acceso</label><span>@Formato.FechaHora(Model.FechaUltimoAcceso)</span></div>
+            <div class="detail-item"><label>Creado</label><span>@Formato.FechaHora(Model.FechaCreacion)</span></div>
         </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link active">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Detalle de Usuario</h1>
-            <a href="@Url.Action("Usuarios", "Usuarios")" class="btn-secondary">Volver</a>
-        </div>
-
-        <!-- Detalle del usuario -->
-        <div class="detail-container">
-            <h2>Informacion del Usuario</h2>
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <span class="detail-label">ID Usuario:</span>
-                    <span class="detail-value">1</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Nombre Completo:</span>
-                    <span class="detail-value">Juan Perez Gomez</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Nombre de Usuario:</span>
-                    <span class="detail-value">jperez</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Correo Electronico:</span>
-                    <span class="detail-value">jperez@colibri.com</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Rol:</span>
-                    <span class="detail-value">Administrador</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Estado:</span>
-                    <span class="detail-value"><span class="badge badge-activo">Activo</span></span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Fecha Creacion:</span>
-                    <span class="detail-value">15/01/2024</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Ultima Modificacion:</span>
-                    <span class="detail-value">20/01/2024</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Informacion adicional -->
-        <div class="info-box">
-            <h3>Informacion de Acceso</h3>
-            <ul>
-                <li><strong>Ultimo Acceso:</strong> 25/01/2024 14:35</li>
-                <li><strong>Intentos de Acceso Fallidos:</strong> 0</li>
-                <li><strong>Sesiones Activas:</strong> 1</li>
-                <li><strong>Permisos Especiales:</strong> Administrador total del sistema</li>
-            </ul>
-        </div>
+        <p><small>La contrasena no se muestra: la base solo guarda el hash bcrypt.</small></p>
     </div>
-</body>
-</html>
+
+    <div class="form-actions">
+        <a href="@Url.Action("Editar", "Usuarios", new { id = Model.IdUsuario })" class="btn-primary">Editar</a>
+        <a href="@Url.Action("Bitacora", "Bitacora", new { idUsuario = Model.IdUsuario })" class="btn-secondary">Ver bitacora</a>
+    </div>
+</div>

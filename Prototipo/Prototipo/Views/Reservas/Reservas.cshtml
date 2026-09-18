@@ -1,134 +1,85 @@
+@using Prototipo.Common
+@model List<Prototipo.Models.Reserva>
 @{
     ViewBag.Title = "Reservas";
-    Layout = null;
+    ViewBag.Modulo = "Reservas";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Gestion de Reservas</h1>
+    <a href="@Url.Action("Crear", "Reservas")" class="btn-primary">Nueva Reserva</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
+<div class="filter-container">
+    @using (Html.BeginForm("Reservas", "Reservas", FormMethod.Get))
+    {
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado" class="filter-select">
+            <option value="">Todos</option>
+            @foreach (var estado in Estados.Reserva.Todos)
+            {
+                <option value="@estado" selected="@(((string)ViewBag.Estado) == estado)">@estado</option>
+            }
+        </select>
 
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link active">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
+        <label for="desde">Desde:</label>
+        <input type="date" id="desde" name="desde" class="filter-select"
+               value="@(ViewBag.Desde != null ? ((DateTime)ViewBag.Desde).ToString("yyyy-MM-dd") : "")" />
 
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Gestion de Reservas</h1>
-            <a href="@Url.Action("Crear", "Reservas")" class="btn-primary">Nueva Reserva</a>
-        </div>
+        <label for="hasta">Hasta:</label>
+        <input type="date" id="hasta" name="hasta" class="filter-select"
+               value="@(ViewBag.Hasta != null ? ((DateTime)ViewBag.Hasta).ToString("yyyy-MM-dd") : "")" />
 
-        <!-- Filtro por Estado -->
-        <div class="filter-container">
-            <label for="filtroEstadoReserva">Filtrar por Estado:</label>
-            <select id="filtroEstadoReserva" class="filter-select">
-                <option value="">Todos</option>
-                <option value="Pendiente">Pendiente</option>
-                <option value="Confirmada">Confirmada</option>
-                <option value="Cancelada">Cancelada</option>
-                <option value="Completada">Completada</option>
-            </select>
-        </div>
+        <label for="busqueda">Buscar:</label>
+        <input type="text" id="busqueda" name="busqueda" class="filter-select"
+               value="@ViewBag.Busqueda" placeholder="Cliente o habitacion" />
 
-        <!-- Tabla de reservas -->
-        <div class="table-container">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>ID Habitacion</th>
-                        <th>Cliente</th>
-                        <th>Fecha Entrada</th>
-                        <th>Fecha Salida</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Datos de ejemplo -->
-                    <tr>
-                        <td>101</td>
-                        <td>Juan Perez</td>
-                        <td>2024-01-15</td>
-                        <td>2024-01-18</td>
-                        <td><span class="badge badge-confirmada">Confirmada</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleReserva", "Reservas")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Reservas")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar esta reserva?')) alert('Reserva eliminada exitosamente (Prototipo)');">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>201</td>
-                        <td>Maria Garcia</td>
-                        <td>2024-01-20</td>
-                        <td>2024-01-25</td>
-                        <td><span class="badge badge-pendiente">Pendiente</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleReserva", "Reservas")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Reservas")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar esta reserva?')) alert('Reserva eliminada exitosamente (Prototipo)');">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>301</td>
-                        <td>Carlos Lopez</td>
-                        <td>2024-02-01</td>
-                        <td>2024-02-05</td>
-                        <td><span class="badge badge-confirmada">Confirmada</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleReserva", "Reservas")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Reservas")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar esta reserva?')) alert('Reserva eliminada exitosamente (Prototipo)');">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>102</td>
-                        <td>Ana Martinez</td>
-                        <td>2024-01-10</td>
-                        <td>2024-01-12</td>
-                        <td><span class="badge badge-cancelada">Cancelada</span></td>
-                        <td class="table-actions">
-                            <a href="@Url.Action("DetalleReserva", "Reservas")" class="btn-view">Consultar</a>
-                            <a href="@Url.Action("Editar", "Reservas")" class="btn-edit">Editar</a>
-                            <button class="btn-delete" onclick="if(confirm('Esta seguro de eliminar esta reserva?')) alert('Reserva eliminada exitosamente (Prototipo)');">Eliminar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</body>
-</html>
+        <button type="submit" class="btn-primary">Filtrar</button>
+    }
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Habitacion</th>
+                <th>Entrada</th>
+                <th>Salida</th>
+                <th>Noches</th>
+                <th>Huespedes</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="10">No hay reservas que coincidan con el filtro.</td></tr>
+            }
+            @foreach (var reserva in Model)
+            {
+                <tr>
+                    <td>@reserva.IdReserva</td>
+                    <td>@reserva.Cliente.NombreMostrar</td>
+                    <td>@reserva.Habitacion.NumeroHabitacion</td>
+                    <td>@Formato.Fecha(reserva.FechaEntrada)</td>
+                    <td>@Formato.Fecha(reserva.FechaSalida)</td>
+                    <td>@reserva.CantidadNoches</td>
+                    <td>@reserva.CantidadHuespedes</td>
+                    <td>@Formato.Colones(reserva.MontoHospedaje)</td>
+                    <td><span class="@Formato.BadgeEstado(reserva.EstadoReserva)">@reserva.EstadoReserva</span></td>
+                    <td class="table-actions">
+                        <a href="@Url.Action("DetalleReserva", "Reservas", new { id = reserva.IdReserva })" class="btn-view">Consultar</a>
+                        @if (reserva.EstadoReserva != Estados.Reserva.Cancelada && reserva.EstadoReserva != Estados.Reserva.CheckOut)
+                        {
+                            <a href="@Url.Action("Editar", "Reservas", new { id = reserva.IdReserva })" class="btn-edit">Editar</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

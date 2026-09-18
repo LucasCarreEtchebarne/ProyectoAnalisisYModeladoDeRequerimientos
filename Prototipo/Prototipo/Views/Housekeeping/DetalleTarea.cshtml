@@ -1,110 +1,51 @@
+@using Prototipo.Common
+@model Prototipo.Models.TareaHousekeeping
 @{
-    ViewBag.Title = "Detalle de Tarea de Housekeeping";
-    Layout = null;
+    ViewBag.Title = "Detalle de Tarea";
+    ViewBag.Modulo = "Housekeeping";
+    var estados = ViewBag.EstadosTarea as string[] ?? new string[0];
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Tarea #@Model.IdTarea</h1>
+    <a href="@Url.Action("Housekeeping", "Housekeeping")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link active">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Detalle de Tarea de Housekeeping</h1>
-            <a href="@Url.Action("Housekeeping", "Housekeeping")" class="btn-secondary">Volver</a>
-        </div>
-
-        <!-- Detalle de la tarea -->
-        <div class="detail-container">
-            <h2>Informacion de la Tarea</h2>
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <span class="detail-label">ID Tarea:</span>
-                    <span class="detail-value">1</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Tipo de Tarea:</span>
-                    <span class="detail-value">Limpieza</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Habitacion:</span>
-                    <span class="detail-value">101 - Individual</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Usuario Asignado:</span>
-                    <span class="detail-value">Maria Rodriguez</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Fecha de Asignacion:</span>
-                    <span class="detail-value">25/01/2024 08:00</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Fecha Limite:</span>
-                    <span class="detail-value">25/01/2024 12:00</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Estado:</span>
-                    <span class="detail-value"><span class="badge badge-enprogreso">En Progreso</span></span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Fecha de Inicio:</span>
-                    <span class="detail-value">25/01/2024 08:15</span>
-                </div>
-            </div>
-
-            <div class="detail-item-full">
-                <span class="detail-label">Observaciones:</span>
-                <span class="detail-value">Limpieza completa de la habitacion, cambio de sabanas y reabastecimiento de amenidades. Cliente solicito atencion especial en el area del baño.</span>
-            </div>
-        </div>
-
-        <!-- Informacion adicional -->
-        <div class="info-box">
-            <h3>Progreso de la Tarea</h3>
-            <ul>
-                <li><strong>Tiempo Estimado:</strong> 4 horas</li>
-                <li><strong>Tiempo Transcurrido:</strong> 2 horas 30 minutos</li>
-                <li><strong>Prioridad:</strong> Media</li>
-                <li><strong>Ultima Actualizacion:</strong> 25/01/2024 10:45</li>
-            </ul>
+<div class="detail-container">
+    <div class="detail-section">
+        <h3>Datos de la tarea</h3>
+        <div class="detail-grid">
+            <div class="detail-item"><label>Habitacion</label><span>@Model.Habitacion.NumeroHabitacion</span></div>
+            <div class="detail-item"><label>Estado de la habitacion</label><span class="@Formato.BadgeEstado(Model.Habitacion.EstadoHabitacion)">@Model.Habitacion.EstadoHabitacion</span></div>
+            <div class="detail-item"><label>Tipo de tarea</label><span>@Model.TipoTarea</span></div>
+            <div class="detail-item"><label>Asignada a</label><span>@Model.Usuario.NombreCompleto</span></div>
+            <div class="detail-item"><label>Fecha de asignacion</label><span>@Formato.FechaHora(Model.FechaAsignacion)</span></div>
+            <div class="detail-item"><label>Fecha limite</label><span>@Formato.FechaHora(Model.FechaLimite)</span></div>
+            <div class="detail-item"><label>Completada</label><span>@Formato.FechaHora(Model.FechaCompletada)</span></div>
+            <div class="detail-item"><label>Estado</label><span class="@Formato.BadgeEstado(Model.EstadoTarea)">@Model.EstadoTarea</span></div>
+            <div class="detail-item-full"><label>Observaciones</label><span>@(string.IsNullOrEmpty(Model.Observaciones) ? "-" : Model.Observaciones)</span></div>
         </div>
     </div>
-</body>
-</html>
+
+    <div class="detail-section">
+        <h3>Actualizar estado</h3>
+        @using (Html.BeginForm("CambiarEstado", "Housekeeping", new { id = Model.IdTarea }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <select name="estado" class="form-control">
+                    @foreach (var estado in estados)
+                    {
+                        <option value="@estado" selected="@(Model.EstadoTarea == estado)">@estado</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn-primary">Aplicar</button>
+        }
+        <p><small>Al marcar la tarea como Completada, una habitacion en Limpieza vuelve a Disponible.</small></p>
+    </div>
+
+    <div class="form-actions">
+        <a href="@Url.Action("Editar", "Housekeeping", new { id = Model.IdTarea })" class="btn-primary">Editar</a>
+    </div>
+</div>

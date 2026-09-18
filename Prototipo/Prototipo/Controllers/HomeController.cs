@@ -1,12 +1,18 @@
+﻿using System.Linq;
 using System.Web.Mvc;
+using Prototipo.Common;
+using Prototipo.Infrastructure;
 
 namespace Prototipo.Controllers
 {
-    public class HomeController : Controller
+    [AllowAnonymous]
+    public class HomeController : ControladorBase
     {
-        // GET: Home (Página de inicio)
         public ActionResult Index()
         {
+            ViewBag.HabitacionesDisponibles = Db.Habitaciones
+                .Count(h => h.EstadoHabitacion == Estados.Habitacion.Disponible);
+
             return View();
         }
     }

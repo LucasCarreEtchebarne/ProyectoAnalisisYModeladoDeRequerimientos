@@ -1,153 +1,158 @@
+@using Prototipo.Common
 @{
-    ViewBag.Title = "Nueva Factura";
-    Layout = null;
+    ViewBag.Title = "Crear Factura";
+    ViewBag.Modulo = "Facturacion";
+    var pedidos = ViewBag.Pedidos as List<Prototipo.Models.Pedido> ?? new List<Prototipo.Models.Pedido>();
+    var reservas = ViewBag.Reservas as List<Prototipo.Models.Reserva> ?? new List<Prototipo.Models.Reserva>();
+    var eventos = ViewBag.Eventos as List<Prototipo.Models.Evento> ?? new List<Prototipo.Models.Evento>();
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - El Colibri Hotel & Steak House</title>
+<div class="module-header">
+    <h1>Emitir Factura</h1>
+    <a href="@Url.Action("Facturacion", "Facturacion")" class="btn-secondary">Volver</a>
+</div>
 
-    <!-- Custom CSS -->
-    <link href="~/Content/Site.css?v=2" rel="stylesheet" type="text/css" />
-</head>
-<body>
-    <!-- Navbar Principal -->
-    <nav class="navbar-main">
-        <div class="navbar-main-brand">
-            <h2>El Colibri Hotel & Steak House</h2>
-            <span class="navbar-subtitle">Sistema de Gestion</span>
-        </div>
-        <div class="navbar-main-user">
-            <span>Admin</span>
-            <a href="@Url.Action("Index", "Home")" class="btn-logout">Cerrar Sesion</a>
-        </div>
-    </nav>
-
-    <!-- Menu de Modulos -->
-    <nav class="modules-navbar">
-        <a href="@Url.Action("Main", "Main")" class="module-link">Dashboard</a>
-        <a href="@Url.Action("Habitaciones", "Habitaciones")" class="module-link">Habitaciones</a>
-        <a href="@Url.Action("Reservas", "Reservas")" class="module-link">Reservas</a>
-        <a href="@Url.Action("Eventos", "Eventos")" class="module-link">Eventos</a>
-        <a href="@Url.Action("Inventario", "Inventario")" class="module-link">Inventario</a>
-        <a href="@Url.Action("Mesas", "Mesas")" class="module-link">Punto de Venta</a>
-        <a href="@Url.Action("Reportes", "Reportes")" class="module-link">Reportes</a>
-        <a href="@Url.Action("Housekeeping", "Housekeeping")" class="module-link">Housekeeping</a>
-        <a href="@Url.Action("Facturacion", "Facturacion")" class="module-link active">Facturacion</a>
-        <a href="@Url.Action("Pagos", "Pagos")" class="module-link">Pagos</a>
-        <a href="@Url.Action("Bitacora", "Bitacora")" class="module-link">Bitacora</a>
-        <a href="@Url.Action("Clientes", "Clientes")" class="module-link">Clientes</a>
-        <a href="@Url.Action("Usuarios", "Usuarios")" class="module-link">Usuarios</a>
-        <a href="@Url.Action("IA", "IA")" class="module-link">IA</a>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="main-content-area">
-        <div class="module-header">
-            <h1>Nueva Factura</h1>
-        </div>
-
-        <!-- Formulario de Creacion -->
-        <div class="form-container">
-            <form class="module-form" method="post" action="@Url.Action("Facturacion", "Facturacion")">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="cliente">Cliente</label>
-                        <select id="cliente" name="cliente" required>
-                            <option value="">Seleccione un cliente...</option>
-                            <option value="MariaFernandez">Maria Fernandez</option>
-                            <option value="RobertoJimenez">Roberto Jimenez</option>
-                            <option value="CorporacionDelta">Corporacion Delta S.A.</option>
-                            <option value="AnaLuciaVargas">Ana Lucia Vargas</option>
-                            <option value="JorgeCastillo">Jorge Castillo</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="identificacion">Identificacion / Cedula Juridica</label>
-                        <input type="text" id="identificacion" name="identificacion" placeholder="Ej: 1-0234-0567" required />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="tipoConsumo">Tipo de Consumo</label>
-                        <select id="tipoConsumo" name="tipoConsumo" required>
-                            <option value="">Seleccione un tipo...</option>
-                            <option value="Hospedaje">Hospedaje</option>
-                            <option value="Restaurante">Restaurante</option>
-                            <option value="Evento">Evento</option>
-                            <option value="Mixta">Mixta</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="referencia">Referencia (Reserva / Pedido)</label>
-                        <input type="text" id="referencia" name="referencia" placeholder="Ej: Pedido 1002" />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fechaEmision">Fecha de Emision</label>
-                        <input type="date" id="fechaEmision" name="fechaEmision" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="fechaVencimiento">Fecha de Vencimiento</label>
-                        <input type="date" id="fechaVencimiento" name="fechaVencimiento" required />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="subtotal">Subtotal</label>
-                        <input type="number" id="subtotal" name="subtotal" placeholder="Ej: 554.00" step="0.01" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="descuento">Descuento (%)</label>
-                        <input type="number" id="descuento" name="descuento" placeholder="Ej: 0" />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="impuesto">Impuesto (%)</label>
-                        <input type="number" id="impuesto" name="impuesto" value="13" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="servicio">Cargo por Servicio (%)</label>
-                        <input type="number" id="servicio" name="servicio" value="10" required />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="notasFactura">Notas de la Factura</label>
-                    <textarea id="notasFactura" name="notasFactura" rows="4" placeholder="Condiciones de pago, detalles adicionales..."></textarea>
-                </div>
-
-                <div class="form-actions">
-                    <a href="@Url.Action("Facturacion", "Facturacion")" class="btn-secondary">Cancelar</a>
-                    <button type="button" class="btn-primary" onclick="alert('Factura generada exitosamente (Prototipo)'); window.location.href='@Url.Action("Facturacion", "Facturacion")';">Generar Factura</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Info adicional -->
-        <div class="info-box">
-            <h3>Informacion</h3>
-            <ul>
-                <li><strong>Tipo Mixta:</strong> Agrupa consumos de hospedaje y restaurante en un solo documento</li>
-                <li><strong>Referencia:</strong> Vincula la factura con la reserva o el pedido que la origino</li>
-                <li><strong>Cargo por Servicio:</strong> Se aplica unicamente a consumos de restaurante y eventos</li>
-                <li><strong>Vencimiento:</strong> Al superarse la fecha, la factura pasa automaticamente a estado Vencida</li>
-            </ul>
-        </div>
+<div class="detail-section">
+    <h3>Pedidos pendientes de facturar</h3>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Estado</th>
+                    <th>Total</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (pedidos.Count == 0)
+                {
+                    <tr><td colspan="6">No hay pedidos pendientes de facturar.</td></tr>
+                }
+                @foreach (var pedido in pedidos)
+                {
+                    <tr>
+                        <td>#@pedido.IdPedido</td>
+                        <td>@Formato.FechaHora(pedido.FechaHoraPedido)</td>
+                        <td>@(pedido.Cliente != null ? pedido.Cliente.NombreMostrar : "-")</td>
+                        <td><span class="@Formato.BadgeEstado(pedido.EstadoPedido)">@pedido.EstadoPedido</span></td>
+                        <td>@Formato.Colones(pedido.Total)</td>
+                        <td>
+                            @using (Html.BeginForm("Crear", "Facturacion", FormMethod.Post, new { style = "display:inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="origen" value="pedido" />
+                                <input type="hidden" name="idOrigen" value="@pedido.IdPedido" />
+                                <button type="submit" class="btn-primary">Facturar</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-</body>
-</html>
+</div>
+
+<div class="detail-section">
+    <h3>Reservas pendientes de facturar</h3>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Reserva</th>
+                    <th>Cliente</th>
+                    <th>Habitacion</th>
+                    <th>Noches</th>
+                    <th>Hospedaje</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (reservas.Count == 0)
+                {
+                    <tr><td colspan="6">No hay reservas pendientes de facturar.</td></tr>
+                }
+                @foreach (var reserva in reservas)
+                {
+                    <tr>
+                        <td>#@reserva.IdReserva</td>
+                        <td>@reserva.Cliente.NombreMostrar</td>
+                        <td>@reserva.Habitacion.NumeroHabitacion</td>
+                        <td>@reserva.CantidadNoches</td>
+                        <td>@Formato.Colones(reserva.MontoHospedaje)</td>
+                        <td class="table-actions">
+                            @using (Html.BeginForm("Crear", "Facturacion", FormMethod.Post, new { style = "display:inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="origen" value="reserva" />
+                                <input type="hidden" name="idOrigen" value="@reserva.IdReserva" />
+                                <button type="submit" class="btn-primary">Solo hospedaje</button>
+                            }
+                            @using (Html.BeginForm("Crear", "Facturacion", FormMethod.Post, new { style = "display:inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="origen" value="mixta" />
+                                <input type="hidden" name="idOrigen" value="@reserva.IdReserva" />
+                                <button type="submit" class="btn-edit">Hospedaje + consumos</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="detail-section">
+    <h3>Eventos pendientes de facturar</h3>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Cliente</th>
+                    <th>Espacio</th>
+                    <th>Fecha</th>
+                    <th>Monto</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (eventos.Count == 0)
+                {
+                    <tr><td colspan="6">No hay eventos pendientes de facturar.</td></tr>
+                }
+                @foreach (var evento in eventos)
+                {
+                    <tr>
+                        <td>@evento.NombreEvento</td>
+                        <td>@evento.Cliente.NombreMostrar</td>
+                        <td>@evento.Espacio.NombreEspacio</td>
+                        <td>@Formato.Fecha(evento.FechaEvento)</td>
+                        <td>@Formato.Colones(evento.MontoAcordado)</td>
+                        <td>
+                            @using (Html.BeginForm("Crear", "Facturacion", FormMethod.Post, new { style = "display:inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="origen" value="evento" />
+                                <input type="hidden" name="idOrigen" value="@evento.IdEvento" />
+                                <button type="submit" class="btn-primary">Facturar</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="info-box">
+    <h3>Como se arma la factura</h3>
+    <ul>
+        <li>El monto total lo calcula el sistema sumando los subtotales del detalle</li>
+        <li><strong>Hospedaje + consumos</strong> genera una factura Mixta con la estadia y los pedidos de esa reserva</li>
+        <li>Un pedido, una reserva o un evento solo se pueden facturar una vez</li>
+    </ul>
+</div>
