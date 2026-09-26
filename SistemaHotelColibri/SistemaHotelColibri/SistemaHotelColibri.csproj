@@ -6,4 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SistemaHotelColibri.Abstract\SistemaHotelColibri.Abstract.csproj" />
+    <ProjectReference Include="..\SistemaHotelColibri.BusinessLogic\SistemaHotelColibri.BusinessLogic.csproj" />
+    <ProjectReference Include="..\SistemaHotelColibri.DataAccess\SistemaHotelColibri.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>
