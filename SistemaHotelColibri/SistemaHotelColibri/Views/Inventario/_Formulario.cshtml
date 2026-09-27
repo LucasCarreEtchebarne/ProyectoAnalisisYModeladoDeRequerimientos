@@ -1,0 +1,41 @@
+@using SistemaHotelColibri.ViewModels.Inventarios
+@model InventarioFormViewModel
+@{
+    var unidades = (string[])ViewBag.UnidadesMedida;
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<div class="row g-3">
+    <div class="col-12 col-md-6">
+        <label asp-for="NombreProducto" class="form-label">Nombre del producto *</label>
+        <input asp-for="NombreProducto" class="form-control" maxlength="100" autofocus />
+        <span asp-validation-for="NombreProducto" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="CategoriaProducto" class="form-label">Categoría *</label>
+        <input asp-for="CategoriaProducto" class="form-control" maxlength="50" placeholder="Ej.: Abarrotes, Lácteos, Bebidas" />
+        <span asp-validation-for="CategoriaProducto" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-4">
+        <label asp-for="UnidadMedida" class="form-label">Unidad de medida *</label>
+        <select asp-for="UnidadMedida" class="form-select" asp-items="@(new SelectList(unidades))"></select>
+        <span asp-validation-for="UnidadMedida" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-4">
+        <label asp-for="Stock" class="form-label">Stock actual *</label>
+        <input asp-for="Stock" class="form-control" type="number" min="0" step="0.001" />
+        <span asp-validation-for="Stock" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-4">
+        <label asp-for="StockMinimo" class="form-label">Stock mínimo *</label>
+        <input asp-for="StockMinimo" class="form-control" type="number" min="0" step="0.001" />
+        <div class="form-text">Se genera una alerta cuando el stock llega a este valor.</div>
+        <span asp-validation-for="StockMinimo" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Descripcion" class="form-label">Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control" rows="3" maxlength="250"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+</div>
