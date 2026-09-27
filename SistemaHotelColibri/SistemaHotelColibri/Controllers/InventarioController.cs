@@ -14,19 +14,22 @@ public class InventarioController : ControladorBase
     private readonly IObtenerInventarioPorIdBL _obtenerPorIdBL;
     private readonly IEditarInventarioBL _editarBL;
     private readonly IEliminarInventarioBL _eliminarBL;
+    private readonly IObtenerAlertasInventarioBL _obtenerAlertasBL;
 
     public InventarioController(
         IAgregarInventarioBL agregarBL,
         IObtenerInventarioBL obtenerBL,
         IObtenerInventarioPorIdBL obtenerPorIdBL,
         IEditarInventarioBL editarBL,
-        IEliminarInventarioBL eliminarBL)
+        IEliminarInventarioBL eliminarBL,
+        IObtenerAlertasInventarioBL obtenerAlertasBL)
     {
         _agregarBL = agregarBL;
         _obtenerBL = obtenerBL;
         _obtenerPorIdBL = obtenerPorIdBL;
         _editarBL = editarBL;
         _eliminarBL = eliminarBL;
+        _obtenerAlertasBL = obtenerAlertasBL;
     }
 
     public async Task<IActionResult> Index(string? estado)
@@ -36,7 +39,13 @@ public class InventarioController : ControladorBase
 
         ViewBag.EstadoSeleccionado = estadoSeleccionado;
         ViewBag.OpcionesEstado = Estados.ProductoInventario.Todos.Append(TodosLosEstados).ToArray();
+        ViewBag.TotalAlertas = (await _obtenerAlertasBL.ObtenerAlertasAsync()).Count;
         return View(await _obtenerBL.ObtenerAsync(filtro));
+    }
+
+    public async Task<IActionResult> Alertas()
+    {
+        return View(await _obtenerAlertasBL.ObtenerAlertasAsync());
     }
 
     public async Task<IActionResult> Detalle(int id)

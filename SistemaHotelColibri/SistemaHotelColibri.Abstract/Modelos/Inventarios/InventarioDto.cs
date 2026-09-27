@@ -1,3 +1,5 @@
+using SistemaHotelColibri.Abstract.Comun;
+
 namespace SistemaHotelColibri.Abstract.Modelos.Inventarios;
 
 public class InventarioDto
@@ -11,4 +13,6 @@ public class InventarioDto
     public DateOnly FechaIngreso { get; set; }
     public string EstadoProducto { get; set; } = string.Empty;
     public string? Descripcion { get; set; }
+
+    public bool RequiereAlerta => EstadoProducto == Estados.ProductoInventario.Activo && Stock <= StockMinimo;
 }
