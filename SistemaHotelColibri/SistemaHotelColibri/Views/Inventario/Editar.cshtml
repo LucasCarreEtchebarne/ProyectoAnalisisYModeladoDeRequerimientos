@@ -1,0 +1,24 @@
+@using SistemaHotelColibri.ViewModels.Inventarios
+@model InventarioFormViewModel
+@{
+    ViewData["Title"] = "Editar producto";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Editar producto #@Model.IdProducto</h1>
+        <p>El código, la fecha de ingreso y el estado no se modifican desde aquí.</p>
+    </div>
+</div>
+
+<form asp-action="Editar" asp-route-id="@Model.IdProducto" method="post" class="tarjeta tarjeta-cuerpo">
+    <partial name="_Formulario" model="Model" />
+    <div class="d-flex gap-2 justify-content-end mt-4">
+        <a class="btn btn-outline-secondary" asp-action="Detalle" asp-route-id="@Model.IdProducto">Cancelar</a>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Guardar cambios</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

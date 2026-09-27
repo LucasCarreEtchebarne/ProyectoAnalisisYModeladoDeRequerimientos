@@ -9,7 +9,10 @@
         <h1>@Model.NombreProducto</h1>
         <p>Código #@Model.IdProducto · <partial name="_EstadoProducto" model="Model" /></p>
     </div>
-    <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+        <a class="btn btn-primary" asp-action="Editar" asp-route-id="@Model.IdProducto"><i class="bi bi-pencil"></i> Editar</a>
+    </div>
 </div>
 
 <div class="tarjeta tarjeta-cuerpo">

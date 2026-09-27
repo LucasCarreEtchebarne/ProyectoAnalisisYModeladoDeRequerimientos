@@ -36,6 +36,17 @@ public class InventarioFormViewModel
     [StringLength(250, ErrorMessage = Mensajes.LongitudMaxima)]
     public string? Descripcion { get; set; }
 
+    public static InventarioFormViewModel DesdeDto(InventarioDto producto) => new()
+    {
+        IdProducto = producto.IdProducto,
+        NombreProducto = producto.NombreProducto,
+        CategoriaProducto = producto.CategoriaProducto,
+        UnidadMedida = producto.UnidadMedida,
+        Stock = producto.Stock,
+        StockMinimo = producto.StockMinimo,
+        Descripcion = producto.Descripcion
+    };
+
     public InventarioDto ADto() => new()
     {
         IdProducto = IdProducto,

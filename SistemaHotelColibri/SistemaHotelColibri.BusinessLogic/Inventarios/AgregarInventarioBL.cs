@@ -18,23 +18,12 @@ public class AgregarInventarioBL : IAgregarInventarioBL
 
     public async Task<ResultadoOperacion> AgregarAsync(InventarioDto producto)
     {
-        producto.NombreProducto = producto.NombreProducto.Trim();
-        producto.CategoriaProducto = producto.CategoriaProducto.Trim();
-        producto.Descripcion = string.IsNullOrWhiteSpace(producto.Descripcion) ? null : producto.Descripcion.Trim();
+        ReglasInventario.Normalizar(producto);
 
-        if (producto.Stock < 0)
+        var error = ReglasInventario.Validar(producto);
+        if (error != null)
         {
-            return ResultadoOperacion.Error(Mensajes.StockNegativo);
-        }
-
-        if (producto.StockMinimo < 0)
-        {
-            return ResultadoOperacion.Error(Mensajes.StockMinimoNegativo);
-        }
-
-        if (!Catalogos.UnidadesMedida.Contains(producto.UnidadMedida))
-        {
-            return ResultadoOperacion.Error(Mensajes.UnidadMedidaInvalida);
+            return ResultadoOperacion.Error(error);
         }
 
         if (await _existeNombreDA.ExisteNombreAsync(producto.NombreProducto, 0))

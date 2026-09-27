@@ -61,6 +61,7 @@
                         <td><partial name="_EstadoProducto" model="p" /></td>
                         <td class="text-end text-nowrap">
                             <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@p.IdProducto" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@p.IdProducto" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
                         </td>
                     </tr>
                 }
