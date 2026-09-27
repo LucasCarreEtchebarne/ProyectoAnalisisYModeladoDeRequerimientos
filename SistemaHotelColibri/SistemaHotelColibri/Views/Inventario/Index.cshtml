@@ -62,6 +62,14 @@
                         <td class="text-end text-nowrap">
                             <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@p.IdProducto" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
                             <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@p.IdProducto" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            @if (p.EstadoProducto == Estados.ProductoInventario.Activo)
+                            {
+                                <form asp-action="Eliminar" asp-route-id="@p.IdProducto" method="post" class="d-inline"
+                                      data-confirmar="¿Desea eliminar el producto «@p.NombreProducto»? Dejará de aparecer en el inventario activo."
+                                      data-confirmar-boton="Eliminar">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar" aria-label="Eliminar"><i class="bi bi-trash"></i></button>
+                                </form>
+                            }
                         </td>
                     </tr>
                 }

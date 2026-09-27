@@ -13,17 +13,20 @@ public class InventarioController : ControladorBase
     private readonly IObtenerInventarioBL _obtenerBL;
     private readonly IObtenerInventarioPorIdBL _obtenerPorIdBL;
     private readonly IEditarInventarioBL _editarBL;
+    private readonly IEliminarInventarioBL _eliminarBL;
 
     public InventarioController(
         IAgregarInventarioBL agregarBL,
         IObtenerInventarioBL obtenerBL,
         IObtenerInventarioPorIdBL obtenerPorIdBL,
-        IEditarInventarioBL editarBL)
+        IEditarInventarioBL editarBL,
+        IEliminarInventarioBL eliminarBL)
     {
         _agregarBL = agregarBL;
         _obtenerBL = obtenerBL;
         _obtenerPorIdBL = obtenerPorIdBL;
         _editarBL = editarBL;
+        _eliminarBL = eliminarBL;
     }
 
     public async Task<IActionResult> Index(string? estado)
@@ -109,5 +112,12 @@ public class InventarioController : ControladorBase
 
         MensajeExito(resultado.Mensaje);
         return RedirectToAction(nameof(Detalle), new { id });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Eliminar(int id)
+    {
+        MostrarResultado(await _eliminarBL.EliminarAsync(id));
+        return RedirectToAction(nameof(Index));
     }
 }
