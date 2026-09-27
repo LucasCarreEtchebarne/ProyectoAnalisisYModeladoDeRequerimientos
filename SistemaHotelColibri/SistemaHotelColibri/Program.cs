@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaHotelColibri.Abstract.Comun;
+using SistemaHotelColibri.BusinessLogic;
 using SistemaHotelColibri.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 var cadenaConexion = builder.Configuration.GetConnectionString("HotelColibri")
     ?? throw new InvalidOperationException("Falta la cadena de conexión 'ConnectionStrings:HotelColibri'.");
 
-builder.Services.AddDataAccess(cadenaConexion);
+builder.Services
+    .AddDataAccess(cadenaConexion)
+    .AddBusinessLogic();
 
 builder.Services.AddControllersWithViews(opciones =>
 {

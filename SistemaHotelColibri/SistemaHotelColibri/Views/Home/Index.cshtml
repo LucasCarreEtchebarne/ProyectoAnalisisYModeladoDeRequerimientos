@@ -1,8 +1,40 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="encabezado-pagina">
+    <div>
+        <h1>Bienvenido al sistema El Colibrí</h1>
+        <p>Gestión de hospedaje, restaurante e inventario.</p>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-md-6 col-xl-4">
+        <div class="tarjeta indicador">
+            <div class="indicador-icono inactivo"><i class="bi bi-door-closed"></i></div>
+            <div>
+                <div class="fw-semibold">Habitaciones</div>
+                <div class="indicador-etiqueta">En desarrollo (Sprint 1)</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl-4">
+        <div class="tarjeta indicador">
+            <div class="indicador-icono inactivo"><i class="bi bi-people"></i></div>
+            <div>
+                <div class="fw-semibold">Clientes</div>
+                <div class="indicador-etiqueta">En desarrollo (Sprint 1)</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl-4">
+        <div class="tarjeta indicador">
+            <div class="indicador-icono inactivo"><i class="bi bi-box-seam"></i></div>
+            <div>
+                <div class="fw-semibold">Inventario</div>
+                <div class="indicador-etiqueta">En desarrollo (Sprint 1)</div>
+            </div>
+        </div>
+    </div>
 </div>
