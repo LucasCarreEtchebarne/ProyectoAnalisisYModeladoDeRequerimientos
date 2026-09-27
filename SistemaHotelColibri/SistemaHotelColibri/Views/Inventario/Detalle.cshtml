@@ -1,0 +1,42 @@
+@using SistemaHotelColibri.Abstract.Modelos.Inventarios
+@model InventarioDto
+@{
+    ViewData["Title"] = "Detalle de producto";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>@Model.NombreProducto</h1>
+        <p>Código #@Model.IdProducto · <partial name="_EstadoProducto" model="Model" /></p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+</div>
+
+<div class="tarjeta tarjeta-cuerpo">
+    <div class="row">
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Categoría</div>
+            <div class="dato-valor">@Model.CategoriaProducto</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Unidad de medida</div>
+            <div class="dato-valor">@Model.UnidadMedida</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Stock actual</div>
+            <div class="dato-valor">@Formato.Cantidad(Model.Stock)</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Stock mínimo</div>
+            <div class="dato-valor">@Formato.Cantidad(Model.StockMinimo)</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Fecha de ingreso</div>
+            <div class="dato-valor">@Formato.Fecha(Model.FechaIngreso)</div>
+        </div>
+        <div class="col-12 col-md-9">
+            <div class="dato-etiqueta">Descripción</div>
+            <div class="dato-valor">@(Model.Descripcion ?? "—")</div>
+        </div>
+    </div>
+</div>

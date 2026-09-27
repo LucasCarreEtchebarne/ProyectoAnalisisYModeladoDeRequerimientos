@@ -16,6 +16,8 @@ public static class DependencyInjection
 
         services.AddScoped<IAgregarInventarioDA, AgregarInventarioDA>();
         services.AddScoped<IExisteNombreInventarioDA, ExisteNombreInventarioDA>();
+        services.AddScoped<IObtenerInventarioDA, ObtenerInventarioDA>();
+        services.AddScoped<IObtenerInventarioPorIdDA, ObtenerInventarioPorIdDA>();
 
         return services;
     }

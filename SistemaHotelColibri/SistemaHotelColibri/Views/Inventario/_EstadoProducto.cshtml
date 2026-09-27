@@ -1,0 +1,10 @@
+@using SistemaHotelColibri.Abstract.Modelos.Inventarios
+@model InventarioDto
+@if (Model.EstadoProducto == Estados.ProductoInventario.Inactivo)
+{
+    <span class="estado estado-inactivo">Inactivo</span>
+}
+else
+{
+    <span class="estado estado-activo">Activo</span>
+}
