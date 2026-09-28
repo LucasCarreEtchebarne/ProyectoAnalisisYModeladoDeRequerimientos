@@ -13,17 +13,20 @@ public class HabitacionController : ControladorBase
     private readonly IObtenerHabitacionBL _obtenerBL;
     private readonly IObtenerHabitacionPorIdBL _obtenerPorIdBL;
     private readonly IEditarHabitacionBL _editarBL;
+    private readonly IEliminarHabitacionBL _eliminarBL;
 
     public HabitacionController(
         IAgregarHabitacionBL agregarBL,
         IObtenerHabitacionBL obtenerBL,
         IObtenerHabitacionPorIdBL obtenerPorIdBL,
-        IEditarHabitacionBL editarBL)
+        IEditarHabitacionBL editarBL,
+        IEliminarHabitacionBL eliminarBL)
     {
         _agregarBL = agregarBL;
         _obtenerBL = obtenerBL;
         _obtenerPorIdBL = obtenerPorIdBL;
         _editarBL = editarBL;
+        _eliminarBL = eliminarBL;
     }
 
     public async Task<IActionResult> Index(string? estado)
@@ -115,5 +118,12 @@ public class HabitacionController : ControladorBase
 
         MensajeExito(resultado.Mensaje);
         return RedirectToAction(nameof(Detalle), new { id });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Eliminar(int id)
+    {
+        MostrarResultado(await _eliminarBL.EliminarAsync(id));
+        return RedirectToAction(nameof(Index));
     }
 }

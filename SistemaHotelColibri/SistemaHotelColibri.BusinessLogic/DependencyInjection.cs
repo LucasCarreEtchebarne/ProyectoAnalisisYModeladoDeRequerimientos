@@ -21,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<IObtenerHabitacionBL, ObtenerHabitacionBL>();
         services.AddScoped<IObtenerHabitacionPorIdBL, ObtenerHabitacionPorIdBL>();
         services.AddScoped<IEditarHabitacionBL, EditarHabitacionBL>();
+        services.AddScoped<IEliminarHabitacionBL, EliminarHabitacionBL>();
 
         return services;
     }

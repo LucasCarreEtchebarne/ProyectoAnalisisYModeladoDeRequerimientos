@@ -30,4 +30,6 @@ public static class Mensajes
     public const string CapacidadInvalida = "La capacidad debe ser mayor a cero.";
     public const string PrecioInvalido = "El precio no puede ser menor a 0.";
     public const string PisoInvalido = "El piso no puede ser negativo.";
+    public const string HabitacionEliminadaCorrectamente = "Habitación eliminada correctamente.";
+    public const string ErrorEliminarHabitacion = "No se pudo eliminar la habitación, intente nuevamente.";
 }

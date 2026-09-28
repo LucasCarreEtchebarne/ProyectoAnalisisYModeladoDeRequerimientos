@@ -64,6 +64,11 @@
                         <td class="text-end text-nowrap">
                             <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@h.IdHabitacion" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
                             <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@h.IdHabitacion" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            <form asp-action="Eliminar" asp-route-id="@h.IdHabitacion" method="post" class="d-inline"
+                                  data-confirmar="¿Desea eliminar la habitación «@h.NumeroHabitacion»? Esta acción no se puede deshacer."
+                                  data-confirmar-boton="Eliminar">
+                                <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar" aria-label="Eliminar"><i class="bi bi-trash"></i></button>
+                            </form>
                         </td>
                     </tr>
                 }
