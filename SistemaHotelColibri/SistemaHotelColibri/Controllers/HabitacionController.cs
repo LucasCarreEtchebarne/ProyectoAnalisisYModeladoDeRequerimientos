@@ -12,15 +12,18 @@ public class HabitacionController : ControladorBase
     private readonly IAgregarHabitacionBL _agregarBL;
     private readonly IObtenerHabitacionBL _obtenerBL;
     private readonly IObtenerHabitacionPorIdBL _obtenerPorIdBL;
+    private readonly IEditarHabitacionBL _editarBL;
 
     public HabitacionController(
         IAgregarHabitacionBL agregarBL,
         IObtenerHabitacionBL obtenerBL,
-        IObtenerHabitacionPorIdBL obtenerPorIdBL)
+        IObtenerHabitacionPorIdBL obtenerPorIdBL,
+        IEditarHabitacionBL editarBL)
     {
         _agregarBL = agregarBL;
         _obtenerBL = obtenerBL;
         _obtenerPorIdBL = obtenerPorIdBL;
+        _editarBL = editarBL;
     }
 
     public async Task<IActionResult> Index(string? estado)
@@ -73,5 +76,44 @@ public class HabitacionController : ControladorBase
 
         MensajeExito(resultado.Mensaje);
         return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Editar(int id)
+    {
+        var habitacion = await _obtenerPorIdBL.ObtenerPorIdAsync(id);
+        if (habitacion == null)
+        {
+            MensajeError(Mensajes.NoEncontrado);
+            return RedirectToAction(nameof(Index));
+        }
+
+        ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
+        ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
+        return View(HabitacionFormViewModel.DesdeDto(habitacion));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Editar(int id, HabitacionFormViewModel modelo)
+    {
+        modelo.IdHabitacion = id;
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
+            ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
+            return View(modelo);
+        }
+
+        var resultado = await _editarBL.EditarAsync(modelo.ADto());
+        if (!resultado.Exito)
+        {
+            ModelState.AddModelError(string.Empty, resultado.Mensaje);
+            ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
+            ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
+            return View(modelo);
+        }
+
+        MensajeExito(resultado.Mensaje);
+        return RedirectToAction(nameof(Detalle), new { id });
     }
 }

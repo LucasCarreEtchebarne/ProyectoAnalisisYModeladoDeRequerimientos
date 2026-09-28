@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<IExisteNumeroHabitacionDA, ExisteNumeroHabitacionDA>();
         services.AddScoped<IObtenerHabitacionDA, ObtenerHabitacionDA>();
         services.AddScoped<IObtenerHabitacionPorIdDA, ObtenerHabitacionPorIdDA>();
+        services.AddScoped<IEditarHabitacionDA, EditarHabitacionDA>();
 
         return services;
     }

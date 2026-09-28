@@ -21,6 +21,9 @@ public static class Mensajes
 
     public const string HabitacionRegistrada = "Se ha registrado la habitación correctamente.";
     public const string HabitacionDuplicada = "Esta habitación ya se encuentra registrada.";
+    public const string HabitacionModificadaCorrectamente = "Habitación modificada correctamente.";
+    public const string ErrorModificarHabitacion = "No se pudo modificar la habitación, intente nuevamente.";
+    public const string HabitacionNoDisponible = "La habitación no se encuentra disponible para modificar la reserva.";
     public const string NoExistenHabitaciones = "No existen habitaciones registradas.";
     public const string TipoHabitacionInvalido = "El tipo de habitación seleccionado no es válido.";
     public const string EstadoHabitacionInvalido = "El estado de habitación seleccionado no es válido.";
