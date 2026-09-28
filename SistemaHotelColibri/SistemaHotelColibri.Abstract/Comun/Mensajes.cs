@@ -18,4 +18,18 @@ public static class Mensajes
     public const string UnidadMedidaInvalida = "La unidad de medida seleccionada no es válida.";
     public const string StockNegativo = "El stock no puede ser negativo.";
     public const string StockMinimoNegativo = "El stock mínimo no puede ser negativo.";
+
+    public const string HabitacionRegistrada = "Se ha registrado la habitación correctamente.";
+    public const string HabitacionDuplicada = "Esta habitación ya se encuentra registrada.";
+    public const string HabitacionModificadaCorrectamente = "Habitación modificada correctamente.";
+    public const string ErrorModificarHabitacion = "No se pudo modificar la habitación, intente nuevamente.";
+    public const string HabitacionNoDisponible = "La habitación no se encuentra disponible para modificar la reserva.";
+    public const string NoExistenHabitaciones = "No existen habitaciones registradas.";
+    public const string TipoHabitacionInvalido = "El tipo de habitación seleccionado no es válido.";
+    public const string EstadoHabitacionInvalido = "El estado de habitación seleccionado no es válido.";
+    public const string CapacidadInvalida = "La capacidad debe ser mayor a cero.";
+    public const string PrecioInvalido = "El precio no puede ser menor a 0.";
+    public const string PisoInvalido = "El piso no puede ser negativo.";
+    public const string HabitacionEliminadaCorrectamente = "Habitación eliminada correctamente.";
+    public const string ErrorEliminarHabitacion = "No se pudo eliminar la habitación, intente nuevamente.";
 }
