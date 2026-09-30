@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SistemaHotelColibri.Abstract\SistemaHotelColibri.Abstract.csproj" />
+    <ProjectReference Include="..\SistemaHotelColibri.BusinessLogic\SistemaHotelColibri.BusinessLogic.csproj" />
+    <ProjectReference Include="..\SistemaHotelColibri.DataAccess\SistemaHotelColibri.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,18 @@
+@using SistemaHotelColibri.Abstract.Modelos.Habitaciones
+@model HabitacionDto
+@if (Model.EstadoHabitacion == Estados.Habitacion.Ocupada)
+{
+    <span class="estado estado-alerta">Ocupada</span>
+}
+else if (Model.EstadoHabitacion == Estados.Habitacion.Limpieza)
+{
+    <span class="estado estado-inactivo">Limpieza</span>
+}
+else if (Model.EstadoHabitacion == Estados.Habitacion.Mantenimiento)
+{
+    <span class="estado estado-inactivo">Mantenimiento</span>
+}
+else
+{
+    <span class="estado estado-activo">Disponible</span>
+}

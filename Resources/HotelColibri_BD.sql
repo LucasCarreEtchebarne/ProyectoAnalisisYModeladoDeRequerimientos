@@ -27,25 +27,126 @@ DROP TABLE IF EXISTS MENU;
 DROP TABLE IF EXISTS MESA;
 DROP TABLE IF EXISTS HABITACION;
 DROP TABLE IF EXISTS CLIENTE;
-DROP TABLE IF EXISTS USUARIO;
+DROP TABLE IF EXISTS AspNetUserTokens;
+DROP TABLE IF EXISTS AspNetUserRoles;
+DROP TABLE IF EXISTS AspNetUserLogins;
+DROP TABLE IF EXISTS AspNetUserClaims;
+DROP TABLE IF EXISTS AspNetRoleClaims;
+DROP TABLE IF EXISTS AspNetUsers;
+DROP TABLE IF EXISTS AspNetRoles;
+DROP TABLE IF EXISTS __EFMigrationsHistory;
 GO
 
 
-CREATE TABLE USUARIO (
-    IdUsuario           INT IDENTITY(1,1) PRIMARY KEY,
-    NombreCompleto      NVARCHAR(150) NOT NULL,
-    NombreUsuario       NVARCHAR(50)  NOT NULL UNIQUE,
-    CorreoElectronico   NVARCHAR(150) NOT NULL UNIQUE,
-    ContrasenaHash      NVARCHAR(255) NOT NULL,          
-    Rol                 NVARCHAR(30)  NOT NULL
-        CHECK (Rol IN ('Administrador','Recepcionista','Mesero','Housekeeping')),
-    Estado              NVARCHAR(20)  NOT NULL DEFAULT 'Activo'
-        CHECK (Estado IN ('Activo','Inactivo','Bloqueado')),
-    IntentosFallidos    INT           NOT NULL DEFAULT 0 CHECK (IntentosFallidos >= 0),
-    FechaBloqueo        DATETIME2     NULL,
-    FechaUltimoAcceso   DATETIME2     NULL,
-    FechaCreacion       DATETIME2     NOT NULL DEFAULT SYSDATETIME()
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
+
+BEGIN TRANSACTION;
+CREATE TABLE [AspNetRoles] (
+    [Id] int NOT NULL IDENTITY,
+    [Descripcion] nvarchar(250) NULL,
+    [EstadoRol] nvarchar(20) NOT NULL DEFAULT N'Activo',
+    [Name] nvarchar(256) NULL,
+    [NormalizedName] nvarchar(256) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetRoles] PRIMARY KEY ([Id]),
+    CONSTRAINT [CK_AspNetRoles_EstadoRol] CHECK ([EstadoRol] IN ('Activo','Inactivo'))
 );
+
+CREATE TABLE [AspNetUsers] (
+    [Id] int NOT NULL IDENTITY,
+    [NombreCompleto] nvarchar(150) NOT NULL,
+    [Estado] nvarchar(20) NOT NULL DEFAULT N'Activo',
+    [FechaCreacion] datetime2 NOT NULL DEFAULT (SYSDATETIME()),
+    [FechaUltimoAcceso] datetime2 NULL,
+    [UserName] nvarchar(256) NULL,
+    [NormalizedUserName] nvarchar(256) NULL,
+    [Email] nvarchar(256) NULL,
+    [NormalizedEmail] nvarchar(256) NULL,
+    [EmailConfirmed] bit NOT NULL,
+    [PasswordHash] nvarchar(max) NULL,
+    [SecurityStamp] nvarchar(max) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [PhoneNumberConfirmed] bit NOT NULL,
+    [TwoFactorEnabled] bit NOT NULL,
+    [LockoutEnd] datetimeoffset NULL,
+    [LockoutEnabled] bit NOT NULL,
+    [AccessFailedCount] int NOT NULL,
+    CONSTRAINT [PK_AspNetUsers] PRIMARY KEY ([Id]),
+    CONSTRAINT [CK_AspNetUsers_Estado] CHECK ([Estado] IN ('Activo','Inactivo'))
+);
+
+CREATE TABLE [AspNetRoleClaims] (
+    [Id] int NOT NULL IDENTITY,
+    [RoleId] int NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [AspNetRoles] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [AspNetUserClaims] (
+    [Id] int NOT NULL IDENTITY,
+    [UserId] int NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetUserClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [AspNetUserLogins] (
+    [LoginProvider] nvarchar(450) NOT NULL,
+    [ProviderKey] nvarchar(450) NOT NULL,
+    [ProviderDisplayName] nvarchar(max) NULL,
+    [UserId] int NOT NULL,
+    CONSTRAINT [PK_AspNetUserLogins] PRIMARY KEY ([LoginProvider], [ProviderKey]),
+    CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [AspNetUserRoles] (
+    [UserId] int NOT NULL,
+    [RoleId] int NOT NULL,
+    CONSTRAINT [PK_AspNetUserRoles] PRIMARY KEY ([UserId], [RoleId]),
+    CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [AspNetRoles] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [AspNetUserTokens] (
+    [UserId] int NOT NULL,
+    [LoginProvider] nvarchar(450) NOT NULL,
+    [Name] nvarchar(450) NOT NULL,
+    [Value] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY ([UserId], [LoginProvider], [Name]),
+    CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+
+CREATE INDEX [IX_AspNetRoleClaims_RoleId] ON [AspNetRoleClaims] ([RoleId]);
+
+CREATE UNIQUE INDEX [RoleNameIndex] ON [AspNetRoles] ([NormalizedName]) WHERE [NormalizedName] IS NOT NULL;
+
+CREATE INDEX [IX_AspNetUserClaims_UserId] ON [AspNetUserClaims] ([UserId]);
+
+CREATE INDEX [IX_AspNetUserLogins_UserId] ON [AspNetUserLogins] ([UserId]);
+
+CREATE INDEX [IX_AspNetUserRoles_RoleId] ON [AspNetUserRoles] ([RoleId]);
+
+CREATE INDEX [EmailIndex] ON [AspNetUsers] ([NormalizedEmail]);
+
+CREATE UNIQUE INDEX [UserNameIndex] ON [AspNetUsers] ([NormalizedUserName]) WHERE [NormalizedUserName] IS NOT NULL;
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20260926211623_CrearIdentidad', N'10.0.12');
+
+COMMIT;
+GO
 
 CREATE TABLE CLIENTE (
     IdCliente           INT IDENTITY(1,1) PRIMARY KEY,
@@ -136,7 +237,7 @@ CREATE TABLE RESERVA_MESA (
     IdReservaMesa       INT IDENTITY(1,1) PRIMARY KEY,
     IdMesa              INT NOT NULL REFERENCES MESA(IdMesa),
     IdCliente           INT NULL REFERENCES CLIENTE(IdCliente),
-    IdUsuario           INT NOT NULL REFERENCES USUARIO(IdUsuario),
+    IdUsuario           INT NOT NULL REFERENCES AspNetUsers(Id),
     FechaHoraReserva    DATETIME2 NOT NULL,
     CantidadPersonas    INT NOT NULL CHECK (CantidadPersonas > 0),
     EstadoReservaMesa   NVARCHAR(20) NOT NULL DEFAULT 'Pendiente'
@@ -147,7 +248,7 @@ CREATE TABLE RESERVA_MESA (
 CREATE TABLE HOUSEKEEPING (
     IdTarea             INT IDENTITY(1,1) PRIMARY KEY,
     IdHabitacion        INT NOT NULL REFERENCES HABITACION(IdHabitacion),
-    IdUsuario           INT NOT NULL REFERENCES USUARIO(IdUsuario),
+    IdUsuario           INT NOT NULL REFERENCES AspNetUsers(Id),
     TipoTarea           NVARCHAR(50) NOT NULL,
     FechaAsignacion     DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
     FechaLimite         DATETIME2 NULL,
@@ -187,7 +288,7 @@ CREATE TABLE RECETA_PRODUCTO (
 CREATE TABLE PEDIDO (
     IdPedido            INT IDENTITY(1,1) PRIMARY KEY,
     IdCliente           INT NULL REFERENCES CLIENTE(IdCliente),
-    IdUsuario           INT NOT NULL REFERENCES USUARIO(IdUsuario),
+    IdUsuario           INT NOT NULL REFERENCES AspNetUsers(Id),
     IdMesa              INT NULL REFERENCES MESA(IdMesa),            
     IdHabitacion        INT NULL REFERENCES HABITACION(IdHabitacion), 
     IdReserva           INT NULL REFERENCES RESERVA(IdReserva),        
@@ -216,7 +317,7 @@ CREATE TABLE DETALLE_PEDIDO (
 CREATE TABLE MOVIMIENTO_INVENTARIO (
     IdMovimiento        BIGINT IDENTITY(1,1) PRIMARY KEY,
     IdProducto          INT NOT NULL REFERENCES INVENTARIO(IdProducto),
-    IdUsuario           INT NOT NULL REFERENCES USUARIO(IdUsuario),
+    IdUsuario           INT NOT NULL REFERENCES AspNetUsers(Id),
     IdPedido            INT NULL REFERENCES PEDIDO(IdPedido),  
     TipoMovimiento      NVARCHAR(20) NOT NULL
         CHECK (TipoMovimiento IN ('Entrada','Salida','Ajuste')),
@@ -231,7 +332,7 @@ CREATE TABLE FACTURA (
     IdFactura           INT IDENTITY(1,1) PRIMARY KEY,
     NumeroFactura       AS ('FAC-' + RIGHT('000000' + CAST(IdFactura AS VARCHAR(6)), 6)) PERSISTED,
     IdCliente           INT NOT NULL REFERENCES CLIENTE(IdCliente),
-    IdUsuario           INT NOT NULL REFERENCES USUARIO(IdUsuario),
+    IdUsuario           INT NOT NULL REFERENCES AspNetUsers(Id),
     FechaEmision        DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
     TipoFactura         NVARCHAR(20) NOT NULL
         CHECK (TipoFactura IN ('Hospedaje','Restaurante','Evento','Mixta')),
@@ -272,7 +373,7 @@ CREATE TABLE DETALLE_FACTURA (
 CREATE TABLE PAGO (
     IdPago              INT IDENTITY(1,1) PRIMARY KEY,
     IdFactura           INT NOT NULL REFERENCES FACTURA(IdFactura),
-    IdUsuario           INT NOT NULL REFERENCES USUARIO(IdUsuario),
+    IdUsuario           INT NOT NULL REFERENCES AspNetUsers(Id),
     MetodoPago          NVARCHAR(20) NOT NULL
         CHECK (MetodoPago IN ('Efectivo','Tarjeta','Transferencia','SINPE')),
     MontoPagado         DECIMAL(12,2) NOT NULL CHECK (MontoPagado > 0),
@@ -304,7 +405,7 @@ CREATE TABLE PAGO (
 
 CREATE TABLE BITACORA (
     IdBitacora          BIGINT IDENTITY(1,1) PRIMARY KEY,
-    IdUsuario           INT NOT NULL REFERENCES USUARIO(IdUsuario),
+    IdUsuario           INT NOT NULL REFERENCES AspNetUsers(Id),
     Modulo              NVARCHAR(10)  NOT NULL   
         CHECK (Modulo IN ('HRE','RPV','INV','CLI','HSK','FAC','USR','REP','IA')),
     IdRegistro          INT           NULL,     
@@ -315,7 +416,7 @@ CREATE TABLE BITACORA (
 
 CREATE TABLE CONSULTA_IA (
     IdConsultaIA        INT IDENTITY(1,1) PRIMARY KEY,
-    IdUsuario           INT NOT NULL REFERENCES USUARIO(IdUsuario),
+    IdUsuario           INT NOT NULL REFERENCES AspNetUsers(Id),
     ConsultaIngresada   NVARCHAR(MAX) NOT NULL,
     RespuestaGenerada   NVARCHAR(MAX) NULL,
     FechaRealizada      DATETIME2 NOT NULL DEFAULT SYSDATETIME()
@@ -338,11 +439,25 @@ CREATE INDEX IX_Bitacora_Modulo_Fecha     ON BITACORA(Modulo, FechaHora);
 GO
 
 
-INSERT INTO USUARIO (NombreCompleto, NombreUsuario, CorreoElectronico, ContrasenaHash, Rol) VALUES
-('Administrador General', 'admin',     'admin@colibri.cr',     'PENDIENTE_SEEDER_BCRYPT', 'Administrador'),
-('María Rodríguez',       'mrodriguez','recepcion@colibri.cr', 'PENDIENTE_SEEDER_BCRYPT', 'Recepcionista'),
-('Carlos Mora',           'cmora',     'mesero@colibri.cr',    'PENDIENTE_SEEDER_BCRYPT', 'Mesero'),
-('Ana Jiménez',           'ajimenez',  'hsk@colibri.cr',       'PENDIENTE_SEEDER_BCRYPT', 'Housekeeping');
+INSERT INTO AspNetRoles (Name, NormalizedName, ConcurrencyStamp, Descripcion) VALUES
+('Administrador', 'ADMINISTRADOR', NEWID(), 'Acceso completo al sistema, usuarios y configuración'),
+('Recepcionista', 'RECEPCIONISTA', NEWID(), 'Reservas, habitaciones, clientes, eventos y facturación'),
+('Mesero',        'MESERO',        NEWID(), 'Mesas, pedidos y punto de venta del restaurante'),
+('Housekeeping',  'HOUSEKEEPING',  NEWID(), 'Tareas de limpieza y mantenimiento de habitaciones');
+
+INSERT INTO AspNetUsers (NombreCompleto, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed,
+                         SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount) VALUES
+('Administrador General', 'admin',      'ADMIN',      'admin@colibri.cr',     'ADMIN@COLIBRI.CR',     1, NEWID(), NEWID(), 0, 0, 1, 0),
+('María Rodríguez',       'mrodriguez', 'MRODRIGUEZ', 'recepcion@colibri.cr', 'RECEPCION@COLIBRI.CR', 1, NEWID(), NEWID(), 0, 0, 1, 0),
+('Carlos Mora',           'cmora',      'CMORA',      'mesero@colibri.cr',    'MESERO@COLIBRI.CR',    1, NEWID(), NEWID(), 0, 0, 1, 0),
+('Ana Jiménez',           'ajimenez',   'AJIMENEZ',   'hsk@colibri.cr',       'HSK@COLIBRI.CR',       1, NEWID(), NEWID(), 0, 0, 1, 0);
+
+INSERT INTO AspNetUserRoles (UserId, RoleId)
+SELECT u.Id, r.Id
+FROM (VALUES ('admin', 'Administrador'), ('mrodriguez', 'Recepcionista'), ('cmora', 'Mesero'), ('ajimenez', 'Housekeeping'))
+     AS v (UserName, RoleName)
+JOIN AspNetUsers u ON u.UserName = v.UserName
+JOIN AspNetRoles r ON r.Name = v.RoleName;
 
 INSERT INTO CLIENTE (Identificacion, NombreCompleto, PrimerApellido, SegundoApellido, Telefono, CorreoElectronico, Direccion) VALUES
 ('1-1234-0567', 'Luis',  'Vargas', 'Solís', '8888-1111', 'luis.vargas@mail.com',  'San José'),

@@ -1,0 +1,46 @@
+@using SistemaHotelColibri.ViewModels.Habitaciones
+@model HabitacionFormViewModel
+@{
+    var tipos = (string[])ViewBag.TiposHabitacion;
+    var estados = (string[])ViewBag.EstadosHabitacion;
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<div class="row g-3">
+    <div class="col-12 col-md-4">
+        <label asp-for="NumeroHabitacion" class="form-label">Número de habitación *</label>
+        <input asp-for="NumeroHabitacion" class="form-control" maxlength="10" autofocus />
+        <span asp-validation-for="NumeroHabitacion" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-4">
+        <label asp-for="TipoHabitacion" class="form-label">Tipo de habitación *</label>
+        <select asp-for="TipoHabitacion" class="form-select" asp-items="@(new SelectList(tipos))"></select>
+        <span asp-validation-for="TipoHabitacion" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-4">
+        <label asp-for="EstadoHabitacion" class="form-label">Estado de habitación *</label>
+        <select asp-for="EstadoHabitacion" class="form-select" asp-items="@(new SelectList(estados))"></select>
+        <span asp-validation-for="EstadoHabitacion" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-4">
+        <label asp-for="Piso" class="form-label">Piso *</label>
+        <input asp-for="Piso" class="form-control" type="number" min="0" step="1" />
+        <span asp-validation-for="Piso" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-4">
+        <label asp-for="Capacidad" class="form-label">Capacidad *</label>
+        <input asp-for="Capacidad" class="form-control" type="number" min="1" step="1" />
+        <span asp-validation-for="Capacidad" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-4">
+        <label asp-for="Precio" class="form-label">Precio *</label>
+        <input asp-for="Precio" class="form-control" type="number" min="0" step="0.01" />
+        <span asp-validation-for="Precio" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Descripcion" class="form-label">Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control" rows="3" maxlength="250"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+</div>

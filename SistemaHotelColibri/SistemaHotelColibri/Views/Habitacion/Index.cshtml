@@ -1,0 +1,79 @@
+@using SistemaHotelColibri.Abstract.Modelos.Habitaciones
+@model List<HabitacionDto>
+@{
+    ViewData["Title"] = "Habitaciones";
+    var estadoSeleccionado = (string)ViewBag.EstadoSeleccionado;
+    var opcionesEstado = (string[])ViewBag.OpcionesEstado;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Habitaciones</h1>
+        <p>Consulta de habitaciones registradas y su estado actual.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nueva habitación</a>
+</div>
+
+<form method="get" class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <label class="small text-secondary" for="estado">Mostrar</label>
+    <select class="form-select form-select-sm w-auto" id="estado" name="estado" onchange="this.form.submit()">
+        @foreach (var opcion in opcionesEstado)
+        {
+            <option value="@opcion" selected="@(opcion == estadoSeleccionado)">@opcion</option>
+        }
+    </select>
+</form>
+
+<div class="tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Número</th>
+                    <th>Tipo</th>
+                    <th class="text-end">Capacidad</th>
+                    <th class="text-end">Precio</th>
+                    <th>Estado</th>
+                    <th class="text-end">Piso</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="8" class="text-center text-secondary py-5">
+                            <i class="bi bi-inbox d-block fs-3 mb-2"></i>
+                            @Mensajes.NoExistenHabitaciones
+                        </td>
+                    </tr>
+                }
+                @foreach (var h in Model)
+                {
+                    <tr>
+                        <td class="text-secondary">#@h.IdHabitacion</td>
+                        <td>
+                            <a class="fw-semibold text-decoration-none" asp-action="Detalle" asp-route-id="@h.IdHabitacion">@h.NumeroHabitacion</a>
+                        </td>
+                        <td>@h.TipoHabitacion</td>
+                        <td class="text-end">@h.Capacidad</td>
+                        <td class="text-end text-nowrap">@Formato.Colones(h.Precio)</td>
+                        <td><partial name="_EstadoHabitacion" model="h" /></td>
+                        <td class="text-end">@h.Piso</td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@h.IdHabitacion" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@h.IdHabitacion" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            <form asp-action="Eliminar" asp-route-id="@h.IdHabitacion" method="post" class="d-inline"
+                                  data-confirmar="¿Desea eliminar la habitación «@h.NumeroHabitacion»? Esta acción no se puede deshacer."
+                                  data-confirmar-boton="Eliminar">
+                                <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar" aria-label="Eliminar"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<p class="small text-secondary mt-2">@Model.Count habitación(es)</p>

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SistemaHotelColibri.Abstract/SistemaHotelColibri.Abstract.csproj" />
+  <Project Path="SistemaHotelColibri.BusinessLogic/SistemaHotelColibri.BusinessLogic.csproj" />
+  <Project Path="SistemaHotelColibri.DataAccess/SistemaHotelColibri.DataAccess.csproj" />
+  <Project Path="SistemaHotelColibri/SistemaHotelColibri.csproj" />
+</Solution>
