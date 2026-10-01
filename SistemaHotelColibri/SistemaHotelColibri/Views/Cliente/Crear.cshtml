@@ -1,0 +1,24 @@
+﻿@using SistemaHotelColibri.ViewModels.Clientes
+@model ClienteFormViewModel
+@{
+    ViewData["Title"] = "Nuevo cliente";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Nuevo cliente</h1>
+        <p>El código del cliente se genera automáticamente al guardar. Los campos con * son obligatorios.</p>
+    </div>
+</div>
+
+<form asp-action="Crear" method="post" class="tarjeta tarjeta-cuerpo">
+    <partial name="_Formulario" model="Model" />
+    <div class="d-flex gap-2 justify-content-end mt-4">
+        <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Guardar</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
