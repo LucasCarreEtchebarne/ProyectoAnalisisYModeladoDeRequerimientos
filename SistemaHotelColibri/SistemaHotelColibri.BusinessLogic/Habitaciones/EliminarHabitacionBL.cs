@@ -25,6 +25,11 @@ public class EliminarHabitacionBL : IEliminarHabitacionBL
             return ResultadoOperacion.Error(Mensajes.NoEncontrado);
         }
 
+        if (habitacion.EstadoHabitacion == Estados.Habitacion.Inactiva)
+        {
+            return ResultadoOperacion.Error(Mensajes.YaInactivo);
+        }
+
         if (!await _eliminarDA.EliminarAsync(idHabitacion))
         {
             return ResultadoOperacion.Error(Mensajes.ErrorEliminarHabitacion);

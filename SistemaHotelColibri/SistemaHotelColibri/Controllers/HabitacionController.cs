@@ -7,7 +7,7 @@ namespace SistemaHotelColibri.Controllers;
 
 public class HabitacionController : ControladorBase
 {
-    private const string TodosLosEstados = "Todos";
+    private const string Activas = "Activas";
 
     private readonly IAgregarHabitacionBL _agregarBL;
     private readonly IObtenerHabitacionBL _obtenerBL;
@@ -31,11 +31,11 @@ public class HabitacionController : ControladorBase
 
     public async Task<IActionResult> Index(string? estado)
     {
-        var estadoSeleccionado = estado ?? TodosLosEstados;
-        var filtro = estadoSeleccionado == TodosLosEstados ? null : estadoSeleccionado;
+        var estadoSeleccionado = estado ?? Activas;
+        var filtro = estadoSeleccionado == Activas ? null : estadoSeleccionado;
 
         ViewBag.EstadoSeleccionado = estadoSeleccionado;
-        ViewBag.OpcionesEstado = Estados.Habitacion.Todos.Append(TodosLosEstados).ToArray();
+        ViewBag.OpcionesEstado = Estados.Habitacion.Todos.Prepend(Activas).ToArray();
         return View(await _obtenerBL.ObtenerAsync(filtro));
     }
 
@@ -54,7 +54,7 @@ public class HabitacionController : ControladorBase
     public IActionResult Crear()
     {
         ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
-        ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
+        ViewBag.EstadosHabitacion = Estados.Habitacion.Editables;
         return View(new HabitacionFormViewModel());
     }
 
@@ -64,7 +64,7 @@ public class HabitacionController : ControladorBase
         if (!ModelState.IsValid)
         {
             ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
-            ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
+            ViewBag.EstadosHabitacion = Estados.Habitacion.Editables;
             return View(modelo);
         }
 
@@ -73,7 +73,7 @@ public class HabitacionController : ControladorBase
         {
             ModelState.AddModelError(string.Empty, resultado.Mensaje);
             ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
-            ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
+            ViewBag.EstadosHabitacion = Estados.Habitacion.Editables;
             return View(modelo);
         }
 
@@ -90,8 +90,14 @@ public class HabitacionController : ControladorBase
             return RedirectToAction(nameof(Index));
         }
 
+        if (habitacion.EstadoHabitacion == Estados.Habitacion.Inactiva)
+        {
+            MensajeError(Mensajes.HabitacionInactiva);
+            return RedirectToAction(nameof(Detalle), new { id });
+        }
+
         ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
-        ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
+        ViewBag.EstadosHabitacion = Estados.Habitacion.Editables;
         return View(HabitacionFormViewModel.DesdeDto(habitacion));
     }
 
@@ -103,7 +109,7 @@ public class HabitacionController : ControladorBase
         if (!ModelState.IsValid)
         {
             ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
-            ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
+            ViewBag.EstadosHabitacion = Estados.Habitacion.Editables;
             return View(modelo);
         }
 
@@ -112,7 +118,7 @@ public class HabitacionController : ControladorBase
         {
             ModelState.AddModelError(string.Empty, resultado.Mensaje);
             ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
-            ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
+            ViewBag.EstadosHabitacion = Estados.Habitacion.Editables;
             return View(modelo);
         }
 

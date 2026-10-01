@@ -1,3 +1,4 @@
+using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Habitaciones;
 using SistemaHotelColibri.DataAccess.Contexto;
 
@@ -20,7 +21,7 @@ public class EliminarHabitacionDA : IEliminarHabitacionDA
             return false;
         }
 
-        _contexto.Habitacion.Remove(entidad);
+        entidad.EstadoHabitacion = Estados.Habitacion.Inactiva;
         await _contexto.SaveChangesAsync();
         return true;
     }

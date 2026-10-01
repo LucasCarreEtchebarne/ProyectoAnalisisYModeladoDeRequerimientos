@@ -51,7 +51,7 @@
                 }
                 @foreach (var h in Model)
                 {
-                    <tr>
+                    <tr class="@(h.EstadoHabitacion == Estados.Habitacion.Inactiva ? "fila-inactiva" : "")">
                         <td class="text-secondary">#@h.IdHabitacion</td>
                         <td>
                             <a class="fw-semibold text-decoration-none" asp-action="Detalle" asp-route-id="@h.IdHabitacion">@h.NumeroHabitacion</a>
@@ -63,12 +63,15 @@
                         <td class="text-end">@h.Piso</td>
                         <td class="text-end text-nowrap">
                             <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@h.IdHabitacion" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@h.IdHabitacion" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
-                            <form asp-action="Eliminar" asp-route-id="@h.IdHabitacion" method="post" class="d-inline"
-                                  data-confirmar="¿Desea eliminar la habitación «@h.NumeroHabitacion»? Esta acción no se puede deshacer."
-                                  data-confirmar-boton="Eliminar">
-                                <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar" aria-label="Eliminar"><i class="bi bi-trash"></i></button>
-                            </form>
+                            @if (h.EstadoHabitacion != Estados.Habitacion.Inactiva)
+                            {
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@h.IdHabitacion" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                                <form asp-action="Eliminar" asp-route-id="@h.IdHabitacion" method="post" class="d-inline"
+                                      data-confirmar="¿Desea inactivar la habitación «@h.NumeroHabitacion»? Dejará de estar disponible para reservas."
+                                      data-confirmar-boton="Inactivar">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit" title="Inactivar" aria-label="Inactivar"><i class="bi bi-slash-circle"></i></button>
+                                </form>
+                            }
                         </td>
                     </tr>
                 }

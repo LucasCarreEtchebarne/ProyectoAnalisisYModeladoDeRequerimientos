@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Habitaciones;
 using SistemaHotelColibri.Abstract.Modelos.Habitaciones;
 using SistemaHotelColibri.DataAccess.Contexto;
@@ -18,7 +19,11 @@ public class ObtenerHabitacionDA : IObtenerHabitacionDA
     {
         var consulta = _contexto.Habitacion.AsNoTracking();
 
-        if (!string.IsNullOrWhiteSpace(estado))
+        if (string.IsNullOrWhiteSpace(estado))
+        {
+            consulta = consulta.Where(h => h.EstadoHabitacion != Estados.Habitacion.Inactiva);
+        }
+        else
         {
             consulta = consulta.Where(h => h.EstadoHabitacion == estado);
         }

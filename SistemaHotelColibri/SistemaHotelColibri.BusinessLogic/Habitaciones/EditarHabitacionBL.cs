@@ -29,6 +29,11 @@ public class EditarHabitacionBL : IEditarHabitacionBL
             return ResultadoOperacion.Error(Mensajes.NoEncontrado);
         }
 
+        if (habitacion.EstadoHabitacion == Estados.Habitacion.Inactiva)
+        {
+            return ResultadoOperacion.Error(Mensajes.HabitacionInactiva);
+        }
+
         ReglasHabitacion.Normalizar(datos);
 
         var error = ReglasHabitacion.Validar(datos);

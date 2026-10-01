@@ -30,8 +30,9 @@ public static class Mensajes
     public const string CapacidadInvalida = "La capacidad debe ser mayor a cero.";
     public const string PrecioInvalido = "El precio no puede ser menor a 0.";
     public const string PisoInvalido = "El piso no puede ser negativo.";
-    public const string HabitacionEliminadaCorrectamente = "Habitación eliminada correctamente.";
-    public const string ErrorEliminarHabitacion = "No se pudo eliminar la habitación, intente nuevamente.";
+    public const string HabitacionEliminadaCorrectamente = "Habitación inactivada correctamente.";
+    public const string ErrorEliminarHabitacion = "No se pudo inactivar la habitación, intente nuevamente.";
+    public const string HabitacionInactiva = "La habitación está inactiva y no se puede modificar.";
 
     public const string FormatoInvalido = "El campo {0} no tiene un formato válido.";
     public const string CorreoInvalido = "El correo electrónico no tiene un formato válido.";
