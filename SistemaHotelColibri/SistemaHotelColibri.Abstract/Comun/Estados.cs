@@ -29,7 +29,9 @@ public static class Estados
         public const string Ocupada = "Ocupada";
         public const string Limpieza = "Limpieza";
         public const string Mantenimiento = "Mantenimiento";
-        public static readonly string[] Todos = [Disponible, Ocupada, Limpieza, Mantenimiento];
+        public const string Inactiva = "Inactiva";
+        public static readonly string[] Todos = [Disponible, Ocupada, Limpieza, Mantenimiento, Inactiva];
+        public static readonly string[] Editables = [Disponible, Ocupada, Limpieza, Mantenimiento];
     }
 
     public static class Mesa
@@ -37,7 +39,8 @@ public static class Estados
         public const string Disponible = "Disponible";
         public const string Ocupada = "Ocupada";
         public const string Reservada = "Reservada";
-        public static readonly string[] Todos = [Disponible, Ocupada, Reservada];
+        public const string Inactiva = "Inactiva";
+        public static readonly string[] Todos = [Disponible, Ocupada, Reservada, Inactiva];
     }
 
     public static class ReservaMesa

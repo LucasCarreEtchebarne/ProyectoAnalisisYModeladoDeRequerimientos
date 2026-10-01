@@ -9,7 +9,7 @@ internal static class ReglasCliente
     public static void Normalizar(ClienteDto cliente)
     {
         cliente.Identificacion = cliente.Identificacion.Trim().ToUpperInvariant();
-        cliente.NombreCompleto = cliente.NombreCompleto.Trim();
+        cliente.Nombre = cliente.Nombre.Trim();
         cliente.PrimerApellido = cliente.PrimerApellido.Trim();
         cliente.SegundoApellido = Limpiar(cliente.SegundoApellido);
         cliente.Telefono = Limpiar(cliente.Telefono);
@@ -24,7 +24,7 @@ internal static class ReglasCliente
             return string.Format(Mensajes.CampoObligatorio, "identificación");
         }
 
-        if (string.IsNullOrWhiteSpace(cliente.NombreCompleto))
+        if (string.IsNullOrWhiteSpace(cliente.Nombre))
         {
             return string.Format(Mensajes.CampoObligatorio, "nombre");
         }

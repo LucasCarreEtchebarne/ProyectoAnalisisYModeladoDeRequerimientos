@@ -9,7 +9,7 @@ public partial class Cliente
 
     public string Identificacion { get; set; } = null!;
 
-    public string NombreCompleto { get; set; } = null!;
+    public string Nombre { get; set; } = null!;
 
     public string PrimerApellido { get; set; } = null!;
 

@@ -9,7 +9,7 @@ public partial class Factura
 
     public string? NumeroFactura { get; set; }
 
-    public int IdCliente { get; set; }
+    public int? IdCliente { get; set; }
 
     public int IdUsuario { get; set; }
 
@@ -27,7 +27,7 @@ public partial class Factura
 
     public virtual ICollection<DetalleFactura> DetalleFactura { get; set; } = new List<DetalleFactura>();
 
-    public virtual Cliente IdClienteNavigation { get; set; } = null!;
+    public virtual Cliente? IdClienteNavigation { get; set; }
 
     public virtual ICollection<Pago> Pago { get; set; } = new List<Pago>();
 }

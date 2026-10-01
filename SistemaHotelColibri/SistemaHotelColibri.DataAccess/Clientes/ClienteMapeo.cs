@@ -9,7 +9,7 @@ public static class ClienteMapeo
     {
         IdCliente = entidad.IdCliente,
         Identificacion = entidad.Identificacion,
-        NombreCompleto = entidad.NombreCompleto,
+        Nombre = entidad.Nombre,
         PrimerApellido = entidad.PrimerApellido,
         SegundoApellido = entidad.SegundoApellido,
         Telefono = entidad.Telefono,
@@ -23,7 +23,7 @@ public static class ClienteMapeo
     {
         IdCliente = dto.IdCliente,
         Identificacion = dto.Identificacion,
-        NombreCompleto = dto.NombreCompleto,
+        Nombre = dto.Nombre,
         PrimerApellido = dto.PrimerApellido,
         SegundoApellido = dto.SegundoApellido,
         Telefono = dto.Telefono,

@@ -22,7 +22,7 @@ public class ClienteFormViewModel
     [Required(ErrorMessage = Mensajes.CampoObligatorio)]
     [StringLength(100, ErrorMessage = Mensajes.LongitudMaxima)]
     [RegularExpression(PatronNombre, ErrorMessage = Mensajes.FormatoInvalido)]
-    public string? NombreCompleto { get; set; }
+    public string? Nombre { get; set; }
 
     [Display(Name = "primer apellido")]
     [Required(ErrorMessage = Mensajes.CampoObligatorio)]
@@ -59,7 +59,7 @@ public class ClienteFormViewModel
     {
         IdCliente = cliente.IdCliente,
         Identificacion = cliente.Identificacion,
-        NombreCompleto = cliente.NombreCompleto,
+        Nombre = cliente.Nombre,
         PrimerApellido = cliente.PrimerApellido,
         SegundoApellido = cliente.SegundoApellido,
         Telefono = cliente.Telefono,
@@ -72,7 +72,7 @@ public class ClienteFormViewModel
     {
         IdCliente = IdCliente,
         Identificacion = Identificacion ?? string.Empty,
-        NombreCompleto = NombreCompleto ?? string.Empty,
+        Nombre = Nombre ?? string.Empty,
         PrimerApellido = PrimerApellido ?? string.Empty,
         SegundoApellido = SegundoApellido,
         Telefono = Telefono,

@@ -34,7 +34,7 @@ internal static class ReglasHabitacion
             return Mensajes.TipoHabitacionInvalido;
         }
 
-        if (!Estados.Habitacion.Todos.Contains(habitacion.EstadoHabitacion))
+        if (!Estados.Habitacion.Editables.Contains(habitacion.EstadoHabitacion))
         {
             return Mensajes.EstadoHabitacionInvalido;
         }

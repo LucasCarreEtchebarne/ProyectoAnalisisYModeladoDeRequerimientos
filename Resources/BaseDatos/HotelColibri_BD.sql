@@ -8,35 +8,12 @@ SET ANSI_NULLS ON;
 SET QUOTED_IDENTIFIER ON;
 GO
 
-DROP TABLE IF EXISTS CONSULTA_IA;
-DROP TABLE IF EXISTS BITACORA;
-DROP TABLE IF EXISTS PAGO;
-DROP TABLE IF EXISTS DETALLE_FACTURA;
-DROP TABLE IF EXISTS FACTURA;
-DROP TABLE IF EXISTS MOVIMIENTO_INVENTARIO;
-DROP TABLE IF EXISTS DETALLE_PEDIDO;
-DROP TABLE IF EXISTS PEDIDO;
-DROP TABLE IF EXISTS RECETA_PRODUCTO;
-DROP TABLE IF EXISTS HOUSEKEEPING;
-DROP TABLE IF EXISTS EVENTO;
-DROP TABLE IF EXISTS ESPACIO_EVENTO;
-DROP TABLE IF EXISTS RESERVA_MESA;
-DROP TABLE IF EXISTS RESERVA;
-DROP TABLE IF EXISTS INVENTARIO;
-DROP TABLE IF EXISTS MENU;
-DROP TABLE IF EXISTS MESA;
-DROP TABLE IF EXISTS HABITACION;
-DROP TABLE IF EXISTS CLIENTE;
-DROP TABLE IF EXISTS AspNetUserTokens;
-DROP TABLE IF EXISTS AspNetUserRoles;
-DROP TABLE IF EXISTS AspNetUserLogins;
-DROP TABLE IF EXISTS AspNetUserClaims;
-DROP TABLE IF EXISTS AspNetRoleClaims;
-DROP TABLE IF EXISTS AspNetUsers;
-DROP TABLE IF EXISTS AspNetRoles;
-DROP TABLE IF EXISTS __EFMigrationsHistory;
+IF OBJECT_ID(N'AspNetUsers') IS NOT NULL OR OBJECT_ID(N'CLIENTE') IS NOT NULL
+BEGIN
+    RAISERROR(N'La base HotelColibri ya tiene tablas. Ejecute primero HotelColibri_Reiniciar.sql.', 16, 1);
+    SET NOEXEC ON;
+END
 GO
-
 
 IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
 BEGIN
@@ -151,7 +128,7 @@ GO
 CREATE TABLE CLIENTE (
     IdCliente           INT IDENTITY(1,1) PRIMARY KEY,
     Identificacion      NVARCHAR(30)  NOT NULL UNIQUE,
-    NombreCompleto      NVARCHAR(100) NOT NULL,
+    Nombre              NVARCHAR(100) NOT NULL,
     PrimerApellido      NVARCHAR(50)  NOT NULL,
     SegundoApellido     NVARCHAR(50)  NULL,
     Telefono            NVARCHAR(20)  NULL,
@@ -169,7 +146,7 @@ CREATE TABLE HABITACION (
     Capacidad           INT           NOT NULL CHECK (Capacidad > 0),
     Precio              DECIMAL(12,2) NOT NULL CHECK (Precio >= 0),  
     EstadoHabitacion    NVARCHAR(20)  NOT NULL DEFAULT 'Disponible'
-        CHECK (EstadoHabitacion IN ('Disponible','Ocupada','Limpieza','Mantenimiento')),
+        CHECK (EstadoHabitacion IN ('Disponible','Ocupada','Limpieza','Mantenimiento','Inactiva')),
     Piso                INT           NOT NULL,
     Descripcion         NVARCHAR(250) NULL
 );
@@ -179,7 +156,7 @@ CREATE TABLE MESA (
     NumeroMesa          INT           NOT NULL UNIQUE,
     Capacidad           INT           NOT NULL CHECK (Capacidad > 0),
     EstadoMesa          NVARCHAR(20)  NOT NULL DEFAULT 'Disponible'
-        CHECK (EstadoMesa IN ('Disponible','Ocupada','Reservada')),
+        CHECK (EstadoMesa IN ('Disponible','Ocupada','Reservada','Inactiva')),
     Descripcion         NVARCHAR(250) NULL
 );
 
@@ -331,7 +308,7 @@ CREATE TABLE MOVIMIENTO_INVENTARIO (
 CREATE TABLE FACTURA (
     IdFactura           INT IDENTITY(1,1) PRIMARY KEY,
     NumeroFactura       AS ('FAC-' + RIGHT('000000' + CAST(IdFactura AS VARCHAR(6)), 6)) PERSISTED,
-    IdCliente           INT NOT NULL REFERENCES CLIENTE(IdCliente),
+    IdCliente           INT NULL REFERENCES CLIENTE(IdCliente),
     IdUsuario           INT NOT NULL REFERENCES AspNetUsers(Id),
     FechaEmision        DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
     TipoFactura         NVARCHAR(20) NOT NULL
@@ -436,96 +413,120 @@ CREATE INDEX IX_Movimiento_Producto_Fecha ON MOVIMIENTO_INVENTARIO(IdProducto, F
 CREATE INDEX IX_Housekeeping_Estado       ON HOUSEKEEPING(EstadoTarea, FechaLimite);
 CREATE INDEX IX_Bitacora_Usuario_Fecha    ON BITACORA(IdUsuario, FechaHora);
 CREATE INDEX IX_Bitacora_Modulo_Fecha     ON BITACORA(Modulo, FechaHora);
+CREATE INDEX IX_ReservaMesa_Mesa          ON RESERVA_MESA(IdMesa);
+CREATE INDEX IX_ReservaMesa_Cliente       ON RESERVA_MESA(IdCliente);
+CREATE INDEX IX_ReservaMesa_Usuario       ON RESERVA_MESA(IdUsuario);
+CREATE INDEX IX_Housekeeping_Habitacion   ON HOUSEKEEPING(IdHabitacion);
+CREATE INDEX IX_Housekeeping_Usuario      ON HOUSEKEEPING(IdUsuario);
+CREATE INDEX IX_Evento_Cliente            ON EVENTO(IdCliente);
+CREATE INDEX IX_Receta_Producto           ON RECETA_PRODUCTO(IdProducto);
+CREATE INDEX IX_Pedido_Cliente            ON PEDIDO(IdCliente);
+CREATE INDEX IX_Pedido_Usuario            ON PEDIDO(IdUsuario);
+CREATE INDEX IX_Pedido_Mesa               ON PEDIDO(IdMesa);
+CREATE INDEX IX_Pedido_Habitacion         ON PEDIDO(IdHabitacion);
+CREATE INDEX IX_Pedido_Reserva            ON PEDIDO(IdReserva);
+CREATE INDEX IX_DetallePedido_Menu        ON DETALLE_PEDIDO(IdProductoMenu);
+CREATE INDEX IX_Movimiento_Usuario        ON MOVIMIENTO_INVENTARIO(IdUsuario);
+CREATE INDEX IX_Movimiento_Pedido         ON MOVIMIENTO_INVENTARIO(IdPedido);
+CREATE INDEX IX_Factura_Usuario           ON FACTURA(IdUsuario);
+CREATE INDEX IX_DetalleFactura_Reserva    ON DETALLE_FACTURA(IdReserva);
+CREATE INDEX IX_DetalleFactura_Pedido     ON DETALLE_FACTURA(IdPedido);
+CREATE INDEX IX_DetalleFactura_Evento     ON DETALLE_FACTURA(IdEvento);
+CREATE INDEX IX_Pago_Usuario              ON PAGO(IdUsuario);
+CREATE INDEX IX_ConsultaIA_Usuario        ON CONSULTA_IA(IdUsuario);
 GO
 
 
 INSERT INTO AspNetRoles (Name, NormalizedName, ConcurrencyStamp, Descripcion) VALUES
-('Administrador', 'ADMINISTRADOR', NEWID(), 'Acceso completo al sistema, usuarios y configuración'),
-('Recepcionista', 'RECEPCIONISTA', NEWID(), 'Reservas, habitaciones, clientes, eventos y facturación'),
-('Mesero',        'MESERO',        NEWID(), 'Mesas, pedidos y punto de venta del restaurante'),
-('Housekeeping',  'HOUSEKEEPING',  NEWID(), 'Tareas de limpieza y mantenimiento de habitaciones');
+(N'Administrador', N'ADMINISTRADOR', NEWID(), N'Acceso completo al sistema, usuarios y configuración'),
+(N'Recepcionista', N'RECEPCIONISTA', NEWID(), N'Reservas, habitaciones, clientes, eventos y facturación'),
+(N'Mesero',        N'MESERO',        NEWID(), N'Mesas, pedidos y punto de venta del restaurante'),
+(N'Housekeeping',  N'HOUSEKEEPING',  NEWID(), N'Tareas de limpieza y mantenimiento de habitaciones');
 
 INSERT INTO AspNetUsers (NombreCompleto, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed,
                          SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount) VALUES
-('Administrador General', 'admin',      'ADMIN',      'admin@colibri.cr',     'ADMIN@COLIBRI.CR',     1, NEWID(), NEWID(), 0, 0, 1, 0),
-('María Rodríguez',       'mrodriguez', 'MRODRIGUEZ', 'recepcion@colibri.cr', 'RECEPCION@COLIBRI.CR', 1, NEWID(), NEWID(), 0, 0, 1, 0),
-('Carlos Mora',           'cmora',      'CMORA',      'mesero@colibri.cr',    'MESERO@COLIBRI.CR',    1, NEWID(), NEWID(), 0, 0, 1, 0),
-('Ana Jiménez',           'ajimenez',   'AJIMENEZ',   'hsk@colibri.cr',       'HSK@COLIBRI.CR',       1, NEWID(), NEWID(), 0, 0, 1, 0);
+(N'Administrador General', N'admin',      N'ADMIN',      N'admin@colibri.cr',     N'ADMIN@COLIBRI.CR',     1, NEWID(), NEWID(), 0, 0, 1, 0),
+(N'María Rodríguez',       N'mrodriguez', N'MRODRIGUEZ', N'recepcion@colibri.cr', N'RECEPCION@COLIBRI.CR', 1, NEWID(), NEWID(), 0, 0, 1, 0),
+(N'Carlos Mora',           N'cmora',      N'CMORA',      N'mesero@colibri.cr',    N'MESERO@COLIBRI.CR',    1, NEWID(), NEWID(), 0, 0, 1, 0),
+(N'Ana Jiménez',           N'ajimenez',   N'AJIMENEZ',   N'hsk@colibri.cr',       N'HSK@COLIBRI.CR',       1, NEWID(), NEWID(), 0, 0, 1, 0);
 
 INSERT INTO AspNetUserRoles (UserId, RoleId)
 SELECT u.Id, r.Id
-FROM (VALUES ('admin', 'Administrador'), ('mrodriguez', 'Recepcionista'), ('cmora', 'Mesero'), ('ajimenez', 'Housekeeping'))
+FROM (VALUES (N'admin', N'Administrador'), (N'mrodriguez', N'Recepcionista'), (N'cmora', N'Mesero'), (N'ajimenez', N'Housekeeping'))
      AS v (UserName, RoleName)
 JOIN AspNetUsers u ON u.UserName = v.UserName
 JOIN AspNetRoles r ON r.Name = v.RoleName;
 
-INSERT INTO CLIENTE (Identificacion, NombreCompleto, PrimerApellido, SegundoApellido, Telefono, CorreoElectronico, Direccion) VALUES
-('1-1234-0567', 'Luis',  'Vargas', 'Solís', '8888-1111', 'luis.vargas@mail.com',  'San José'),
-('2-0456-0789', 'Sofía', 'Castro', 'Rojas', '8777-2222', 'sofia.castro@mail.com', 'Alajuela');
+INSERT INTO CLIENTE (Identificacion, Nombre, PrimerApellido, SegundoApellido, Telefono, CorreoElectronico, Direccion) VALUES
+(N'1-1234-0567', N'Luis',  N'Vargas', N'Solís', N'8888-1111', N'luis.vargas@mail.com',  N'San José'),
+(N'2-0456-0789', N'Sofía', N'Castro', N'Rojas', N'8777-2222', N'sofia.castro@mail.com', N'Alajuela');
 
 INSERT INTO HABITACION (NumeroHabitacion, TipoHabitacion, Capacidad, Precio, Piso, Descripcion) VALUES
-('101', 'Estándar', 2, 45000, 1, 'Cama matrimonial'),
-('102', 'Doble',    4, 65000, 1, 'Dos camas queen'),
-('201', 'Suite',    2, 95000, 2, 'Vista al jardín');
+(N'101', N'Estándar', 2, 45000, 1, N'Cama matrimonial'),
+(N'102', N'Doble',    4, 65000, 1, N'Dos camas queen'),
+(N'201', N'Suite',    2, 95000, 2, N'Vista al jardín');
 
 INSERT INTO MESA (NumeroMesa, Capacidad) VALUES (1, 2), (2, 4), (3, 6);
 
 INSERT INTO ESPACIO_EVENTO (NombreEspacio, CapacidadMaxima, Descripcion) VALUES
-('Salón Colibrí', 80, 'Salón principal con proyector'),
-('Terraza Jardín', 40, 'Espacio al aire libre');
+(N'Salón Colibrí', 80, N'Salón principal con proyector'),
+(N'Terraza Jardín', 40, N'Espacio al aire libre');
 
 INSERT INTO INVENTARIO (NombreProducto, CategoriaProducto, UnidadMedida, Stock, StockMinimo) VALUES
-('Arroz',        'Granos',            'Kilogramo', 50,  10),
-('Frijoles',     'Granos',            'Kilogramo', 30,   8),
-('Huevos',       'Lácteos y huevos',  'Unidad',   120,  30),
-('Café molido',  'Bebidas',           'Kilogramo', 10,   2);
+(N'Arroz',        N'Granos',            N'Kilogramo', 50,  10),
+(N'Frijoles',     N'Granos',            N'Kilogramo', 30,   8),
+(N'Huevos',       N'Lácteos y huevos',  N'Unidad',   120,  30),
+(N'Café molido',  N'Bebidas',           N'Kilogramo', 10,   2);
 
 INSERT INTO MENU (NombreProducto, CategoriaMenu, Precio, Descripcion) VALUES
-('Gallo pinto con huevo', 'Desayunos', 4500, 'Desayuno típico'),
-('Café chorreado',        'Bebidas',   1500, 'Taza de café');
+(N'Gallo pinto con huevo', N'Desayunos', 4500, N'Desayuno típico'),
+(N'Café chorreado',        N'Bebidas',   1500, N'Taza de café');
 
 INSERT INTO RECETA_PRODUCTO (IdProductoMenu, IdProducto, CantidadUtilizada) VALUES
 (1, 1, 0.150), (1, 2, 0.100), (1, 3, 2), (2, 4, 0.020);
 
 INSERT INTO RESERVA (IdCliente, IdHabitacion, FechaEntrada, FechaSalida, CantidadHuespedes, PrecioNoche, EstadoReserva) VALUES
-(1, 1, '2026-10-01', '2026-10-03', 2, 45000, 'Confirmada');
+(1, 1, '2026-10-01', '2026-10-03', 2, 45000, N'Confirmada');
 
 INSERT INTO PEDIDO (IdCliente, IdUsuario, IdMesa, TipoPedido, EstadoPedido) VALUES
-(2, 3, 2, 'Mesa', 'Entregado');
+(2, 3, 2, N'Mesa', N'Entregado');
 INSERT INTO DETALLE_PEDIDO (IdPedido, IdProductoMenu, Cantidad, PrecioUnitario) VALUES
 (1, 1, 2, 4500), (1, 2, 2, 1500);
 
 INSERT INTO MOVIMIENTO_INVENTARIO (IdProducto, IdUsuario, IdPedido, TipoMovimiento, Cantidad, StockResultante, Motivo) VALUES
-(1, 3, 1, 'Salida', 0.300, 49.700, 'Consumo receta pedido FAC-000001'),
-(2, 3, 1, 'Salida', 0.200, 29.800, 'Consumo receta pedido FAC-000001'),
-(3, 3, 1, 'Salida', 4.000, 116.000, 'Consumo receta pedido FAC-000001'),
-(4, 3, 1, 'Salida', 0.040, 9.960, 'Consumo receta pedido FAC-000001');
+(1, 3, 1, N'Salida', 0.300, 49.700, N'Consumo receta pedido FAC-000001'),
+(2, 3, 1, N'Salida', 0.200, 29.800, N'Consumo receta pedido FAC-000001'),
+(3, 3, 1, N'Salida', 4.000, 116.000, N'Consumo receta pedido FAC-000001'),
+(4, 3, 1, N'Salida', 0.040, 9.960, N'Consumo receta pedido FAC-000001');
 UPDATE INVENTARIO SET Stock = 49.700 WHERE IdProducto = 1;
 UPDATE INVENTARIO SET Stock = 29.800 WHERE IdProducto = 2;
 UPDATE INVENTARIO SET Stock = 116.000 WHERE IdProducto = 3;
 UPDATE INVENTARIO SET Stock = 9.960  WHERE IdProducto = 4;
 
 INSERT INTO FACTURA (IdCliente, IdUsuario, TipoFactura, MontoTotal, EstadoFactura) VALUES
-(2, 3, 'Restaurante', 12000, 'Pagada');
+(2, 3, N'Restaurante', 12000, N'Pagada');
 INSERT INTO DETALLE_FACTURA (IdFactura, TipoConcepto, IdPedido, Descripcion, Cantidad, PrecioUnitario) VALUES
-(1, 'Restaurante', 1, 'Gallo pinto con huevo', 2, 4500),
-(1, 'Restaurante', 1, 'Café chorreado',        2, 1500);
+(1, N'Restaurante', 1, N'Gallo pinto con huevo', 2, 4500),
+(1, N'Restaurante', 1, N'Café chorreado',        2, 1500);
 INSERT INTO PAGO (IdFactura, IdUsuario, MetodoPago, MontoPagado, MontoRecibido, CambioDevuelto) VALUES
-(1, 3, 'Efectivo', 12000, 15000, 3000);
+(1, 3, N'Efectivo', 12000, 15000, 3000);
 
 INSERT INTO HOUSEKEEPING (IdHabitacion, IdUsuario, TipoTarea, FechaLimite) VALUES
-(2, 4, 'Limpieza general', DATEADD(HOUR, 4, SYSDATETIME()));
+(2, 4, N'Limpieza general', DATEADD(HOUR, 4, SYSDATETIME()));
 
 INSERT INTO EVENTO (IdCliente, IdEspacio, NombreEvento, FechaEvento, HoraInicio, HoraFin, Participantes, MontoAcordado) VALUES
-(1, 1, 'Reunión corporativa', '2026-11-15', '09:00', '13:00', 25, 350000);
+(1, 1, N'Reunión corporativa', '2026-11-15', '09:00', '13:00', 25, 350000);
 
 INSERT INTO FACTURA (IdCliente, IdUsuario, TipoFactura, MontoTotal, EstadoFactura) VALUES
-(1, 2, 'Mixta', 440000, 'Pendiente');
+(1, 2, N'Mixta', 440000, N'Pendiente');
 INSERT INTO DETALLE_FACTURA (IdFactura, TipoConcepto, IdReserva, IdEvento, Descripcion, Cantidad, PrecioUnitario) VALUES
-(2, 'Hospedaje', 1, NULL, 'Habitación 101 — 2 noches', 2, 45000),
-(2, 'Evento', NULL, 1, 'Reunión corporativa — Salón Colibrí', 1, 350000);
+(2, N'Hospedaje', 1, NULL, N'Habitación 101 — 2 noches', 2, 45000),
+(2, N'Evento', NULL, 1, N'Reunión corporativa — Salón Colibrí', 1, 350000);
 
 INSERT INTO BITACORA (IdUsuario, Modulo, IdRegistro, AccionRealizada, Descripcion) VALUES
-(3, 'FAC', 1, 'CREAR', 'Factura de restaurante emitida'),
-(2, 'FAC', 2, 'CREAR', 'Factura mixta (hospedaje + evento) emitida');
+(3, N'FAC', 1, N'CREAR', N'Factura de restaurante emitida'),
+(2, N'FAC', 2, N'CREAR', N'Factura mixta (hospedaje + evento) emitida');
+GO
+
+SET NOEXEC OFF;
 GO

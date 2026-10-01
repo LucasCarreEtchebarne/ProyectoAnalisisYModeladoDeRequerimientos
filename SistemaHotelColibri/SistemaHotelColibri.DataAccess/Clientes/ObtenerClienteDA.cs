@@ -25,7 +25,7 @@ public class ObtenerClienteDA : IObtenerClienteDA
 
         var clientes = await consulta
             .OrderBy(c => c.PrimerApellido)
-            .ThenBy(c => c.NombreCompleto)
+            .ThenBy(c => c.Nombre)
             .ToListAsync();
 
         return clientes.Select(c => c.ADto()).ToList();

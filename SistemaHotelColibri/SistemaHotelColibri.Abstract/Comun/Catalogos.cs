@@ -6,5 +6,5 @@ public static class Catalogos
         ["Unidad", "Kilogramo", "Gramo", "Litro", "Mililitro", "Paquete", "Caja", "Botella"];
 
     public static readonly string[] TiposHabitacion =
-        ["Estandar", "Doble", "Suite", "Familiar"];
+        ["Estándar", "Doble", "Suite", "Familiar"];
 }

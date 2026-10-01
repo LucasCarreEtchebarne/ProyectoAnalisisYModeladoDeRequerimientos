@@ -44,7 +44,7 @@ public class EditarClienteBL : IEditarClienteBL
 
         // La fecha de registro se conserva; solo se actualizan los datos editables.
         cliente.Identificacion = datos.Identificacion;
-        cliente.NombreCompleto = datos.NombreCompleto;
+        cliente.Nombre = datos.Nombre;
         cliente.PrimerApellido = datos.PrimerApellido;
         cliente.SegundoApellido = datos.SegundoApellido;
         cliente.Telefono = datos.Telefono;

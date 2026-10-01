@@ -26,16 +26,16 @@ public class BuscarClienteDA : IBuscarClienteDA
         
         consulta = consulta.Where(c =>
             c.Identificacion.Contains(texto)
-            || c.NombreCompleto.Contains(texto)
+            || c.Nombre.Contains(texto)
             || c.PrimerApellido.Contains(texto)
             || (c.SegundoApellido != null && c.SegundoApellido.Contains(texto))
-            || (c.NombreCompleto + " " + c.PrimerApellido).Contains(texto)
+            || (c.Nombre + " " + c.PrimerApellido).Contains(texto)
             || (c.Telefono != null && c.Telefono.Contains(texto))
             || (c.CorreoElectronico != null && c.CorreoElectronico.Contains(texto)));
 
         var clientes = await consulta
             .OrderBy(c => c.PrimerApellido)
-            .ThenBy(c => c.NombreCompleto)
+            .ThenBy(c => c.Nombre)
             .ToListAsync();
 
         return clientes.Select(c => c.ADto()).ToList();
