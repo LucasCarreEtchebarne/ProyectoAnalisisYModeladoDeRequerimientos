@@ -1,0 +1,10 @@
+﻿@using SistemaHotelColibri.Abstract.Modelos.Clientes
+@model ClienteDto
+@if (Model.EstadoCliente == Estados.Cliente.Inactivo)
+{
+    <span class="estado estado-inactivo">Inactivo</span>
+}
+else
+{
+    <span class="estado estado-activo">Activo</span>
+}

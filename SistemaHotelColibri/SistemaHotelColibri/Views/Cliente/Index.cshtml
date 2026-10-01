@@ -1,0 +1,96 @@
+﻿@using SistemaHotelColibri.Abstract.Modelos.Clientes
+@model List<ClienteDto>
+@{
+    ViewData["Title"] = "Clientes";
+    var estadoSeleccionado = (string)ViewBag.EstadoSeleccionado;
+    var opcionesEstado = (string[])ViewBag.OpcionesEstado;
+    var busqueda = ViewBag.Busqueda as string;
+    var hayBusqueda = !string.IsNullOrWhiteSpace(busqueda);
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Clientes</h1>
+        <p>Consulta de los clientes registrados en el hotel.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nuevo cliente</a>
+</div>
+
+<form method="get" class="d-flex flex-wrap align-items-center gap-2 mb-3" role="search">
+    <div class="input-group input-group-sm" style="max-width: 360px;">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="search" class="form-control" id="busqueda" name="busqueda" value="@busqueda" maxlength="100"
+               placeholder="Identificación, nombre, apellido, teléfono o correo" aria-label="Buscar clientes" />
+        <button class="btn btn-primary" type="submit">Buscar</button>
+    </div>
+
+    <label class="small text-secondary ms-md-2" for="estado">Mostrar</label>
+    <select class="form-select form-select-sm w-auto" id="estado" name="estado" onchange="this.form.submit()">
+        @foreach (var opcion in opcionesEstado)
+        {
+            <option value="@opcion" selected="@(opcion == estadoSeleccionado)">@opcion</option>
+        }
+    </select>
+
+    @if (hayBusqueda)
+    {
+        <a class="btn btn-sm btn-outline-secondary" asp-action="Index" asp-route-estado="@estadoSeleccionado">
+            <i class="bi bi-x-lg"></i> Limpiar búsqueda
+        </a>
+    }
+</form>
+
+<div class="tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Identificación</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-secondary py-5">
+                            <i class="bi bi-inbox d-block fs-3 mb-2"></i>
+                            @(hayBusqueda ? Mensajes.SinResultadosBusqueda : Mensajes.NoExistenClientes)
+                        </td>
+                    </tr>
+                }
+                @foreach (var c in Model)
+                {
+                    <tr class="@(c.EstadoCliente == Estados.Cliente.Inactivo ? "fila-inactiva" : "")">
+                        <td class="text-secondary">#@c.IdCliente</td>
+                        <td class="text-nowrap">@c.Identificacion</td>
+                        <td>
+                            <a class="fw-semibold text-decoration-none" asp-action="Detalle" asp-route-id="@c.IdCliente">@c.NombreMostrar</a>
+                        </td>
+                        <td class="text-nowrap">@(c.Telefono ?? "—")</td>
+                        <td>@(c.CorreoElectronico ?? "—")</td>
+                        <td><partial name="_EstadoCliente" model="c" /></td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@c.IdCliente" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@c.IdCliente" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            @if (c.EstadoCliente == Estados.Cliente.Activo)
+                            {
+                                <form asp-action="Eliminar" asp-route-id="@c.IdCliente" method="post" class="d-inline"
+                                      data-confirmar="¿Desea eliminar al cliente «@c.NombreMostrar»? Dejará de aparecer en la lista de clientes activos."
+                                      data-confirmar-boton="Eliminar">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar" aria-label="Eliminar"><i class="bi bi-trash"></i></button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<p class="small text-secondary mt-2">@Model.Count cliente(s)@(hayBusqueda ? $" encontrados para «{busqueda}»" : "")</p>

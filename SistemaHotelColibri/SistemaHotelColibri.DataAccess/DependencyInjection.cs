@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Clientes;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Inventarios;
+using SistemaHotelColibri.DataAccess.Clientes;
 using SistemaHotelColibri.DataAccess.Contexto;
 using SistemaHotelColibri.DataAccess.Habitaciones;
 using SistemaHotelColibri.DataAccess.Identidad;
@@ -30,6 +32,14 @@ public static class DependencyInjection
         services.AddScoped<IObtenerHabitacionPorIdDA, ObtenerHabitacionPorIdDA>();
         services.AddScoped<IEditarHabitacionDA, EditarHabitacionDA>();
         services.AddScoped<IEliminarHabitacionDA, EliminarHabitacionDA>();
+
+        services.AddScoped<IAgregarClienteDA, AgregarClienteDA>();
+        services.AddScoped<IExisteIdentificacionClienteDA, ExisteIdentificacionClienteDA>();
+        services.AddScoped<IObtenerClienteDA, ObtenerClienteDA>();
+        services.AddScoped<IObtenerClientePorIdDA, ObtenerClientePorIdDA>();
+        services.AddScoped<IEditarClienteDA, EditarClienteDA>();
+        services.AddScoped<IEliminarClienteDA, EliminarClienteDA>();
+        services.AddScoped<IBuscarClienteDA, BuscarClienteDA>();
 
         return services;
     }

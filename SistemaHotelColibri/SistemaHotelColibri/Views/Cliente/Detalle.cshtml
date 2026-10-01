@@ -1,0 +1,61 @@
+﻿@using SistemaHotelColibri.Abstract.Modelos.Clientes
+@model ClienteDto
+@{
+    ViewData["Title"] = "Detalle de cliente";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>@Model.NombreMostrar</h1>
+        <p>Código #@Model.IdCliente · <partial name="_EstadoCliente" model="Model" /></p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+        <a class="btn btn-primary" asp-action="Editar" asp-route-id="@Model.IdCliente"><i class="bi bi-pencil"></i> Editar</a>
+        @if (Model.EstadoCliente == Estados.Cliente.Activo)
+        {
+            <form asp-action="Eliminar" asp-route-id="@Model.IdCliente" method="post"
+                  data-confirmar="¿Desea eliminar al cliente «@Model.NombreMostrar»? Dejará de aparecer en la lista de clientes activos."
+                  data-confirmar-boton="Eliminar">
+                <button class="btn btn-outline-danger" type="submit"><i class="bi bi-trash"></i> Eliminar</button>
+            </form>
+        }
+    </div>
+</div>
+
+<div class="tarjeta tarjeta-cuerpo">
+    <div class="row">
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Identificación</div>
+            <div class="dato-valor">@Model.Identificacion</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Nombre</div>
+            <div class="dato-valor">@Model.NombreCompleto</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Primer apellido</div>
+            <div class="dato-valor">@Model.PrimerApellido</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Segundo apellido</div>
+            <div class="dato-valor">@(Model.SegundoApellido ?? "—")</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Teléfono</div>
+            <div class="dato-valor">@(Model.Telefono ?? "—")</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Correo electrónico</div>
+            <div class="dato-valor text-break">@(Model.CorreoElectronico ?? "—")</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Fecha de registro</div>
+            <div class="dato-valor">@Formato.Fecha(Model.FechaRegistro)</div>
+        </div>
+        <div class="col-12">
+            <div class="dato-etiqueta">Dirección</div>
+            <div class="dato-valor">@(Model.Direccion ?? "—")</div>
+        </div>
+    </div>
+</div>

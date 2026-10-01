@@ -35,10 +35,9 @@
                 </a>
 
                 <div class="sidebar-seccion">Clientes</div>
-                <span class="sidebar-link disabled">
+                <a class="sidebar-link @Activo("Cliente")" asp-controller="Cliente" asp-action="Index">
                     <i class="bi bi-people"></i> Clientes
-                    <span class="badge-pendiente">Pendiente</span>
-                </span>
+                </a>
 
                 <div class="sidebar-seccion">Restaurante</div>
                 <a class="sidebar-link @Activo("Inventario")" asp-controller="Inventario" asp-action="Index">
