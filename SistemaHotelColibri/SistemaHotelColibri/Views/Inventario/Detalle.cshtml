@@ -15,9 +15,9 @@
         @if (Model.EstadoProducto == Estados.ProductoInventario.Activo)
         {
             <form asp-action="Eliminar" asp-route-id="@Model.IdProducto" method="post"
-                  data-confirmar="¿Desea eliminar el producto «@Model.NombreProducto»? Dejará de aparecer en el inventario activo."
-                  data-confirmar-boton="Eliminar">
-                <button class="btn btn-outline-danger" type="submit"><i class="bi bi-trash"></i> Eliminar</button>
+                  data-confirmar="¿Desea inactivar el producto «@Model.NombreProducto»? Dejará de aparecer en el inventario activo."
+                  data-confirmar-boton="Inactivar">
+                <button class="btn btn-outline-danger" type="submit"><i class="bi bi-slash-circle"></i> Inactivar</button>
             </form>
         }
     </div>

@@ -81,9 +81,9 @@
                             @if (c.EstadoCliente == Estados.Cliente.Activo)
                             {
                                 <form asp-action="Eliminar" asp-route-id="@c.IdCliente" method="post" class="d-inline"
-                                      data-confirmar="¿Desea eliminar al cliente «@c.NombreMostrar»? Dejará de aparecer en la lista de clientes activos."
-                                      data-confirmar-boton="Eliminar">
-                                    <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar" aria-label="Eliminar"><i class="bi bi-trash"></i></button>
+                                      data-confirmar="¿Desea inactivar al cliente «@c.NombreMostrar»? Dejará de aparecer en la lista de clientes activos."
+                                      data-confirmar-boton="Inactivar">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit" title="Inactivar" aria-label="Inactivar"><i class="bi bi-slash-circle"></i></button>
                                 </form>
                             }
                         </td>

@@ -4,7 +4,7 @@ public static class Mensajes
 {
     public const string CreadoOk = "El registro se creó correctamente.";
     public const string ActualizadoOk = "Los cambios se guardaron correctamente.";
-    public const string EliminadoOk = "El registro se eliminó correctamente.";
+    public const string EliminadoOk = "El registro se inactivó correctamente.";
     public const string NoEncontrado = "El registro solicitado no existe.";
     public const string YaInactivo = "El registro ya se encuentra inactivo.";
     public const string RevisarFormulario = "Revise los datos marcados en el formulario.";
@@ -12,6 +12,7 @@ public static class Mensajes
     public const string CampoObligatorio = "El campo {0} es obligatorio.";
     public const string LongitudMaxima = "El campo {0} admite como máximo {1} caracteres.";
     public const string ValorNoNegativo = "El campo {0} no puede ser negativo.";
+    public const string RangoValores = "El campo {0} debe estar entre {1} y {2}.";
 
     public const string ProductoRegistrado = "El producto se registró con el código #{0}.";
     public const string ProductoDuplicado = "Ya existe un producto de inventario con ese nombre.";
@@ -39,7 +40,7 @@ public static class Mensajes
     public const string ClienteRegistrado = "El cliente se registró correctamente con el código #{0}.";
     public const string ClienteDuplicado = "Ya existe un cliente registrado con esa identificación.";
     public const string ClienteModificado = "Los datos del cliente se actualizaron correctamente.";
-    public const string ClienteEliminado = "El cliente se eliminó correctamente.";
+    public const string ClienteEliminado = "El cliente se inactivó correctamente.";
     public const string ClienteYaInactivo = "El cliente ya se encuentra inactivo.";
     public const string EstadoClienteInvalido = "El estado de cliente seleccionado no es válido.";
     public const string NoExistenClientes = "No existen clientes registrados.";

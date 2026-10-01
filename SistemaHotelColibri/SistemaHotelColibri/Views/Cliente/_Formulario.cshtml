@@ -46,7 +46,7 @@
         <div class="col-12 col-md-4">
             <label asp-for="EstadoCliente" class="form-label">Estado *</label>
             <select asp-for="EstadoCliente" class="form-select" asp-items="@(new SelectList(estados))"></select>
-            <div class="form-text">Permite reactivar un cliente eliminado.</div>
+            <div class="form-text">Permite reactivar un cliente inactivo.</div>
             <span asp-validation-for="EstadoCliente" class="text-danger"></span>
         </div>
     }

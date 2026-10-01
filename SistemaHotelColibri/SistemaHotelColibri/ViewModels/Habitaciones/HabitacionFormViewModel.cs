@@ -23,7 +23,7 @@ public class HabitacionFormViewModel
 
     [Display(Name = "capacidad")]
     [Required(ErrorMessage = Mensajes.CampoObligatorio)]
-    [Range(1, 20, ErrorMessage = Mensajes.ValorNoNegativo)]
+    [Range(1, 20, ErrorMessage = Mensajes.RangoValores)]
     public int? Capacidad { get; set; }
 
     [Display(Name = "precio")]
@@ -33,7 +33,7 @@ public class HabitacionFormViewModel
 
     [Display(Name = "piso")]
     [Required(ErrorMessage = Mensajes.CampoObligatorio)]
-    [Range(0, 100, ErrorMessage = Mensajes.ValorNoNegativo)]
+    [Range(0, 100, ErrorMessage = Mensajes.RangoValores)]
     public int? Piso { get; set; }
 
     [Display(Name = "descripción")]
