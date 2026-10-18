@@ -9,7 +9,11 @@ public static class InventarioMapeo
     {
         IdProducto = entidad.IdProducto,
         NombreProducto = entidad.NombreProducto,
-        CategoriaProducto = entidad.CategoriaProducto,
+        IdCategoria = entidad.IdCategoria,
+        NombreCategoria = entidad.IdCategoriaNavigation?.NombreCategoria ?? string.Empty,
+        AreaCategoria = entidad.IdCategoriaNavigation?.Area ?? string.Empty,
+        IdProveedor = entidad.IdProveedor,
+        NombreProveedor = entidad.IdProveedorNavigation?.NombreProveedor,
         UnidadMedida = entidad.UnidadMedida,
         Stock = entidad.Stock,
         StockMinimo = entidad.StockMinimo,
@@ -22,12 +26,22 @@ public static class InventarioMapeo
     {
         IdProducto = dto.IdProducto,
         NombreProducto = dto.NombreProducto,
-        CategoriaProducto = dto.CategoriaProducto,
+        IdCategoria = dto.IdCategoria,
+        IdProveedor = dto.IdProveedor,
         UnidadMedida = dto.UnidadMedida,
         Stock = dto.Stock,
         StockMinimo = dto.StockMinimo,
         FechaIngreso = dto.FechaIngreso,
         EstadoProducto = dto.EstadoProducto,
         Descripcion = dto.Descripcion
+    };
+
+    public static CategoriaInventarioDto ADto(this CategoriaInventario entidad) => new()
+    {
+        IdCategoria = entidad.IdCategoria,
+        NombreCategoria = entidad.NombreCategoria,
+        Area = entidad.Area,
+        EstadoCategoria = entidad.EstadoCategoria,
+        Descripcion = entidad.Descripcion
     };
 }

@@ -18,6 +18,7 @@ public class ObtenerInventarioPorIdDA : IObtenerInventarioPorIdDA
     {
         var producto = await _contexto.Inventario
             .AsNoTracking()
+            .ConCategoriaYProveedor()
             .FirstOrDefaultAsync(p => p.IdProducto == idProducto);
 
         return producto?.ADto();

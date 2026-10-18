@@ -19,6 +19,7 @@ public static class Mensajes
     public const string UnidadMedidaInvalida = "La unidad de medida seleccionada no es válida.";
     public const string StockNegativo = "El stock no puede ser negativo.";
     public const string StockMinimoNegativo = "El stock mínimo no puede ser negativo.";
+    public const string CategoriaInvalida = "Seleccione una categoría válida.";
 
     public const string HabitacionRegistrada = "Se ha registrado la habitación correctamente.";
     public const string HabitacionDuplicada = "Esta habitación ya se encuentra registrada.";
@@ -39,6 +40,7 @@ public static class Mensajes
     public const string CorreoInvalido = "El correo electrónico no tiene un formato válido.";
     public const string ClienteRegistrado = "El cliente se registró correctamente con el código #{0}.";
     public const string ClienteDuplicado = "Ya existe un cliente registrado con esa identificación.";
+    public const string CorreoClienteDuplicado = "Ya existe un cliente registrado con ese correo electrónico.";
     public const string ClienteModificado = "Los datos del cliente se actualizaron correctamente.";
     public const string ClienteEliminado = "El cliente se inactivó correctamente.";
     public const string ClienteYaInactivo = "El cliente ya se encuentra inactivo.";

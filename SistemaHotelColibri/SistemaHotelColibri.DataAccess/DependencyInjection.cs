@@ -25,6 +25,7 @@ public static class DependencyInjection
         services.AddScoped<IEditarInventarioDA, EditarInventarioDA>();
         services.AddScoped<IEliminarInventarioDA, EliminarInventarioDA>();
         services.AddScoped<IObtenerAlertasInventarioDA, ObtenerAlertasInventarioDA>();
+        services.AddScoped<IObtenerCategoriaInventarioDA, ObtenerCategoriaInventarioDA>();
 
         services.AddScoped<IAgregarHabitacionDA, AgregarHabitacionDA>();
         services.AddScoped<IExisteNumeroHabitacionDA, ExisteNumeroHabitacionDA>();
@@ -35,6 +36,7 @@ public static class DependencyInjection
 
         services.AddScoped<IAgregarClienteDA, AgregarClienteDA>();
         services.AddScoped<IExisteIdentificacionClienteDA, ExisteIdentificacionClienteDA>();
+        services.AddScoped<IExisteCorreoClienteDA, ExisteCorreoClienteDA>();
         services.AddScoped<IObtenerClienteDA, ObtenerClienteDA>();
         services.AddScoped<IObtenerClientePorIdDA, ObtenerClientePorIdDA>();
         services.AddScoped<IEditarClienteDA, EditarClienteDA>();

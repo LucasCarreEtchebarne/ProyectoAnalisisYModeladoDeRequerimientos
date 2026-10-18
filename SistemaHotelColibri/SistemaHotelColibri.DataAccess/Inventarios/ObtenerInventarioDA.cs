@@ -16,7 +16,7 @@ public class ObtenerInventarioDA : IObtenerInventarioDA
 
     public async Task<List<InventarioDto>> ObtenerAsync(string? estado)
     {
-        var consulta = _contexto.Inventario.AsNoTracking();
+        var consulta = _contexto.Inventario.AsNoTracking().ConCategoriaYProveedor();
 
         if (!string.IsNullOrWhiteSpace(estado))
         {
