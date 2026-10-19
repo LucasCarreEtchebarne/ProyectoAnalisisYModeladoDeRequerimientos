@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Inventarios;
+using SistemaHotelColibri.ViewModels.Comun;
 using SistemaHotelColibri.ViewModels.Inventarios;
 
 namespace SistemaHotelColibri.Controllers;
 
 public class InventarioController : ControladorBase
 {
-    private const string TodosLosEstados = "Todos";
-
     private readonly IAgregarInventarioBL _agregarBL;
     private readonly IObtenerInventarioBL _obtenerBL;
     private readonly IObtenerInventarioPorIdBL _obtenerPorIdBL;
@@ -41,13 +40,27 @@ public class InventarioController : ControladorBase
         ViewBag.Categorias = await _obtenerCategoriasBL.ObtenerAsync(Estados.CategoriaInventario.Activo);
     }
 
-    public async Task<IActionResult> Index(string? estado)
+    public async Task<IActionResult> Index(string? busqueda, string? estado, int pagina = 1)
     {
         var estadoSeleccionado = estado ?? Estados.ProductoInventario.Activo;
-        var filtro = estadoSeleccionado == TodosLosEstados ? null : estadoSeleccionado;
 
-        ViewBag.EstadoSeleccionado = estadoSeleccionado;
-        ViewBag.OpcionesEstado = Estados.ProductoInventario.Todos.Append(TodosLosEstados).ToArray();
+        var filtro = new FiltroListado
+        {
+            Busqueda = busqueda,
+            Estado = estadoSeleccionado == FiltroListado.TodosLosEstados ? null : estadoSeleccionado,
+            Pagina = pagina
+        };
+
+        ViewBag.Busqueda = new BarraBusquedaViewModel
+        {
+            Busqueda = busqueda,
+            Placeholder = "Nombre, categoría, proveedor o descripción",
+            Filtros =
+            [
+                FiltroSeleccion.Crear("estado", "Estado",
+                    Estados.ProductoInventario.Todos.Append(FiltroListado.TodosLosEstados), estadoSeleccionado)
+            ]
+        };
         ViewBag.TotalAlertas = (await _obtenerAlertasBL.ObtenerAlertasAsync()).Count;
         return View(await _obtenerBL.ObtenerAsync(filtro));
     }

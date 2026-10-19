@@ -176,6 +176,41 @@ body {
     .barra-superior { padding: 0 1rem; }
 }
 
+.barra-busqueda {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: .75rem;
+    padding: 1rem 1.25rem;
+}
+.barra-busqueda .form-label { margin-bottom: .3rem; color: var(--color-texto-suave); }
+.barra-busqueda-texto { flex: 1 1 280px; }
+.barra-busqueda-filtro { flex: 0 1 180px; }
+.barra-busqueda-acciones { display: flex; gap: .5rem; }
+
+@media (max-width: 575.98px) {
+    .barra-busqueda-filtro { flex: 1 1 100%; }
+    .barra-busqueda-acciones { flex: 1 1 100%; }
+    .barra-busqueda-acciones .btn { flex: 1; }
+}
+
+.paginacion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-top: .75rem;
+}
+.pagination {
+    --bs-pagination-color: var(--color-acento);
+    --bs-pagination-hover-color: #0f766e;
+    --bs-pagination-focus-color: #0f766e;
+    --bs-pagination-focus-box-shadow: 0 0 0 .2rem rgba(13, 148, 136, .2);
+    --bs-pagination-active-bg: var(--color-acento);
+    --bs-pagination-active-border-color: var(--color-acento);
+}
+
 .encabezado-pagina {
     display: flex;
     flex-wrap: wrap;

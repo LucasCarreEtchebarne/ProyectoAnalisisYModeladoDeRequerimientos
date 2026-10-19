@@ -14,7 +14,7 @@ public static class Mensajes
     public const string ValorNoNegativo = "El campo {0} no puede ser negativo.";
     public const string RangoValores = "El campo {0} debe estar entre {1} y {2}.";
 
-    public const string ProductoRegistrado = "El producto se registró con el código #{0}.";
+    public const string ProductoRegistrado = "El producto «{0}» se registró correctamente.";
     public const string ProductoDuplicado = "Ya existe un producto de inventario con ese nombre.";
     public const string UnidadMedidaInvalida = "La unidad de medida seleccionada no es válida.";
     public const string StockNegativo = "El stock no puede ser negativo.";

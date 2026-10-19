@@ -37,6 +37,6 @@ public class AgregarInventarioBL : IAgregarInventarioBL
 
         var idGenerado = await _agregarDA.AgregarAsync(producto);
 
-        return ResultadoOperacion.Ok(string.Format(Mensajes.ProductoRegistrado, idGenerado), idGenerado);
+        return ResultadoOperacion.Ok(string.Format(Mensajes.ProductoRegistrado, producto.NombreProducto), idGenerado);
     }
 }

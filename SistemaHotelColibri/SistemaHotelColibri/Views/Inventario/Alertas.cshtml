@@ -26,7 +26,6 @@ else
             <table class="table table-hover tabla-datos">
                 <thead>
                     <tr>
-                        <th>Código</th>
                         <th>Producto</th>
                         <th>Categoría</th>
                         <th class="text-end">Stock</th>
@@ -39,7 +38,6 @@ else
                     @foreach (var p in Model)
                     {
                         <tr>
-                            <td class="text-secondary">#@p.IdProducto</td>
                             <td><a class="fw-semibold text-decoration-none" asp-action="Detalle" asp-route-id="@p.IdProducto">@p.NombreProducto</a></td>
                             <td>@p.NombreCategoria</td>
                             <td class="text-end text-nowrap">@Formato.Cantidad(p.Stock) <span class="text-secondary small">@p.UnidadMedida</span></td>
