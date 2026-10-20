@@ -7,6 +7,9 @@ public static class Estados
         public const string Activo = "Activo";
         public const string Inactivo = "Inactivo";
         public static readonly string[] Todos = [Activo, Inactivo];
+
+        public const string Bloqueado = "Bloqueado";
+        public static readonly string[] Filtro = [Activo, Bloqueado, Inactivo];
     }
 
     public static class Rol

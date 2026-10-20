@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Inventarios;
@@ -6,6 +7,7 @@ using SistemaHotelColibri.ViewModels.Inventarios;
 
 namespace SistemaHotelColibri.Controllers;
 
+[Authorize(Roles = Roles.AccesoInventario)]
 public class InventarioController : ControladorBase
 {
     private readonly IAgregarInventarioBL _agregarBL;

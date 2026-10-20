@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Clientes;
 using SistemaHotelColibri.ViewModels.Clientes;
 
 namespace SistemaHotelColibri.Controllers;
 
+[Authorize(Roles = Roles.AccesoHospedaje)]
 public class ClienteController : ControladorBase
 {
     private const string TodosLosEstados = "Todos";

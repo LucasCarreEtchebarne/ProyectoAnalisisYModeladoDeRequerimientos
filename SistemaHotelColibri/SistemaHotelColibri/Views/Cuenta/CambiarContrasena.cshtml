@@ -1,0 +1,64 @@
+@model SistemaHotelColibri.ViewModels.Cuenta.CambiarContrasenaViewModel
+@{
+    ViewData["Title"] = "Cambiar contraseña";
+    var obligatorio = User.HasClaim(c => c.Type == Reclamos.DebeCambiarContrasena);
+    Layout = obligatorio ? "_LayoutCuenta" : "_Layout";
+}
+
+@if (!obligatorio)
+{
+    <div class="encabezado-pagina">
+        <div>
+            <h1>Cambiar contraseña</h1>
+            <p>Actualice la contraseña de su usuario.</p>
+        </div>
+    </div>
+}
+else
+{
+    <h1 class="cuenta-titulo">Cambiar contraseña</h1>
+    <p class="cuenta-subtitulo">Por seguridad, defina una contraseña nueva antes de continuar.</p>
+}
+
+<form asp-action="CambiarContrasena" method="post" class="@(obligatorio ? "" : "tarjeta tarjeta-cuerpo formulario-angosto")">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+    <partial name="_RequisitosContrasena" />
+
+    <div class="mb-3">
+        <label asp-for="ContrasenaActual" class="form-label">Contraseña actual</label>
+        <input asp-for="ContrasenaActual" class="form-control" autocomplete="current-password" autofocus />
+        <span asp-validation-for="ContrasenaActual" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ContrasenaNueva" class="form-label">Nueva contraseña</label>
+        <input asp-for="ContrasenaNueva" class="form-control" autocomplete="new-password" />
+        <span asp-validation-for="ContrasenaNueva" class="text-danger"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="ConfirmarContrasena" class="form-label">Confirmar nueva contraseña</label>
+        <input asp-for="ConfirmarContrasena" class="form-control" autocomplete="new-password" />
+        <span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
+    </div>
+
+    <div class="d-flex gap-2 @(obligatorio ? "flex-column" : "justify-content-end")">
+        <button type="submit" class="btn btn-primary">Guardar contraseña</button>
+        @if (obligatorio)
+        {
+            <button type="submit" form="formCerrarSesion" class="btn btn-link">Cerrar sesión</button>
+        }
+        else
+        {
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary order-first">Cancelar</a>
+        }
+    </div>
+</form>
+
+@if (obligatorio)
+{
+    <form id="formCerrarSesion" asp-action="CerrarSesion" method="post"></form>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

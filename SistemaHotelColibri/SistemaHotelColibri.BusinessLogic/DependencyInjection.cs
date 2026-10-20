@@ -2,9 +2,11 @@ using Microsoft.Extensions.DependencyInjection;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Clientes;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Inventarios;
+using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Usuarios;
 using SistemaHotelColibri.BusinessLogic.Clientes;
 using SistemaHotelColibri.BusinessLogic.Habitaciones;
 using SistemaHotelColibri.BusinessLogic.Inventarios;
+using SistemaHotelColibri.BusinessLogic.Usuarios;
 
 namespace SistemaHotelColibri.BusinessLogic;
 
@@ -32,6 +34,20 @@ public static class DependencyInjection
         services.AddScoped<IEditarClienteBL, EditarClienteBL>();
         services.AddScoped<IEliminarClienteBL, EliminarClienteBL>();
         services.AddScoped<IBuscarClienteBL, BuscarClienteBL>();
+
+        services.AddScoped<IIniciarSesionBL, IniciarSesionBL>();
+        services.AddScoped<ICerrarSesionBL, CerrarSesionBL>();
+        services.AddScoped<IAgregarUsuarioBL, AgregarUsuarioBL>();
+        services.AddScoped<IObtenerUsuarioBL, ObtenerUsuarioBL>();
+        services.AddScoped<IObtenerUsuarioPorIdBL, ObtenerUsuarioPorIdBL>();
+        services.AddScoped<IEditarUsuarioBL, EditarUsuarioBL>();
+        services.AddScoped<IEliminarUsuarioBL, EliminarUsuarioBL>();
+        services.AddScoped<IActivarUsuarioBL, ActivarUsuarioBL>();
+        services.AddScoped<IBloquearUsuarioBL, BloquearUsuarioBL>();
+        services.AddScoped<IRestablecerContrasenaUsuarioBL, RestablecerContrasenaUsuarioBL>();
+        services.AddScoped<ICambiarContrasenaBL, CambiarContrasenaBL>();
+        services.AddScoped<IRecuperarContrasenaBL, RecuperarContrasenaBL>();
+        services.AddScoped<IObtenerRolBL, ObtenerRolBL>();
 
         return services;
     }
