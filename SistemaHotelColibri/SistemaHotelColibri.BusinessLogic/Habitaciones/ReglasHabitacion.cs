@@ -9,6 +9,8 @@ internal static class ReglasHabitacion
     {
         habitacion.NumeroHabitacion = habitacion.NumeroHabitacion.Trim();
         habitacion.TipoHabitacion = habitacion.TipoHabitacion.Trim();
+        habitacion.TipoCama = habitacion.TipoCama.Trim();
+        habitacion.Vista = string.IsNullOrWhiteSpace(habitacion.Vista) ? null : habitacion.Vista.Trim();
         habitacion.Descripcion = string.IsNullOrWhiteSpace(habitacion.Descripcion) ? null : habitacion.Descripcion.Trim();
     }
 
@@ -34,9 +36,24 @@ internal static class ReglasHabitacion
             return Mensajes.TipoHabitacionInvalido;
         }
 
-        if (!Estados.Habitacion.Editables.Contains(habitacion.EstadoHabitacion))
+        if (!Estados.Habitacion.Todos.Contains(habitacion.EstadoHabitacion))
         {
             return Mensajes.EstadoHabitacionInvalido;
+        }
+
+        if (habitacion.CantidadCamas <= 0)
+        {
+            return Mensajes.CantidadCamasInvalida;
+        }
+
+        if (!Catalogos.TiposCama.Contains(habitacion.TipoCama))
+        {
+            return Mensajes.TipoCamaInvalido;
+        }
+
+        if (habitacion.Vista != null && !Catalogos.VistasHabitacion.Contains(habitacion.Vista))
+        {
+            return Mensajes.VistaInvalida;
         }
 
         return null;
