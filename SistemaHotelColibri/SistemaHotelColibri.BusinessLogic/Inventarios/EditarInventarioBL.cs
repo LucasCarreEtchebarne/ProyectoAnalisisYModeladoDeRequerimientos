@@ -43,7 +43,7 @@ public class EditarInventarioBL : IEditarInventarioBL
         }
 
         producto.NombreProducto = datos.NombreProducto;
-        producto.CategoriaProducto = datos.CategoriaProducto;
+        producto.IdCategoria = datos.IdCategoria;
         producto.UnidadMedida = datos.UnidadMedida;
         producto.Stock = datos.Stock;
         producto.StockMinimo = datos.StockMinimo;

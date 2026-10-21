@@ -9,7 +9,9 @@ public partial class Inventario
 
     public string NombreProducto { get; set; } = null!;
 
-    public string CategoriaProducto { get; set; } = null!;
+    public int IdCategoria { get; set; }
+
+    public int? IdProveedor { get; set; }
 
     public string UnidadMedida { get; set; } = null!;
 
@@ -22,6 +24,10 @@ public partial class Inventario
     public string EstadoProducto { get; set; } = null!;
 
     public string? Descripcion { get; set; }
+
+    public virtual CategoriaInventario IdCategoriaNavigation { get; set; } = null!;
+
+    public virtual Proveedor? IdProveedorNavigation { get; set; }
 
     public virtual ICollection<MovimientoInventario> MovimientoInventario { get; set; } = new List<MovimientoInventario>();
 

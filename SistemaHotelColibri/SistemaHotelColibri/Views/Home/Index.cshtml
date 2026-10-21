@@ -1,40 +1,60 @@
 @{
     ViewData["Title"] = "Inicio";
+    bool TieneRol(string roles) => roles.Split(',').Any(User.IsInRole);
+    var nombre = User.FindFirst(Reclamos.NombreCompleto)?.Value ?? User.Identity?.Name;
 }
 
 <div class="encabezado-pagina">
     <div>
-        <h1>Bienvenido al sistema El Colibrí</h1>
+        <h1>Bienvenido, @nombre</h1>
         <p>Gestión de hospedaje, restaurante e inventario.</p>
     </div>
 </div>
 
 <div class="row g-3">
-    <div class="col-12 col-md-6 col-xl-4">
-        <a class="tarjeta indicador" asp-controller="Habitacion" asp-action="Index">
-            <div class="indicador-icono"><i class="bi bi-door-closed"></i></div>
-            <div>
-                <div class="fw-semibold">Habitaciones</div>
-                <div class="indicador-etiqueta">Consulta y gestión de habitaciones</div>
-            </div>
-        </a>
-    </div>
-    <div class="col-12 col-md-6 col-xl-4">
-        <a class="tarjeta indicador" asp-controller="Cliente" asp-action="Index">
-            <div class="indicador-icono"><i class="bi bi-people"></i></div>
-            <div>
-                <div class="fw-semibold">Clientes</div>
-                <div class="indicador-etiqueta">Registro y consulta de clientes</div>
-            </div>
-        </a>
-    </div>
-    <div class="col-12 col-md-6 col-xl-4">
-        <a class="tarjeta indicador" asp-controller="Inventario" asp-action="Index">
-            <div class="indicador-icono"><i class="bi bi-box-seam"></i></div>
-            <div>
-                <div class="fw-semibold">Inventario</div>
-                <div class="indicador-etiqueta">Productos e insumos del restaurante</div>
-            </div>
-        </a>
-    </div>
+    @if (TieneRol(Roles.AccesoHospedaje))
+    {
+        <div class="col-12 col-md-6 col-xl-4">
+            <a class="tarjeta indicador" asp-controller="Habitacion" asp-action="Index">
+                <div class="indicador-icono"><i class="bi bi-door-closed"></i></div>
+                <div>
+                    <div class="fw-semibold">Habitaciones</div>
+                    <div class="indicador-etiqueta">Consulta y gestión de habitaciones</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-md-6 col-xl-4">
+            <a class="tarjeta indicador" asp-controller="Cliente" asp-action="Index">
+                <div class="indicador-icono"><i class="bi bi-people"></i></div>
+                <div>
+                    <div class="fw-semibold">Clientes</div>
+                    <div class="indicador-etiqueta">Registro y consulta de clientes</div>
+                </div>
+            </a>
+        </div>
+    }
+    @if (TieneRol(Roles.AccesoInventario))
+    {
+        <div class="col-12 col-md-6 col-xl-4">
+            <a class="tarjeta indicador" asp-controller="Inventario" asp-action="Index">
+                <div class="indicador-icono"><i class="bi bi-box-seam"></i></div>
+                <div>
+                    <div class="fw-semibold">Inventario</div>
+                    <div class="indicador-etiqueta">Productos e insumos del restaurante y de las habitaciones</div>
+                </div>
+            </a>
+        </div>
+    }
+    @if (User.IsInRole(Roles.Administrador))
+    {
+        <div class="col-12 col-md-6 col-xl-4">
+            <a class="tarjeta indicador" asp-controller="Usuario" asp-action="Index">
+                <div class="indicador-icono"><i class="bi bi-person-gear"></i></div>
+                <div>
+                    <div class="fw-semibold">Usuarios</div>
+                    <div class="indicador-etiqueta">Usuarios, roles y seguridad</div>
+                </div>
+            </a>
+        </div>
+    }
 </div>

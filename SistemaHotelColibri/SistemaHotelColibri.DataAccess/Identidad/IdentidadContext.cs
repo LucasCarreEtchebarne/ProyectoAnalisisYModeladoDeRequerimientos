@@ -20,6 +20,11 @@ public class IdentidadContext : IdentityDbContext<Usuario, Rol, int>
             entidad.Property(u => u.Estado).HasMaxLength(20).HasDefaultValue("Activo");
             entidad.Property(u => u.FechaCreacion).HasDefaultValueSql("SYSDATETIME()");
 
+            entidad.HasIndex(u => u.NormalizedEmail)
+                .HasDatabaseName("EmailIndex")
+                .IsUnique()
+                .HasFilter("[NormalizedEmail] IS NOT NULL");
+
             entidad.ToTable(t => t.HasCheckConstraint("CK_AspNetUsers_Estado", "[Estado] IN ('Activo','Inactivo')"));
         });
 

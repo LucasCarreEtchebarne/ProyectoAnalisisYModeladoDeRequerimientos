@@ -1,0 +1,22 @@
+@model SistemaHotelColibri.ViewModels.Comun.BarraBusquedaViewModel
+
+<form method="get" class="tarjeta barra-busqueda mb-3" role="search">
+    <div class="barra-busqueda-texto">
+        <label class="form-label small" for="busqueda">Buscar</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input class="form-control" id="busqueda" name="busqueda" value="@Model.Busqueda" placeholder="@Model.Placeholder" autocomplete="off" />
+        </div>
+    </div>
+    @foreach (var filtro in Model.Filtros)
+    {
+        <div class="barra-busqueda-filtro">
+            <label class="form-label small" for="filtro-@filtro.Nombre">@filtro.Etiqueta</label>
+            <select class="form-select" id="filtro-@filtro.Nombre" name="@filtro.Nombre" asp-items="filtro.Opciones" onchange="this.form.submit()"></select>
+        </div>
+    }
+    <div class="barra-busqueda-acciones">
+        <button class="btn btn-primary" type="submit">Buscar</button>
+        <a class="btn btn-outline-secondary" href="@Context.Request.Path">Limpiar</a>
+    </div>
+</form>

@@ -13,6 +13,8 @@ public static class Formato
     public static string Fecha(DateOnly fecha) => fecha.ToString("dd/MM/yyyy", Cultura);
 
     public static string Fecha(DateTime fecha) => fecha.ToString("dd/MM/yyyy", Cultura);
+
+    public static string Hora(TimeOnly hora) => hora.ToString("HH:mm", Cultura);
 }
 
 public static class CulturaSistema

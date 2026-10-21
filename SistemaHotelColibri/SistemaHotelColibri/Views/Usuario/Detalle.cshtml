@@ -1,0 +1,107 @@
+@model SistemaHotelColibri.Abstract.Modelos.Usuarios.UsuarioDto
+@{
+    ViewData["Title"] = "Detalle de usuario";
+    var esUsuarioActual = Model.IdUsuario == (int)ViewBag.IdUsuarioActual;
+    var activo = Model.Estado == Estados.Usuario.Activo;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>@Model.NombreCompleto</h1>
+        <p>@Model.Rol · <partial name="_EstadoUsuario" model="Model" /></p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+        @if (activo)
+        {
+            <a class="btn btn-primary" asp-action="Editar" asp-route-id="@Model.IdUsuario"><i class="bi bi-pencil"></i> Editar</a>
+        }
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-lg-7">
+        <div class="tarjeta tarjeta-cuerpo h-100">
+            <div class="row">
+                <div class="col-6">
+                    <div class="dato-etiqueta">Nombre de usuario</div>
+                    <div class="dato-valor">@Model.NombreUsuario</div>
+                </div>
+                <div class="col-6">
+                    <div class="dato-etiqueta">Correo electrónico</div>
+                    <div class="dato-valor text-break">@Model.CorreoElectronico</div>
+                </div>
+                <div class="col-6">
+                    <div class="dato-etiqueta">Fecha de creación</div>
+                    <div class="dato-valor">@Formato.Fecha(Model.FechaCreacion)</div>
+                </div>
+                <div class="col-6">
+                    <div class="dato-etiqueta">Último acceso</div>
+                    <div class="dato-valor">@(Model.FechaUltimoAcceso.HasValue ? Model.FechaUltimoAcceso.Value.ToString("dd/MM/yyyy HH:mm") : "Nunca")</div>
+                </div>
+                <div class="col-6">
+                    <div class="dato-etiqueta">Intentos fallidos</div>
+                    <div class="dato-valor">@Model.IntentosFallidos</div>
+                </div>
+                @if (Model.EstaBloqueado)
+                {
+                    <div class="col-6">
+                        <div class="dato-etiqueta">Bloqueado hasta</div>
+                        <div class="dato-valor">@(Model.BloqueadoHasta!.Value.Year > 9000 ? "Hasta que el administrador lo desbloquee" : Model.BloqueadoHasta.Value.ToLocalTime().ToString("dd/MM/yyyy HH:mm"))</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-5">
+        <div class="tarjeta tarjeta-cuerpo h-100">
+            <div class="dato-etiqueta mb-3">Acciones de seguridad</div>
+            @if (esUsuarioActual)
+            {
+                <p class="text-secondary small mb-3">Este es su propio usuario. Para cambiar su contraseña use la opción del menú.</p>
+                <a class="btn btn-outline-primary w-100" asp-controller="Cuenta" asp-action="CambiarContrasena"><i class="bi bi-key"></i> Cambiar mi contraseña</a>
+            }
+            else
+            {
+                <div class="d-grid gap-2">
+                    @if (activo)
+                    {
+                        <form asp-action="RestablecerContrasena" asp-route-id="@Model.IdUsuario" method="post"
+                              data-confirmar="Se generará una contraseña temporal para «@Model.NombreUsuario» y deberá cambiarla al iniciar sesión. ¿Continuar?"
+                              data-confirmar-boton="Generar">
+                            <button class="btn btn-outline-primary w-100" type="submit"><i class="bi bi-key"></i> Generar contraseña temporal</button>
+                        </form>
+
+                        @if (Model.EstaBloqueado)
+                        {
+                            <form asp-action="Desbloquear" asp-route-id="@Model.IdUsuario" method="post">
+                                <button class="btn btn-outline-success w-100" type="submit"><i class="bi bi-unlock"></i> Desbloquear</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="Bloquear" asp-route-id="@Model.IdUsuario" method="post"
+                                  data-confirmar="¿Desea bloquear a «@Model.NombreUsuario»? No podrá iniciar sesión hasta que lo desbloquee."
+                                  data-confirmar-boton="Bloquear">
+                                <button class="btn btn-outline-warning w-100" type="submit"><i class="bi bi-lock"></i> Bloquear</button>
+                            </form>
+                        }
+
+                        <form asp-action="Eliminar" asp-route-id="@Model.IdUsuario" method="post"
+                              data-confirmar="¿Desea inactivar a «@Model.NombreUsuario»? Su sesión se cerrará y no podrá ingresar."
+                              data-confirmar-boton="Inactivar">
+                            <button class="btn btn-outline-danger w-100" type="submit"><i class="bi bi-slash-circle"></i> Inactivar</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="Activar" asp-route-id="@Model.IdUsuario" method="post">
+                            <button class="btn btn-outline-primary w-100" type="submit"><i class="bi bi-arrow-counterclockwise"></i> Activar</button>
+                        </form>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

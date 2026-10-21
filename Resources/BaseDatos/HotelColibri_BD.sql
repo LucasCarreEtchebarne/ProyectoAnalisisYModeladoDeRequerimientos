@@ -115,12 +115,13 @@ CREATE INDEX [IX_AspNetUserLogins_UserId] ON [AspNetUserLogins] ([UserId]);
 
 CREATE INDEX [IX_AspNetUserRoles_RoleId] ON [AspNetUserRoles] ([RoleId]);
 
-CREATE INDEX [EmailIndex] ON [AspNetUsers] ([NormalizedEmail]);
+CREATE UNIQUE INDEX [EmailIndex] ON [AspNetUsers] ([NormalizedEmail]) WHERE [NormalizedEmail] IS NOT NULL;
 
 CREATE UNIQUE INDEX [UserNameIndex] ON [AspNetUsers] ([NormalizedUserName]) WHERE [NormalizedUserName] IS NOT NULL;
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20260926211623_CrearIdentidad', N'10.0.12');
+VALUES (N'20260926211623_CrearIdentidad', N'10.0.12'),
+       (N'20261018210428_CorreoUnicoUsuario', N'10.0.12');
 
 COMMIT;
 GO
@@ -148,7 +149,26 @@ CREATE TABLE HABITACION (
     EstadoHabitacion    NVARCHAR(20)  NOT NULL DEFAULT 'Disponible'
         CHECK (EstadoHabitacion IN ('Disponible','Ocupada','Limpieza','Mantenimiento','Inactiva')),
     Piso                INT           NOT NULL,
+    CantidadCamas       INT           NOT NULL DEFAULT 1 CHECK (CantidadCamas > 0),
+    TipoCama            NVARCHAR(20)  NOT NULL DEFAULT 'Matrimonial'
+        CHECK (TipoCama IN ('Individual','Matrimonial','Queen','King')),
+    BanoPrivado         BIT           NOT NULL DEFAULT 0,
+    Vista               NVARCHAR(20)  NULL
+        CHECK (Vista IS NULL OR Vista IN (N'Jardín',N'Piscina',N'Montaña',N'Ciudad',N'Interior')),
+    AireAcondicionado   BIT           NOT NULL DEFAULT 0,
+    Television          BIT           NOT NULL DEFAULT 0,
+    Wifi                BIT           NOT NULL DEFAULT 0,
     Descripcion         NVARCHAR(250) NULL
+);
+
+CREATE TABLE HABITACION_IMAGEN (
+    IdImagen            INT IDENTITY(1,1) PRIMARY KEY,
+    IdHabitacion        INT NOT NULL REFERENCES HABITACION(IdHabitacion),
+    RutaArchivo         NVARCHAR(260) NOT NULL UNIQUE,
+    NombreOriginal      NVARCHAR(150) NULL,
+    EsPrincipal         BIT           NOT NULL DEFAULT 0,
+    Orden               INT           NOT NULL DEFAULT 0 CHECK (Orden >= 0),
+    FechaSubida         DATETIME2     NOT NULL DEFAULT SYSDATETIME()
 );
 
 CREATE TABLE MESA (
@@ -170,10 +190,32 @@ CREATE TABLE MENU (
     Descripcion         NVARCHAR(250) NULL
 );
 
+CREATE TABLE CATEGORIA_INVENTARIO (
+    IdCategoria         INT IDENTITY(1,1) PRIMARY KEY,
+    NombreCategoria     NVARCHAR(50)  NOT NULL UNIQUE,
+    Area                NVARCHAR(20)  NOT NULL
+        CHECK (Area IN ('Restaurante','Habitaciones')),
+    EstadoCategoria     NVARCHAR(20)  NOT NULL DEFAULT 'Activo'
+        CHECK (EstadoCategoria IN ('Activo','Inactivo')),
+    Descripcion         NVARCHAR(250) NULL
+);
+
+CREATE TABLE PROVEEDOR (
+    IdProveedor         INT IDENTITY(1,1) PRIMARY KEY,
+    NombreProveedor     NVARCHAR(100) NOT NULL UNIQUE,
+    NombreContacto      NVARCHAR(100) NULL,
+    Telefono            NVARCHAR(20)  NOT NULL,
+    CorreoElectronico   NVARCHAR(150) NULL,
+    EstadoProveedor     NVARCHAR(20)  NOT NULL DEFAULT 'Activo'
+        CHECK (EstadoProveedor IN ('Activo','Inactivo')),
+    Descripcion         NVARCHAR(250) NULL
+);
+
 CREATE TABLE INVENTARIO (
     IdProducto          INT IDENTITY(1,1) PRIMARY KEY,
     NombreProducto      NVARCHAR(100) NOT NULL UNIQUE,
-    CategoriaProducto   NVARCHAR(50)  NOT NULL,
+    IdCategoria         INT           NOT NULL REFERENCES CATEGORIA_INVENTARIO(IdCategoria),
+    IdProveedor         INT           NULL REFERENCES PROVEEDOR(IdProveedor),
     UnidadMedida        NVARCHAR(20)  NOT NULL DEFAULT 'Unidad',
     Stock               DECIMAL(12,3) NOT NULL DEFAULT 0 CHECK (Stock >= 0),
     StockMinimo         DECIMAL(12,3) NOT NULL DEFAULT 0 CHECK (StockMinimo >= 0),
@@ -205,6 +247,7 @@ CREATE TABLE RESERVA (
     MontoHospedaje      AS (PrecioNoche * DATEDIFF(DAY, FechaEntrada, FechaSalida)) PERSISTED,
     EstadoReserva       NVARCHAR(20) NOT NULL DEFAULT 'Pendiente'
         CHECK (EstadoReserva IN ('Pendiente','Confirmada','CheckIn','CheckOut','Cancelada')),
+    PlacaVehiculo       NVARCHAR(10) NULL,
     FechaRegistro       DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
     Observaciones       NVARCHAR(250) NULL,
     CONSTRAINT CK_Reserva_Fechas CHECK (FechaSalida > FechaEntrada)
@@ -231,7 +274,7 @@ CREATE TABLE HOUSEKEEPING (
     FechaLimite         DATETIME2 NULL,
     FechaCompletada     DATETIME2 NULL,
     EstadoTarea         NVARCHAR(20) NOT NULL DEFAULT 'Pendiente'
-        CHECK (EstadoTarea IN ('Pendiente','EnProceso','Completada')),
+        CHECK (EstadoTarea IN ('Pendiente','EnProceso','Completada','Cancelada')),
     Observaciones       NVARCHAR(250) NULL,
     CONSTRAINT CK_Housekeeping_Completada
         CHECK (EstadoTarea <> 'Completada' OR FechaCompletada IS NOT NULL)
@@ -434,6 +477,11 @@ CREATE INDEX IX_DetalleFactura_Pedido     ON DETALLE_FACTURA(IdPedido);
 CREATE INDEX IX_DetalleFactura_Evento     ON DETALLE_FACTURA(IdEvento);
 CREATE INDEX IX_Pago_Usuario              ON PAGO(IdUsuario);
 CREATE INDEX IX_ConsultaIA_Usuario        ON CONSULTA_IA(IdUsuario);
+CREATE INDEX IX_Inventario_Categoria      ON INVENTARIO(IdCategoria);
+CREATE INDEX IX_Inventario_Proveedor      ON INVENTARIO(IdProveedor);
+CREATE INDEX IX_HabitacionImagen_Habitacion ON HABITACION_IMAGEN(IdHabitacion);
+
+CREATE UNIQUE INDEX UX_Cliente_Correo ON CLIENTE(CorreoElectronico) WHERE CorreoElectronico IS NOT NULL;
 GO
 
 
@@ -461,10 +509,11 @@ INSERT INTO CLIENTE (Identificacion, Nombre, PrimerApellido, SegundoApellido, Te
 (N'1-1234-0567', N'Luis',  N'Vargas', N'Solís', N'8888-1111', N'luis.vargas@mail.com',  N'San José'),
 (N'2-0456-0789', N'Sofía', N'Castro', N'Rojas', N'8777-2222', N'sofia.castro@mail.com', N'Alajuela');
 
-INSERT INTO HABITACION (NumeroHabitacion, TipoHabitacion, Capacidad, Precio, Piso, Descripcion) VALUES
-(N'101', N'Estándar', 2, 45000, 1, N'Cama matrimonial'),
-(N'102', N'Doble',    4, 65000, 1, N'Dos camas queen'),
-(N'201', N'Suite',    2, 95000, 2, N'Vista al jardín');
+INSERT INTO HABITACION (NumeroHabitacion, TipoHabitacion, Capacidad, Precio, Piso,
+                        CantidadCamas, TipoCama, BanoPrivado, Vista, AireAcondicionado, Television, Wifi, Descripcion) VALUES
+(N'101', N'Estándar', 2, 45000, 1, 1, N'Matrimonial', 1, N'Jardín',  0, 1, 1, N'Habitación sencilla con ventilador de techo'),
+(N'102', N'Doble',    4, 65000, 1, 2, N'Queen',       1, N'Piscina', 1, 1, 1, N'Ideal para familias'),
+(N'201', N'Suite',    2, 95000, 2, 1, N'King',        1, N'Montaña', 1, 1, 1, N'Incluye sala de estar y balcón');
 
 INSERT INTO MESA (NumeroMesa, Capacidad) VALUES (1, 2), (2, 4), (3, 6);
 
@@ -472,11 +521,33 @@ INSERT INTO ESPACIO_EVENTO (NombreEspacio, CapacidadMaxima, Descripcion) VALUES
 (N'Salón Colibrí', 80, N'Salón principal con proyector'),
 (N'Terraza Jardín', 40, N'Espacio al aire libre');
 
-INSERT INTO INVENTARIO (NombreProducto, CategoriaProducto, UnidadMedida, Stock, StockMinimo) VALUES
-(N'Arroz',        N'Granos',            N'Kilogramo', 50,  10),
-(N'Frijoles',     N'Granos',            N'Kilogramo', 30,   8),
-(N'Huevos',       N'Lácteos y huevos',  N'Unidad',   120,  30),
-(N'Café molido',  N'Bebidas',           N'Kilogramo', 10,   2);
+INSERT INTO CATEGORIA_INVENTARIO (NombreCategoria, Area, Descripcion) VALUES
+(N'Granos',           N'Restaurante',  N'Arroz, frijoles y similares'),
+(N'Lácteos y huevos', N'Restaurante',  NULL),
+(N'Bebidas',          N'Restaurante',  N'Café, jugos y refrescos'),
+(N'Abarrotes',        N'Restaurante',  N'Aceites, condimentos y enlatados'),
+(N'Blancos',          N'Habitaciones', N'Paños, sábanas y fundas'),
+(N'Amenidades',       N'Habitaciones', N'Jabones, shampoo y artículos de cortesía'),
+(N'Limpieza',         N'Habitaciones', N'Productos de limpieza de habitaciones');
+
+INSERT INTO PROVEEDOR (NombreProveedor, NombreContacto, Telefono, CorreoElectronico, Descripcion) VALUES
+(N'Distribuidora El Granero', N'Jorge Solano',  N'50688880001', N'ventas@elgranero.cr', N'Granos y abarrotes'),
+(N'Suministros Hoteleros CR', N'Paola Méndez',  N'50688880002', N'pedidos@sumhotel.cr', N'Blancos y amenidades para habitaciones');
+
+INSERT INTO INVENTARIO (NombreProducto, IdCategoria, IdProveedor, UnidadMedida, Stock, StockMinimo)
+SELECT v.NombreProducto, c.IdCategoria, p.IdProveedor, v.UnidadMedida, v.Stock, v.StockMinimo
+FROM (VALUES
+    (1, N'Arroz',            N'Granos',           N'Distribuidora El Granero', N'Kilogramo',  50, 10),
+    (2, N'Frijoles',         N'Granos',           N'Distribuidora El Granero', N'Kilogramo',  30,  8),
+    (3, N'Huevos',           N'Lácteos y huevos', NULL,                        N'Unidad',    120, 30),
+    (4, N'Café molido',      N'Bebidas',          NULL,                        N'Kilogramo',  10,  2),
+    (5, N'Paño de baño',     N'Blancos',          N'Suministros Hoteleros CR', N'Unidad',     40, 15),
+    (6, N'Jabón de tocador', N'Amenidades',       N'Suministros Hoteleros CR', N'Unidad',    100, 30),
+    (7, N'Shampoo',          N'Amenidades',       N'Suministros Hoteleros CR', N'Botella',     8, 20)
+) AS v (Orden, NombreProducto, Categoria, Proveedor, UnidadMedida, Stock, StockMinimo)
+JOIN CATEGORIA_INVENTARIO c ON c.NombreCategoria = v.Categoria
+LEFT JOIN PROVEEDOR p ON p.NombreProveedor = v.Proveedor
+ORDER BY v.Orden;
 
 INSERT INTO MENU (NombreProducto, CategoriaMenu, Precio, Descripcion) VALUES
 (N'Gallo pinto con huevo', N'Desayunos', 4500, N'Desayuno típico'),
@@ -485,8 +556,8 @@ INSERT INTO MENU (NombreProducto, CategoriaMenu, Precio, Descripcion) VALUES
 INSERT INTO RECETA_PRODUCTO (IdProductoMenu, IdProducto, CantidadUtilizada) VALUES
 (1, 1, 0.150), (1, 2, 0.100), (1, 3, 2), (2, 4, 0.020);
 
-INSERT INTO RESERVA (IdCliente, IdHabitacion, FechaEntrada, FechaSalida, CantidadHuespedes, PrecioNoche, EstadoReserva) VALUES
-(1, 1, '2026-10-01', '2026-10-03', 2, 45000, N'Confirmada');
+INSERT INTO RESERVA (IdCliente, IdHabitacion, FechaEntrada, FechaSalida, CantidadHuespedes, PrecioNoche, EstadoReserva, PlacaVehiculo) VALUES
+(1, 1, '2026-10-01', '2026-10-03', 2, 45000, N'Confirmada', N'BCD-123');
 
 INSERT INTO PEDIDO (IdCliente, IdUsuario, IdMesa, TipoPedido, EstadoPedido) VALUES
 (2, 3, 2, N'Mesa', N'Entregado');

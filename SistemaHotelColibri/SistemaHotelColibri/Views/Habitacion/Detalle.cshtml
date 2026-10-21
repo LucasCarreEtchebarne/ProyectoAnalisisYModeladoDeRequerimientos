@@ -11,9 +11,9 @@
     </div>
     <div class="d-flex flex-wrap gap-2">
         <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+        <a class="btn btn-primary" asp-action="Editar" asp-route-id="@Model.IdHabitacion"><i class="bi bi-pencil"></i> Editar</a>
         @if (Model.EstadoHabitacion != Estados.Habitacion.Inactiva)
         {
-            <a class="btn btn-primary" asp-action="Editar" asp-route-id="@Model.IdHabitacion"><i class="bi bi-pencil"></i> Editar</a>
             <form asp-action="Eliminar" asp-route-id="@Model.IdHabitacion" method="post"
                   data-confirmar="¿Desea inactivar la habitación «@Model.NumeroHabitacion»? Dejará de estar disponible para reservas."
                   data-confirmar-boton="Inactivar">
@@ -40,6 +40,30 @@
         <div class="col-6 col-md-3">
             <div class="dato-etiqueta">Piso</div>
             <div class="dato-valor">@Model.Piso</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Camas</div>
+            <div class="dato-valor">@Model.CantidadCamas · @Model.TipoCama</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Vista</div>
+            <div class="dato-valor">@(Model.Vista ?? "—")</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Baño privado</div>
+            <div class="dato-valor">@(Model.BanoPrivado ? "Sí" : "No")</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Aire acondicionado</div>
+            <div class="dato-valor">@(Model.AireAcondicionado ? "Sí" : "No")</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Televisión</div>
+            <div class="dato-valor">@(Model.Television ? "Sí" : "No")</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Wifi</div>
+            <div class="dato-valor">@(Model.Wifi ? "Sí" : "No")</div>
         </div>
         <div class="col-12 col-md-9">
             <div class="dato-etiqueta">Descripción</div>

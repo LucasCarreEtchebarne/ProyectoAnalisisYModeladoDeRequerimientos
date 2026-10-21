@@ -1,0 +1,73 @@
+@using SistemaHotelColibri.Abstract.Modelos.Reservas
+@model ResultadoPaginado<ReservaDto>
+@{
+    ViewData["Title"] = "Reservas";
+    var barraBusqueda = (BarraBusquedaViewModel)ViewBag.Busqueda;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Reservas</h1>
+        <p>Consulta de reservas registradas y su estado actual.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nueva reserva</a>
+</div>
+
+<partial name="_BarraBusqueda" model="barraBusqueda" />
+
+<div class="tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Reserva</th>
+                    <th>Cliente</th>
+                    <th>Habitación</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th class="text-end">Noches</th>
+                    <th class="text-end">Monto</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Elementos.Count == 0)
+                {
+                    <tr>
+                        <td colspan="9" class="text-center text-secondary py-5">
+                            <i class="bi bi-inbox d-block fs-3 mb-2"></i>
+                            @Mensajes.NoExistenReservas
+                        </td>
+                    </tr>
+                }
+                @foreach (var r in Model.Elementos)
+                {
+                    <tr class="@(r.EstadoReserva == Estados.Reserva.Cancelada ? "fila-inactiva" : "")">
+                        <td><a class="fw-semibold text-decoration-none" asp-action="Detalle" asp-route-id="@r.IdReserva">#@r.IdReserva</a></td>
+                        <td>@r.NombreCliente</td>
+                        <td>@r.NumeroHabitacion</td>
+                        <td class="text-nowrap">@Formato.Fecha(r.FechaEntrada)</td>
+                        <td class="text-nowrap">@Formato.Fecha(r.FechaSalida)</td>
+                        <td class="text-end">@r.CantidadNoches</td>
+                        <td class="text-end text-nowrap">@Formato.Colones(r.MontoHospedaje)</td>
+                        <td><partial name="_EstadoReserva" model="r" /></td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@r.IdReserva" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@r.IdReserva" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            @if (r.EstadoReserva != Estados.Reserva.Cancelada && r.EstadoReserva != Estados.Reserva.CheckIn && r.EstadoReserva != Estados.Reserva.CheckOut)
+                            {
+                                <form asp-action="Eliminar" asp-route-id="@r.IdReserva" method="post" class="d-inline"
+                                      data-confirmar="¿Desea cancelar la reserva #@r.IdReserva de @r.NombreCliente?"
+                                      data-confirmar-boton="Cancelar reserva">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit" title="Cancelar" aria-label="Cancelar"><i class="bi bi-slash-circle"></i></button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<partial name="_Paginacion" model="Model" />

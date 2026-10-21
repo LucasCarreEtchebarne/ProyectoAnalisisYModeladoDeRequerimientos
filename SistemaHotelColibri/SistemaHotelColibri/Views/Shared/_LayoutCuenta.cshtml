@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · Hotel El Colibrí</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="pagina-cuenta">
+    <main class="cuenta-contenedor">
+        <div class="cuenta-marca">
+            <i class="bi bi-feather"></i>
+            <div>
+                <div class="cuenta-marca-nombre">El Colibrí</div>
+                <div class="cuenta-marca-sub">Gestión hotelera</div>
+            </div>
+        </div>
+        <div class="tarjeta cuenta-tarjeta">
+            <partial name="_Mensajes" />
+            @RenderBody()
+        </div>
+        <p class="cuenta-pie">&copy; @DateTime.Now.Year Hotel El Colibrí · SC-603</p>
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

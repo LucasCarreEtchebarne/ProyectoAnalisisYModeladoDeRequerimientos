@@ -19,6 +19,7 @@ public class ObtenerAlertasInventarioDA : IObtenerAlertasInventarioDA
     {
         var productos = await _contexto.Inventario
             .AsNoTracking()
+            .ConCategoriaYProveedor()
             .Where(p => p.EstadoProducto == Estados.ProductoInventario.Activo && p.Stock <= p.StockMinimo)
             .OrderBy(p => p.Stock)
             .ThenBy(p => p.NombreProducto)
