@@ -1,0 +1,73 @@
+@using SistemaHotelColibri.Abstract.Modelos.Eventos
+@model ResultadoPaginado<EventoDto>
+@{
+    ViewData["Title"] = "Eventos";
+    var barraBusqueda = (BarraBusquedaViewModel)ViewBag.Busqueda;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Eventos</h1>
+        <p>Eventos registrados en los espacios del hotel.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nuevo evento</a>
+</div>
+
+<partial name="_BarraBusqueda" model="barraBusqueda" />
+
+<div class="tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Cliente</th>
+                    <th>Espacio</th>
+                    <th>Fecha</th>
+                    <th>Horario</th>
+                    <th class="text-end">Participantes</th>
+                    <th class="text-end">Monto</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Elementos.Count == 0)
+                {
+                    <tr>
+                        <td colspan="9" class="text-center text-secondary py-5">
+                            <i class="bi bi-inbox d-block fs-3 mb-2"></i>
+                            @Mensajes.NoExistenEventos
+                        </td>
+                    </tr>
+                }
+                @foreach (var e in Model.Elementos)
+                {
+                    <tr class="@(e.EstadoEvento == Estados.Evento.Cancelado ? "fila-inactiva" : "")">
+                        <td><a class="fw-semibold text-decoration-none" asp-action="Detalle" asp-route-id="@e.IdEvento">@e.NombreEvento</a></td>
+                        <td>@e.NombreCliente</td>
+                        <td>@e.NombreEspacio</td>
+                        <td class="text-nowrap">@Formato.Fecha(e.FechaEvento)</td>
+                        <td class="text-nowrap">@Formato.Hora(e.HoraInicio) - @Formato.Hora(e.HoraFin)</td>
+                        <td class="text-end">@e.Participantes</td>
+                        <td class="text-end text-nowrap">@Formato.Colones(e.MontoAcordado)</td>
+                        <td><partial name="_EstadoEvento" model="e" /></td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@e.IdEvento" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@e.IdEvento" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            @if (e.EstadoEvento == Estados.Evento.Programado)
+                            {
+                                <form asp-action="Eliminar" asp-route-id="@e.IdEvento" method="post" class="d-inline"
+                                      data-confirmar="¿Desea cancelar el evento «@e.NombreEvento»?"
+                                      data-confirmar-boton="Cancelar evento">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit" title="Cancelar" aria-label="Cancelar"><i class="bi bi-slash-circle"></i></button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<partial name="_Paginacion" model="Model" />

@@ -96,4 +96,23 @@ public static class Mensajes
     public const string EstadoReservaInvalido = "El estado de reserva seleccionado no es válido.";
     public const string NoExistenReservas = "No existen reservas registradas.";
     public const string UsuarioInactivoNoEditable = "El usuario está inactivo. Actívelo para poder modificarlo.";
+
+    public const string EventoRegistrado = "Se ha registrado el evento correctamente.";
+    public const string ErrorRegistrarEvento = "No se pudo registrar el evento, intente nuevamente.";
+    public const string EventoModificado = "Evento modificado correctamente.";
+    public const string ErrorModificarEvento = "No se pudo modificar el evento, intente nuevamente.";
+    public const string EventoCancelado = "Evento cancelado correctamente.";
+    public const string ErrorCancelarEvento = "No se pudo cancelar el evento, intente nuevamente.";
+    public const string EventoYaCancelado = "El evento ya se encuentra cancelado.";
+    public const string EventoYaRealizado = "No se puede cancelar un evento que ya fue realizado.";
+    public const string EventoCamposIncompletos = "Se debe completar la información faltante.";
+    public const string EventoHorasInvalidas = "La hora de fin debe ser posterior a la hora de inicio.";
+    public const string EventoFechaPasada = "La fecha del evento no puede ser anterior a hoy.";
+    public const string EspacioEventoNoDisponible = "El espacio seleccionado no se encuentra disponible para ese horario.";
+    public const string EspacioEventoInactivo = "El espacio seleccionado está inactivo.";
+    public const string ParticipantesExcedenCapacidad = "La cantidad de participantes supera la capacidad del espacio seleccionado ({0}).";
+    public const string ParticipantesInvalidos = "La cantidad de participantes debe ser mayor a cero.";
+    public const string MontoAcordadoInvalido = "El monto acordado no puede ser negativo.";
+    public const string EstadoEventoInvalido = "El estado de evento seleccionado no es válido.";
+    public const string NoExistenEventos = "No existen eventos registrados.";
 }
