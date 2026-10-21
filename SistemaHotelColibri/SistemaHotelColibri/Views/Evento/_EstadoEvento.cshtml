@@ -1,0 +1,14 @@
+@using SistemaHotelColibri.Abstract.Modelos.Eventos
+@model EventoDto
+@if (Model.EstadoEvento == Estados.Evento.Cancelado)
+{
+    <span class="estado estado-inactivo">Cancelado</span>
+}
+else if (Model.EstadoEvento == Estados.Evento.Realizado)
+{
+    <span class="estado estado-activo">Realizado</span>
+}
+else
+{
+    <span class="estado estado-alerta">Programado</span>
+}

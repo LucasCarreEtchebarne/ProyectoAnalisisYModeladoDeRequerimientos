@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Clientes;
+using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Eventos;
+using SistemaHotelColibri.BusinessLogic.Eventos;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Inventarios;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Reservas;
@@ -43,6 +45,13 @@ public static class DependencyInjection
         services.AddScoped<IEditarReservaBL, EditarReservaBL>();
         services.AddScoped<IEliminarReservaBL, EliminarReservaBL>();
         services.AddScoped<IObtenerOpcionesReservaBL, ObtenerOpcionesReservaBL>();
+
+        services.AddScoped<IAgregarEventoBL, AgregarEventoBL>();
+        services.AddScoped<IObtenerEventoBL, ObtenerEventoBL>();
+        services.AddScoped<IObtenerEventoPorIdBL, ObtenerEventoPorIdBL>();
+        services.AddScoped<IEditarEventoBL, EditarEventoBL>();
+        services.AddScoped<IEliminarEventoBL, EliminarEventoBL>();
+        services.AddScoped<IObtenerEspacioEventoBL, ObtenerEspacioEventoBL>();
 
         services.AddScoped<IIniciarSesionBL, IniciarSesionBL>();
         services.AddScoped<ICerrarSesionBL, CerrarSesionBL>();

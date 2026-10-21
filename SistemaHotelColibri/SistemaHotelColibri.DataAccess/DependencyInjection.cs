@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Clientes;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Correo;
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Eventos;
+using SistemaHotelColibri.DataAccess.Eventos;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Inventarios;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Reservas;
@@ -93,6 +95,15 @@ public static class DependencyInjection
         services.AddScoped<IEliminarReservaDA, EliminarReservaDA>();
         services.AddScoped<IHabitacionDisponibleReservaDA, HabitacionDisponibleReservaDA>();
         services.AddScoped<IObtenerOpcionesReservaDA, ObtenerOpcionesReservaDA>();
+
+        services.AddScoped<IAgregarEventoDA, AgregarEventoDA>();
+        services.AddScoped<IObtenerEventoDA, ObtenerEventoDA>();
+        services.AddScoped<IObtenerEventoPorIdDA, ObtenerEventoPorIdDA>();
+        services.AddScoped<IEditarEventoDA, EditarEventoDA>();
+        services.AddScoped<IEliminarEventoDA, EliminarEventoDA>();
+        services.AddScoped<IObtenerEspacioEventoDA, ObtenerEspacioEventoDA>();
+        services.AddScoped<IObtenerEspacioEventoPorIdDA, ObtenerEspacioEventoPorIdDA>();
+        services.AddScoped<IEspacioDisponibleEventoDA, EspacioDisponibleEventoDA>();
 
         services.AddScoped<IIniciarSesionDA, IniciarSesionDA>();
         services.AddScoped<ICerrarSesionDA, CerrarSesionDA>();
