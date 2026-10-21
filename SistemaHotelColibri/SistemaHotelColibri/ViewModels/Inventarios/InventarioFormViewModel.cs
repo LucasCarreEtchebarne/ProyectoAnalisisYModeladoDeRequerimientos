@@ -15,8 +15,7 @@ public class InventarioFormViewModel
 
     [Display(Name = "categoría")]
     [Required(ErrorMessage = Mensajes.CampoObligatorio)]
-    [StringLength(50, ErrorMessage = Mensajes.LongitudMaxima)]
-    public string? CategoriaProducto { get; set; }
+    public int? IdCategoria { get; set; }
 
     [Display(Name = "unidad de medida")]
     [Required(ErrorMessage = Mensajes.CampoObligatorio)]
@@ -40,7 +39,7 @@ public class InventarioFormViewModel
     {
         IdProducto = producto.IdProducto,
         NombreProducto = producto.NombreProducto,
-        CategoriaProducto = producto.CategoriaProducto,
+        IdCategoria = producto.IdCategoria,
         UnidadMedida = producto.UnidadMedida,
         Stock = producto.Stock,
         StockMinimo = producto.StockMinimo,
@@ -51,7 +50,7 @@ public class InventarioFormViewModel
     {
         IdProducto = IdProducto,
         NombreProducto = NombreProducto ?? string.Empty,
-        CategoriaProducto = CategoriaProducto ?? string.Empty,
+        IdCategoria = IdCategoria ?? 0,
         UnidadMedida = UnidadMedida ?? string.Empty,
         Stock = Stock ?? 0,
         StockMinimo = StockMinimo ?? 0,

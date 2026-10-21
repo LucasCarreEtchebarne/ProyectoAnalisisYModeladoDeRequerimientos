@@ -1,0 +1,13 @@
+@model SistemaHotelColibri.Abstract.Modelos.Usuarios.UsuarioDto
+@switch (Model.EstadoMostrado)
+{
+    case Estados.Usuario.Activo:
+        <span class="estado estado-activo">Activo</span>
+        break;
+    case Estados.Usuario.Bloqueado:
+        <span class="estado estado-agotado"><i class="bi bi-lock-fill"></i> Bloqueado</span>
+        break;
+    default:
+        <span class="estado estado-inactivo">Inactivo</span>
+        break;
+}

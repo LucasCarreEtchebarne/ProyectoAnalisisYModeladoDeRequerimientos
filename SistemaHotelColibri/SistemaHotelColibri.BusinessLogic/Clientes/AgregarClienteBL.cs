@@ -9,11 +9,16 @@ public class AgregarClienteBL : IAgregarClienteBL
 {
     private readonly IAgregarClienteDA _agregarDA;
     private readonly IExisteIdentificacionClienteDA _existeIdentificacionDA;
+    private readonly IExisteCorreoClienteDA _existeCorreoDA;
 
-    public AgregarClienteBL(IAgregarClienteDA agregarDA, IExisteIdentificacionClienteDA existeIdentificacionDA)
+    public AgregarClienteBL(
+        IAgregarClienteDA agregarDA,
+        IExisteIdentificacionClienteDA existeIdentificacionDA,
+        IExisteCorreoClienteDA existeCorreoDA)
     {
         _agregarDA = agregarDA;
         _existeIdentificacionDA = existeIdentificacionDA;
+        _existeCorreoDA = existeCorreoDA;
     }
 
     public async Task<ResultadoOperacion> AgregarAsync(ClienteDto cliente)
@@ -33,6 +38,12 @@ public class AgregarClienteBL : IAgregarClienteBL
         if (await _existeIdentificacionDA.ExisteIdentificacionAsync(cliente.Identificacion, 0))
         {
             return ResultadoOperacion.Error(Mensajes.ClienteDuplicado);
+        }
+
+        if (cliente.CorreoElectronico != null
+            && await _existeCorreoDA.ExisteCorreoAsync(cliente.CorreoElectronico, 0))
+        {
+            return ResultadoOperacion.Error(Mensajes.CorreoClienteDuplicado);
         }
 
         var idGenerado = await _agregarDA.AgregarAsync(cliente);

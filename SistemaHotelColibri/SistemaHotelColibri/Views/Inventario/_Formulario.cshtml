@@ -2,6 +2,7 @@
 @model InventarioFormViewModel
 @{
     var unidades = (string[])ViewBag.UnidadesMedida;
+    var categorias = (List<SistemaHotelColibri.Abstract.Modelos.Inventarios.CategoriaInventarioDto>)ViewBag.Categorias;
 }
 
 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
@@ -13,9 +14,20 @@
         <span asp-validation-for="NombreProducto" class="text-danger"></span>
     </div>
     <div class="col-12 col-md-6">
-        <label asp-for="CategoriaProducto" class="form-label">Categoría *</label>
-        <input asp-for="CategoriaProducto" class="form-control" maxlength="50" placeholder="Ej.: Abarrotes, Lácteos, Bebidas" />
-        <span asp-validation-for="CategoriaProducto" class="text-danger"></span>
+        <label asp-for="IdCategoria" class="form-label">Categoría *</label>
+        <select asp-for="IdCategoria" class="form-select">
+            <option value="">Seleccione una categoría</option>
+            @foreach (var area in categorias.GroupBy(c => c.Area))
+            {
+                <optgroup label="@area.Key">
+                    @foreach (var categoria in area)
+                    {
+                        <option value="@categoria.IdCategoria" selected="@(categoria.IdCategoria == Model.IdCategoria)">@categoria.NombreCategoria</option>
+                    }
+                </optgroup>
+            }
+        </select>
+        <span asp-validation-for="IdCategoria" class="text-danger"></span>
     </div>
     <div class="col-12 col-md-4">
         <label asp-for="UnidadMedida" class="form-label">Unidad de medida *</label>

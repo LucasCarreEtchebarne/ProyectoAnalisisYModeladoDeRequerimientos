@@ -1,0 +1,28 @@
+@model SistemaHotelColibri.ViewModels.Cuenta.OlvideContrasenaViewModel
+@{
+    ViewData["Title"] = "Recuperar contraseña";
+    Layout = "_LayoutCuenta";
+}
+
+<h1 class="cuenta-titulo">Recuperar contraseña</h1>
+<p class="cuenta-subtitulo">Le enviaremos un enlace para restablecerla. Si no tiene acceso a su correo, solicite al administrador una contraseña temporal.</p>
+
+<form asp-action="OlvideContrasena" method="post">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+    <div class="mb-4">
+        <label asp-for="CorreoElectronico" class="form-label">Correo electrónico</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input asp-for="CorreoElectronico" class="form-control" type="email" autocomplete="email" autofocus />
+        </div>
+        <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Enviar enlace</button>
+    <a asp-action="IniciarSesion" class="btn btn-link w-100 mt-2">Volver al inicio de sesión</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

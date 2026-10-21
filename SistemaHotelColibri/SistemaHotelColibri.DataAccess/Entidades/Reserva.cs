@@ -25,6 +25,8 @@ public partial class Reserva
 
     public string EstadoReserva { get; set; } = null!;
 
+    public string? PlacaVehiculo { get; set; }
+
     public DateTime FechaRegistro { get; set; }
 
     public string? Observaciones { get; set; }

@@ -1,0 +1,33 @@
+@model SistemaHotelColibri.ViewModels.Cuenta.RestablecerContrasenaViewModel
+@{
+    ViewData["Title"] = "Restablecer contraseña";
+    Layout = "_LayoutCuenta";
+}
+
+<h1 class="cuenta-titulo">Restablecer contraseña</h1>
+<p class="cuenta-subtitulo">Cuenta: <strong>@Model.Correo</strong></p>
+
+<form asp-action="RestablecerContrasena" method="post">
+    <input type="hidden" asp-for="Correo" />
+    <input type="hidden" asp-for="Token" />
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+    <partial name="_RequisitosContrasena" />
+
+    <div class="mb-3">
+        <label asp-for="ContrasenaNueva" class="form-label">Nueva contraseña</label>
+        <input asp-for="ContrasenaNueva" class="form-control" autocomplete="new-password" autofocus />
+        <span asp-validation-for="ContrasenaNueva" class="text-danger"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="ConfirmarContrasena" class="form-label">Confirmar contraseña</label>
+        <input asp-for="ConfirmarContrasena" class="form-control" autocomplete="new-password" />
+        <span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Guardar contraseña</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

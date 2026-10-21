@@ -1,0 +1,45 @@
+@model SistemaHotelColibri.ViewModels.Cuenta.IniciarSesionViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+    Layout = "_LayoutCuenta";
+}
+
+<h1 class="cuenta-titulo">Iniciar sesión</h1>
+<p class="cuenta-subtitulo">Ingrese con su usuario o correo electrónico.</p>
+
+<form asp-action="IniciarSesion" method="post">
+    <input type="hidden" asp-for="ReturnUrl" />
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="UsuarioOCorreo" class="form-label">Usuario o correo</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input asp-for="UsuarioOCorreo" class="form-control" autocomplete="username" autofocus />
+        </div>
+        <span asp-validation-for="UsuarioOCorreo" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Contrasena" class="form-label">Contraseña</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input asp-for="Contrasena" class="form-control" autocomplete="current-password" />
+        </div>
+        <span asp-validation-for="Contrasena" class="text-danger"></span>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+            <input asp-for="Recordarme" class="form-check-input" />
+            <label asp-for="Recordarme" class="form-check-label">Recordarme</label>
+        </div>
+        <a asp-action="OlvideContrasena" class="small">¿Olvidó su contraseña?</a>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

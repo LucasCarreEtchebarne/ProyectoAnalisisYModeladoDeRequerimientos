@@ -10,15 +10,18 @@ public class EditarClienteBL : IEditarClienteBL
     private readonly IEditarClienteDA _editarDA;
     private readonly IObtenerClientePorIdDA _obtenerPorIdDA;
     private readonly IExisteIdentificacionClienteDA _existeIdentificacionDA;
+    private readonly IExisteCorreoClienteDA _existeCorreoDA;
 
     public EditarClienteBL(
         IEditarClienteDA editarDA,
         IObtenerClientePorIdDA obtenerPorIdDA,
-        IExisteIdentificacionClienteDA existeIdentificacionDA)
+        IExisteIdentificacionClienteDA existeIdentificacionDA,
+        IExisteCorreoClienteDA existeCorreoDA)
     {
         _editarDA = editarDA;
         _obtenerPorIdDA = obtenerPorIdDA;
         _existeIdentificacionDA = existeIdentificacionDA;
+        _existeCorreoDA = existeCorreoDA;
     }
 
     public async Task<ResultadoOperacion> EditarAsync(ClienteDto datos)
@@ -40,6 +43,12 @@ public class EditarClienteBL : IEditarClienteBL
         if (await _existeIdentificacionDA.ExisteIdentificacionAsync(datos.Identificacion, datos.IdCliente))
         {
             return ResultadoOperacion.Error(Mensajes.ClienteDuplicado);
+        }
+
+        if (datos.CorreoElectronico != null
+            && await _existeCorreoDA.ExisteCorreoAsync(datos.CorreoElectronico, datos.IdCliente))
+        {
+            return ResultadoOperacion.Error(Mensajes.CorreoClienteDuplicado);
         }
 
         // La fecha de registro se conserva; solo se actualizan los datos editables.

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Habitaciones;
@@ -5,6 +6,7 @@ using SistemaHotelColibri.ViewModels.Habitaciones;
 
 namespace SistemaHotelColibri.Controllers;
 
+[Authorize(Roles = Roles.AccesoHospedaje)]
 public class HabitacionController : ControladorBase
 {
     private const string Activas = "Activas";

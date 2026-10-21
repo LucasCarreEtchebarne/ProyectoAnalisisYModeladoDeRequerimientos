@@ -1,20 +1,22 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Inventarios;
+using SistemaHotelColibri.ViewModels.Comun;
 using SistemaHotelColibri.ViewModels.Inventarios;
 
 namespace SistemaHotelColibri.Controllers;
 
+[Authorize(Roles = Roles.AccesoInventario)]
 public class InventarioController : ControladorBase
 {
-    private const string TodosLosEstados = "Todos";
-
     private readonly IAgregarInventarioBL _agregarBL;
     private readonly IObtenerInventarioBL _obtenerBL;
     private readonly IObtenerInventarioPorIdBL _obtenerPorIdBL;
     private readonly IEditarInventarioBL _editarBL;
     private readonly IEliminarInventarioBL _eliminarBL;
     private readonly IObtenerAlertasInventarioBL _obtenerAlertasBL;
+    private readonly IObtenerCategoriaInventarioBL _obtenerCategoriasBL;
 
     public InventarioController(
         IAgregarInventarioBL agregarBL,
@@ -22,7 +24,8 @@ public class InventarioController : ControladorBase
         IObtenerInventarioPorIdBL obtenerPorIdBL,
         IEditarInventarioBL editarBL,
         IEliminarInventarioBL eliminarBL,
-        IObtenerAlertasInventarioBL obtenerAlertasBL)
+        IObtenerAlertasInventarioBL obtenerAlertasBL,
+        IObtenerCategoriaInventarioBL obtenerCategoriasBL)
     {
         _agregarBL = agregarBL;
         _obtenerBL = obtenerBL;
@@ -30,15 +33,36 @@ public class InventarioController : ControladorBase
         _editarBL = editarBL;
         _eliminarBL = eliminarBL;
         _obtenerAlertasBL = obtenerAlertasBL;
+        _obtenerCategoriasBL = obtenerCategoriasBL;
     }
 
-    public async Task<IActionResult> Index(string? estado)
+    private async Task CargarCatalogosAsync()
+    {
+        ViewBag.UnidadesMedida = Catalogos.UnidadesMedida;
+        ViewBag.Categorias = await _obtenerCategoriasBL.ObtenerAsync(Estados.CategoriaInventario.Activo);
+    }
+
+    public async Task<IActionResult> Index(string? busqueda, string? estado, int pagina = 1)
     {
         var estadoSeleccionado = estado ?? Estados.ProductoInventario.Activo;
-        var filtro = estadoSeleccionado == TodosLosEstados ? null : estadoSeleccionado;
 
-        ViewBag.EstadoSeleccionado = estadoSeleccionado;
-        ViewBag.OpcionesEstado = Estados.ProductoInventario.Todos.Append(TodosLosEstados).ToArray();
+        var filtro = new FiltroListado
+        {
+            Busqueda = busqueda,
+            Estado = estadoSeleccionado == FiltroListado.TodosLosEstados ? null : estadoSeleccionado,
+            Pagina = pagina
+        };
+
+        ViewBag.Busqueda = new BarraBusquedaViewModel
+        {
+            Busqueda = busqueda,
+            Placeholder = "Nombre, categoría, proveedor o descripción",
+            Filtros =
+            [
+                FiltroSeleccion.Crear("estado", "Estado",
+                    Estados.ProductoInventario.Todos.Append(FiltroListado.TodosLosEstados), estadoSeleccionado)
+            ]
+        };
         ViewBag.TotalAlertas = (await _obtenerAlertasBL.ObtenerAlertasAsync()).Count;
         return View(await _obtenerBL.ObtenerAsync(filtro));
     }
@@ -60,9 +84,9 @@ public class InventarioController : ControladorBase
         return View(producto);
     }
 
-    public IActionResult Crear()
+    public async Task<IActionResult> Crear()
     {
-        ViewBag.UnidadesMedida = Catalogos.UnidadesMedida;
+        await CargarCatalogosAsync();
         return View(new InventarioFormViewModel());
     }
 
@@ -71,7 +95,7 @@ public class InventarioController : ControladorBase
     {
         if (!ModelState.IsValid)
         {
-            ViewBag.UnidadesMedida = Catalogos.UnidadesMedida;
+            await CargarCatalogosAsync();
             return View(modelo);
         }
 
@@ -79,7 +103,7 @@ public class InventarioController : ControladorBase
         if (!resultado.Exito)
         {
             ModelState.AddModelError(string.Empty, resultado.Mensaje);
-            ViewBag.UnidadesMedida = Catalogos.UnidadesMedida;
+            await CargarCatalogosAsync();
             return View(modelo);
         }
 
@@ -96,7 +120,7 @@ public class InventarioController : ControladorBase
             return RedirectToAction(nameof(Index));
         }
 
-        ViewBag.UnidadesMedida = Catalogos.UnidadesMedida;
+        await CargarCatalogosAsync();
         return View(InventarioFormViewModel.DesdeDto(producto));
     }
 
@@ -107,7 +131,7 @@ public class InventarioController : ControladorBase
 
         if (!ModelState.IsValid)
         {
-            ViewBag.UnidadesMedida = Catalogos.UnidadesMedida;
+            await CargarCatalogosAsync();
             return View(modelo);
         }
 
@@ -115,7 +139,7 @@ public class InventarioController : ControladorBase
         if (!resultado.Exito)
         {
             ModelState.AddModelError(string.Empty, resultado.Mensaje);
-            ViewBag.UnidadesMedida = Catalogos.UnidadesMedida;
+            await CargarCatalogosAsync();
             return View(modelo);
         }
 

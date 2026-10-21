@@ -7,6 +7,9 @@ public static class Estados
         public const string Activo = "Activo";
         public const string Inactivo = "Inactivo";
         public static readonly string[] Todos = [Activo, Inactivo];
+
+        public const string Bloqueado = "Bloqueado";
+        public static readonly string[] Filtro = [Activo, Bloqueado, Inactivo];
     }
 
     public static class Rol
@@ -67,6 +70,20 @@ public static class Estados
         public static readonly string[] Todos = [Activo, Inactivo];
     }
 
+    public static class CategoriaInventario
+    {
+        public const string Activo = "Activo";
+        public const string Inactivo = "Inactivo";
+        public static readonly string[] Todos = [Activo, Inactivo];
+    }
+
+    public static class Proveedor
+    {
+        public const string Activo = "Activo";
+        public const string Inactivo = "Inactivo";
+        public static readonly string[] Todos = [Activo, Inactivo];
+    }
+
     public static class EspacioEvento
     {
         public const string Activo = "Activo";
@@ -98,7 +115,8 @@ public static class Estados
         public const string Pendiente = "Pendiente";
         public const string EnProceso = "EnProceso";
         public const string Completada = "Completada";
-        public static readonly string[] Todos = [Pendiente, EnProceso, Completada];
+        public const string Cancelada = "Cancelada";
+        public static readonly string[] Todos = [Pendiente, EnProceso, Completada, Cancelada];
     }
 
     public static class Evento
