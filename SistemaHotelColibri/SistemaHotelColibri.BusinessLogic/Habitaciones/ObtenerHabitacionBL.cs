@@ -1,3 +1,4 @@
+using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Habitaciones;
 using SistemaHotelColibri.Abstract.Modelos.Habitaciones;
@@ -13,8 +14,9 @@ public class ObtenerHabitacionBL : IObtenerHabitacionBL
         _obtenerDA = obtenerDA;
     }
 
-    public Task<List<HabitacionDto>> ObtenerAsync(string? estado)
+    public Task<ResultadoPaginado<HabitacionDto>> ObtenerAsync(FiltroListado filtro)
     {
-        return _obtenerDA.ObtenerAsync(estado);
+        filtro.Busqueda = string.IsNullOrWhiteSpace(filtro.Busqueda) ? null : filtro.Busqueda.Trim();
+        return _obtenerDA.ObtenerAsync(filtro);
     }
 }

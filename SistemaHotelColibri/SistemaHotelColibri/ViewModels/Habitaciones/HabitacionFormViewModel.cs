@@ -36,6 +36,30 @@ public class HabitacionFormViewModel
     [Range(0, 100, ErrorMessage = Mensajes.RangoValores)]
     public int? Piso { get; set; }
 
+    [Display(Name = "cantidad de camas")]
+    [Required(ErrorMessage = Mensajes.CampoObligatorio)]
+    [Range(1, 20, ErrorMessage = Mensajes.RangoValores)]
+    public int? CantidadCamas { get; set; } = 1;
+
+    [Display(Name = "tipo de cama")]
+    [Required(ErrorMessage = Mensajes.CampoObligatorio)]
+    public string? TipoCama { get; set; } = "Matrimonial";
+
+    [Display(Name = "vista")]
+    public string? Vista { get; set; }
+
+    [Display(Name = "baño privado")]
+    public bool BanoPrivado { get; set; }
+
+    [Display(Name = "aire acondicionado")]
+    public bool AireAcondicionado { get; set; }
+
+    [Display(Name = "televisión")]
+    public bool Television { get; set; }
+
+    [Display(Name = "wifi")]
+    public bool Wifi { get; set; }
+
     [Display(Name = "descripción")]
     [StringLength(250, ErrorMessage = Mensajes.LongitudMaxima)]
     public string? Descripcion { get; set; }
@@ -49,6 +73,13 @@ public class HabitacionFormViewModel
         Capacidad = habitacion.Capacidad,
         Precio = habitacion.Precio,
         Piso = habitacion.Piso,
+        CantidadCamas = habitacion.CantidadCamas,
+        TipoCama = habitacion.TipoCama,
+        Vista = habitacion.Vista,
+        BanoPrivado = habitacion.BanoPrivado,
+        AireAcondicionado = habitacion.AireAcondicionado,
+        Television = habitacion.Television,
+        Wifi = habitacion.Wifi,
         Descripcion = habitacion.Descripcion
     };
 
@@ -61,6 +92,13 @@ public class HabitacionFormViewModel
         Capacidad = Capacidad ?? 0,
         Precio = Precio ?? 0,
         Piso = Piso ?? 0,
+        CantidadCamas = CantidadCamas ?? 0,
+        TipoCama = TipoCama ?? string.Empty,
+        Vista = Vista,
+        BanoPrivado = BanoPrivado,
+        AireAcondicionado = AireAcondicionado,
+        Television = Television,
+        Wifi = Wifi,
         Descripcion = Descripcion
     };
 }

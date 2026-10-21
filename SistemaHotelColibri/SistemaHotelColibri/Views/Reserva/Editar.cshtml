@@ -1,0 +1,24 @@
+@using SistemaHotelColibri.ViewModels.Reservas
+@model ReservaFormViewModel
+@{
+    ViewData["Title"] = "Editar reserva";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Editar reserva #@Model.IdReserva</h1>
+        <p>Modifique los atributos necesarios. Cambie el estado a Cancelada para inactivarla o a Pendiente/Confirmada para activarla de nuevo.</p>
+    </div>
+</div>
+
+<form asp-action="Editar" asp-route-id="@Model.IdReserva" method="post" class="tarjeta tarjeta-cuerpo">
+    <partial name="_Formulario" model="Model" />
+    <div class="d-flex gap-2 justify-content-end mt-4">
+        <a class="btn btn-outline-secondary" asp-action="Detalle" asp-route-id="@Model.IdReserva">Cancelar</a>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Guardar cambios</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

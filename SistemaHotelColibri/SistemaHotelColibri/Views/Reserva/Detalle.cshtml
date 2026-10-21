@@ -1,0 +1,44 @@
+@using SistemaHotelColibri.Abstract.Modelos.Reservas
+@model ReservaDto
+@{
+    ViewData["Title"] = "Detalle de reserva";
+    var puedeCancelar = Model.EstadoReserva != Estados.Reserva.Cancelada
+        && Model.EstadoReserva != Estados.Reserva.CheckIn
+        && Model.EstadoReserva != Estados.Reserva.CheckOut;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Reserva #@Model.IdReserva</h1>
+        <p><partial name="_EstadoReserva" model="Model" /></p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+        <a class="btn btn-primary" asp-action="Editar" asp-route-id="@Model.IdReserva"><i class="bi bi-pencil"></i> Editar</a>
+        @if (puedeCancelar)
+        {
+            <form asp-action="Eliminar" asp-route-id="@Model.IdReserva" method="post"
+                  data-confirmar="¿Desea cancelar la reserva #@Model.IdReserva?"
+                  data-confirmar-boton="Cancelar reserva">
+                <button class="btn btn-outline-danger" type="submit"><i class="bi bi-slash-circle"></i> Cancelar reserva</button>
+            </form>
+        }
+    </div>
+</div>
+
+<div class="tarjeta tarjeta-cuerpo">
+    <div class="row">
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Cliente</div><div class="dato-valor">@Model.NombreCliente</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Identificación</div><div class="dato-valor">@Model.IdentificacionCliente</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Habitación</div><div class="dato-valor">@Model.NumeroHabitacion · @Model.TipoHabitacion</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Huéspedes</div><div class="dato-valor">@Model.CantidadHuespedes</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Entrada</div><div class="dato-valor">@Formato.Fecha(Model.FechaEntrada)</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Salida</div><div class="dato-valor">@Formato.Fecha(Model.FechaSalida)</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Noches</div><div class="dato-valor">@Model.CantidadNoches</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Precio por noche</div><div class="dato-valor">@Formato.Colones(Model.PrecioNoche)</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Monto de hospedaje</div><div class="dato-valor">@Formato.Colones(Model.MontoHospedaje)</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Placa</div><div class="dato-valor">@(Model.PlacaVehiculo ?? "—")</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Registrada</div><div class="dato-valor">@Formato.Fecha(Model.FechaRegistro)</div></div>
+        <div class="col-12 mt-2"><div class="dato-etiqueta">Observaciones</div><div class="dato-valor">@(Model.Observaciones ?? "—")</div></div>
+    </div>
+</div>

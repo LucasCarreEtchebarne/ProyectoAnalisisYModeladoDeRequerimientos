@@ -29,11 +29,6 @@ public class EditarHabitacionBL : IEditarHabitacionBL
             return ResultadoOperacion.Error(Mensajes.NoEncontrado);
         }
 
-        if (habitacion.EstadoHabitacion == Estados.Habitacion.Inactiva)
-        {
-            return ResultadoOperacion.Error(Mensajes.HabitacionInactiva);
-        }
-
         ReglasHabitacion.Normalizar(datos);
 
         var error = ReglasHabitacion.Validar(datos);
@@ -61,6 +56,13 @@ public class EditarHabitacionBL : IEditarHabitacionBL
         habitacion.Capacidad = datos.Capacidad;
         habitacion.Precio = datos.Precio;
         habitacion.Piso = datos.Piso;
+        habitacion.CantidadCamas = datos.CantidadCamas;
+        habitacion.TipoCama = datos.TipoCama;
+        habitacion.BanoPrivado = datos.BanoPrivado;
+        habitacion.Vista = datos.Vista;
+        habitacion.AireAcondicionado = datos.AireAcondicionado;
+        habitacion.Television = datos.Television;
+        habitacion.Wifi = datos.Wifi;
         habitacion.Descripcion = datos.Descripcion;
 
         if (!await _editarDA.EditarAsync(habitacion))

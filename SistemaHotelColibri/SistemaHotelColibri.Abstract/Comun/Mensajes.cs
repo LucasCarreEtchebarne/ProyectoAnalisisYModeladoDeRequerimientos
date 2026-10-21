@@ -26,8 +26,10 @@ public static class Mensajes
     public const string HabitacionModificadaCorrectamente = "Habitación modificada correctamente.";
     public const string ErrorModificarHabitacion = "No se pudo modificar la habitación, intente nuevamente.";
     public const string HabitacionNoDisponible = "La habitación no se encuentra disponible para modificar la reserva.";
-    public const string NoExistenHabitaciones = "No existen habitaciones registradas.";
-    public const string TipoHabitacionInvalido = "El tipo de habitación seleccionado no es válido.";
+    public const string CantidadCamasInvalida = "La cantidad de camas debe ser mayor a cero.";
+    public const string TipoCamaInvalido = "El tipo de cama seleccionado no es válido.";
+    public const string VistaInvalida = "La vista seleccionada no es válida.";
+    public const string NoExistenHabitaciones = "No existen habitaciones registradas.";    public const string TipoHabitacionInvalido = "El tipo de habitación seleccionado no es válido.";
     public const string EstadoHabitacionInvalido = "El estado de habitación seleccionado no es válido.";
     public const string CapacidadInvalida = "La capacidad debe ser mayor a cero.";
     public const string PrecioInvalido = "El precio no puede ser menor a 0.";
@@ -74,5 +76,24 @@ public static class Mensajes
     public const string RolInvalido = "Seleccione un rol válido.";
     public const string NombreUsuarioInvalido = "El nombre de usuario solo admite letras, números, punto, guion y guion bajo.";
     public const string AccionSobreUsuarioPropio = "No puede inactivar, bloquear ni cambiar el rol de su propio usuario.";
+    public const string ReservaRegistrada = "Se ha registrado la reserva correctamente.";
+    public const string ErrorRegistrarReserva = "No se pudo registrar la reserva, intente nuevamente.";
+    public const string ReservaModificada = "Reserva modificada correctamente.";
+    public const string ErrorModificarReserva = "No se pudo modificar la reserva, intente nuevamente.";
+    public const string ReservaCancelada = "Reserva cancelada correctamente.";
+    public const string ErrorCancelarReserva = "No se pudo cancelar la reserva, intente nuevamente.";
+    public const string ReservaYaCancelada = "La reserva ya se encuentra cancelada.";
+    public const string ReservaYaEmpezo = "No se puede cancelar una reserva que ya empezó.";
+    public const string ReservaHabitacionNoDisponible = "La habitación no se encuentra disponible para las fechas seleccionadas.";
+    public const string ReservaCamposIncompletos = "Se debe completar la información faltante.";
+    public const string ClienteNoRegistrado = "El cliente no se encuentra registrado.";
+    public const string ClienteReservaInactivo = "El cliente seleccionado está inactivo.";
+    public const string HabitacionReservaInactiva = "La habitación seleccionada está inactiva.";
+    public const string FechasReservaInvalidas = "La fecha de salida debe ser posterior a la fecha de entrada.";
+    public const string FechaEntradaPasada = "La fecha de entrada no puede ser anterior a hoy.";
+    public const string HuespedesExcedenCapacidad = "La cantidad de huéspedes excede la capacidad de la habitación ({0}).";
+    public const string CantidadHuespedesInvalida = "La cantidad de huéspedes debe ser mayor a cero.";
+    public const string EstadoReservaInvalido = "El estado de reserva seleccionado no es válido.";
+    public const string NoExistenReservas = "No existen reservas registradas.";
     public const string UsuarioInactivoNoEditable = "El usuario está inactivo. Actívelo para poder modificarlo.";
 }

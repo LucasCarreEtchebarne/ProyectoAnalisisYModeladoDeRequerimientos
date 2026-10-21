@@ -1,0 +1,118 @@
+@using SistemaHotelColibri.Abstract.Modelos.Reservas
+@using SistemaHotelColibri.ViewModels.Reservas
+@model ReservaFormViewModel
+@{
+    var opciones = (OpcionesReservaDto)ViewBag.Opciones;
+    var estados = (string[])ViewBag.EstadosReserva;
+    var hoy = DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd");
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<div class="row g-3">
+    <div class="col-12 col-md-6">
+        <label asp-for="IdCliente" class="form-label">Cliente *</label>
+        <select asp-for="IdCliente" class="form-select">
+            <option value="">Seleccione un cliente</option>
+            @foreach (var c in opciones.Clientes)
+            {
+                <option value="@c.IdCliente" selected="@(Model.IdCliente == c.IdCliente)">@c.Texto</option>
+            }
+        </select>
+        <span asp-validation-for="IdCliente" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="IdHabitacion" class="form-label">Habitación *</label>
+        <select asp-for="IdHabitacion" class="form-select" id="IdHabitacion">
+            <option value="">Seleccione una habitación</option>
+            @foreach (var h in opciones.Habitaciones)
+            {
+                <option value="@h.IdHabitacion" data-precio="@h.Precio.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-capacidad="@h.Capacidad" selected="@(Model.IdHabitacion == h.IdHabitacion)">@h.Texto</option>
+            }
+        </select>
+        <span asp-validation-for="IdHabitacion" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-3">
+        <label asp-for="FechaEntrada" class="form-label">Fecha de entrada *</label>
+        <input asp-for="FechaEntrada" class="form-control" type="date" id="FechaEntrada" />
+        <span asp-validation-for="FechaEntrada" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-3">
+        <label asp-for="FechaSalida" class="form-label">Fecha de salida *</label>
+        <input asp-for="FechaSalida" class="form-control" type="date" id="FechaSalida" />
+        <span asp-validation-for="FechaSalida" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-3">
+        <label asp-for="CantidadHuespedes" class="form-label">Huéspedes *</label>
+        <input asp-for="CantidadHuespedes" class="form-control" type="number" min="1" step="1" id="CantidadHuespedes" />
+        <span asp-validation-for="CantidadHuespedes" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-3">
+        <label asp-for="PrecioNoche" class="form-label">Precio por noche *</label>
+        <input asp-for="PrecioNoche" class="form-control" type="number" min="0" step="0.01" id="PrecioNoche" />
+        <span asp-validation-for="PrecioNoche" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-4">
+        <label asp-for="EstadoReserva" class="form-label">Estado de reserva *</label>
+        <select asp-for="EstadoReserva" class="form-select" asp-items="@(new SelectList(estados))"></select>
+        <span asp-validation-for="EstadoReserva" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-4">
+        <label asp-for="PlacaVehiculo" class="form-label">Placa del vehículo</label>
+        <input asp-for="PlacaVehiculo" class="form-control" maxlength="10" />
+        <span asp-validation-for="PlacaVehiculo" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="dato-etiqueta">Resumen</div>
+        <div class="dato-valor" id="ResumenReserva">—</div>
+    </div>
+    <div class="col-12">
+        <label asp-for="Observaciones" class="form-label">Observaciones</label>
+        <textarea asp-for="Observaciones" class="form-control" rows="3" maxlength="250"></textarea>
+        <span asp-validation-for="Observaciones" class="text-danger"></span>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var entrada = document.getElementById('FechaEntrada');
+        var salida = document.getElementById('FechaSalida');
+        var hab = document.getElementById('IdHabitacion');
+        var precio = document.getElementById('PrecioNoche');
+        var huespedes = document.getElementById('CantidadHuespedes');
+        var resumen = document.getElementById('ResumenReserva');
+        var esNueva = @(Model.IdReserva == 0 ? "true" : "false");
+        var hoy = '@hoy';
+
+        function sumarDia(valor) {
+            var d = new Date(valor + 'T00:00:00');
+            d.setDate(d.getDate() + 1);
+            var m = ('0' + (d.getMonth() + 1)).slice(-2), dd = ('0' + d.getDate()).slice(-2);
+            return d.getFullYear() + '-' + m + '-' + dd;
+        }
+
+        function actualizar() {
+            if (esNueva) { entrada.min = hoy; }
+            if (entrada.value) {
+                var minSalida = sumarDia(entrada.value);
+                salida.min = minSalida;
+                if (salida.value && salida.value < minSalida) { salida.value = minSalida; }
+            }
+            var opcion = hab.options[hab.selectedIndex];
+            if (opcion && opcion.dataset.capacidad) { huespedes.max = opcion.dataset.capacidad; }
+            if (entrada.value && salida.value) {
+                var noches = Math.round((new Date(salida.value) - new Date(entrada.value)) / 86400000);
+                var total = noches * (parseFloat(precio.value) || 0);
+                resumen.textContent = noches + ' noche(s) · ₡ ' + total.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+        }
+
+        hab.addEventListener('change', function () {
+            var opcion = hab.options[hab.selectedIndex];
+            if (opcion && opcion.dataset.precio) { precio.value = opcion.dataset.precio; }
+            actualizar();
+        });
+        [entrada, salida, precio, huespedes].forEach(function (e) { e.addEventListener('change', actualizar); e.addEventListener('input', actualizar); });
+        actualizar();
+    });
+</script>

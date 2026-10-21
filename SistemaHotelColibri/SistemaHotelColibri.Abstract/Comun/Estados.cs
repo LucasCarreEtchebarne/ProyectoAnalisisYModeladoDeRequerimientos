@@ -33,9 +33,9 @@ public static class Estados
         public const string Limpieza = "Limpieza";
         public const string Mantenimiento = "Mantenimiento";
         public const string Inactiva = "Inactiva";
+        public const string Activas = "Activas";
         public static readonly string[] Todos = [Disponible, Ocupada, Limpieza, Mantenimiento, Inactiva];
-        public static readonly string[] Editables = [Disponible, Ocupada, Limpieza, Mantenimiento];
-    }
+        public static readonly string[] Editables = [Disponible, Ocupada, Limpieza, Mantenimiento];    }
 
     public static class Mesa
     {
