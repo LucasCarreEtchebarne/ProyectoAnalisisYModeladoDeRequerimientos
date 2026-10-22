@@ -117,6 +117,7 @@ public static class Estados
         public const string Completada = "Completada";
         public const string Cancelada = "Cancelada";
         public static readonly string[] Todos = [Pendiente, EnProceso, Completada, Cancelada];
+        public static readonly string[] Activos = [Pendiente, EnProceso];
     }
 
     public static class Evento

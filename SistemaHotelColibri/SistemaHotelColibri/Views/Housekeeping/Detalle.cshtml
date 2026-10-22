@@ -1,0 +1,65 @@
+﻿@using SistemaHotelColibri.Abstract.Modelos.TareasHousekeeping
+@model TareaHousekeepingDto
+@{
+    ViewData["Title"] = "Detalle de tarea";
+    ViewData["VolverA"] = "Detalle";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Tarea #@Model.IdTarea · @Model.TipoTarea</h1>
+        <p>Habitación @Model.NumeroHabitacion · <partial name="_EstadoTarea" model="Model" /></p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+        @if (Model.EstaActiva)
+        {
+            <partial name="_AccionesEstado" model="Model" />
+            <a class="btn btn-primary" asp-action="Editar" asp-route-id="@Model.IdTarea"><i class="bi bi-pencil"></i> Editar</a>
+            <a class="btn btn-outline-danger" asp-action="Cancelar" asp-route-id="@Model.IdTarea"><i class="bi bi-x-circle"></i> Cancelar tarea</a>
+        }
+    </div>
+</div>
+
+<div class="tarjeta tarjeta-cuerpo">
+    <div class="row g-3">
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Habitación</div>
+            <div class="dato-valor">@Model.NumeroHabitacion</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Asignado a</div>
+            <div class="dato-valor">@Model.NombreUsuario</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Fecha de asignación</div>
+            <div class="dato-valor">@Formato.FechaHora(Model.FechaAsignacion)</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Fecha límite</div>
+            <div class="dato-valor">@(Model.FechaLimite.HasValue ? Formato.FechaHora(Model.FechaLimite.Value) : "—")</div>
+        </div>
+        @if (Model.FechaCompletada.HasValue)
+        {
+            <div class="col-6 col-md-3">
+                <div class="dato-etiqueta">Completada el</div>
+                <div class="dato-valor">@Formato.FechaHora(Model.FechaCompletada.Value)</div>
+            </div>
+        }
+        <div class="col-12">
+            <div class="dato-etiqueta">Observaciones</div>
+            <div class="dato-valor">@(Model.Observaciones ?? "—")</div>
+        </div>
+        @if (Model.EstadoTarea == Estados.Tarea.Cancelada)
+        {
+            <div class="col-12 col-md-3">
+                <div class="dato-etiqueta">Cancelada el</div>
+                <div class="dato-valor">@(Model.FechaCancelacion.HasValue ? Formato.FechaHora(Model.FechaCancelacion.Value) : "—")</div>
+            </div>
+            <div class="col-12 col-md-9">
+                <div class="dato-etiqueta">Motivo de cancelación</div>
+                <div class="dato-valor">@Model.MotivoCancelacion</div>
+            </div>
+        }
+    </div>
+</div>

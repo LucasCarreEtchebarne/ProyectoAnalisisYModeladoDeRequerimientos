@@ -324,6 +324,7 @@ public partial class HotelColibriContext : DbContext
                 .HasDefaultValue("Pendiente");
             entity.Property(e => e.FechaAsignacion).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.Observaciones).HasMaxLength(250);
+            entity.Property(e => e.MotivoCancelacion).HasMaxLength(250);
             entity.Property(e => e.TipoTarea).HasMaxLength(50);
 
             entity.HasOne(d => d.IdHabitacionNavigation).WithMany(p => p.Housekeeping)
