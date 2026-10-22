@@ -1,0 +1,60 @@
+@model SistemaHotelColibri.ViewModels.Usuarios.UsuarioFormViewModel
+@{
+    var roles = (List<SistemaHotelColibri.Abstract.Modelos.Usuarios.RolDto>)ViewBag.Roles;
+    var esUsuarioActual = ViewBag.EsUsuarioActual is true;
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<div class="row g-3">
+    <div class="col-12 col-md-6">
+        <label asp-for="NombreCompleto" class="form-label">Nombre completo *</label>
+        <input asp-for="NombreCompleto" class="form-control" maxlength="150" autofocus />
+        <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="Rol" class="form-label">Rol *</label>
+        <select asp-for="Rol" class="form-select" disabled="@esUsuarioActual">
+            <option value="">Seleccione un rol</option>
+            @foreach (var rol in roles)
+            {
+                <option value="@rol.Nombre" selected="@(rol.Nombre == Model.Rol)" title="@rol.Descripcion">@rol.Nombre</option>
+            }
+        </select>
+        @if (esUsuarioActual)
+        {
+            <input type="hidden" asp-for="Rol" />
+            <div class="form-text">No puede cambiar el rol de su propio usuario.</div>
+        }
+        <span asp-validation-for="Rol" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="NombreUsuario" class="form-label">Nombre de usuario *</label>
+        <input asp-for="NombreUsuario" class="form-control" maxlength="50" autocomplete="off" />
+        <div class="form-text">Letras, números, punto, guion y guion bajo.</div>
+        <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="CorreoElectronico" class="form-label">Correo electrónico *</label>
+        <input asp-for="CorreoElectronico" class="form-control" type="email" maxlength="150" autocomplete="off" />
+        <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+    </div>
+
+    @if (!Model.EsEdicion)
+    {
+        <div class="col-12">
+            <partial name="_RequisitosContrasena" />
+        </div>
+        <div class="col-12 col-md-6">
+            <label asp-for="Contrasena" class="form-label">Contraseña inicial *</label>
+            <input asp-for="Contrasena" class="form-control" autocomplete="new-password" />
+            <div class="form-text">El usuario deberá cambiarla en su primer inicio de sesión.</div>
+            <span asp-validation-for="Contrasena" class="text-danger"></span>
+        </div>
+        <div class="col-12 col-md-6">
+            <label asp-for="ConfirmarContrasena" class="form-label">Confirmar contraseña *</label>
+            <input asp-for="ConfirmarContrasena" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
+        </div>
+    }
+</div>

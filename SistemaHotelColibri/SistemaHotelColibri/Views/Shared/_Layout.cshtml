@@ -12,6 +12,9 @@
     @{
         var controlador = ViewContext.RouteData.Values["controller"]?.ToString();
         string Activo(string nombre) => string.Equals(controlador, nombre, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+        bool TieneRol(string roles) => roles.Split(',').Any(User.IsInRole);
+        var nombreUsuario = User.FindFirst(Reclamos.NombreCompleto)?.Value ?? User.Identity?.Name;
+        var rolUsuario = Roles.Todos.FirstOrDefault(User.IsInRole);
     }
 
     <div class="app">
@@ -29,29 +32,83 @@
                     <i class="bi bi-grid-1x2"></i> Inicio
                 </a>
 
-                <div class="sidebar-seccion">Hospedaje</div>
-                <a class="sidebar-link @Activo("Habitacion")" asp-controller="Habitacion" asp-action="Index">
-                    <i class="bi bi-door-closed"></i> Habitaciones
-                </a>
+                @if (TieneRol(Roles.AccesoHospedaje))
+                {
+                    <div class="sidebar-seccion">Hospedaje</div>
+                    <a class="sidebar-link @Activo("Habitacion")" asp-controller="Habitacion" asp-action="Index">
+                        <i class="bi bi-door-closed"></i> Habitaciones
+                    </a>
 
-                <div class="sidebar-seccion">Clientes</div>
-                <a class="sidebar-link @Activo("Cliente")" asp-controller="Cliente" asp-action="Index">
-                    <i class="bi bi-people"></i> Clientes
-                </a>
+                    <a class="sidebar-link @Activo("Reserva")" asp-controller="Reserva" asp-action="Index">
+                        <i class="bi bi-calendar-check"></i> Reservas
+                    </a>
 
-                <div class="sidebar-seccion">Restaurante</div>
-                <a class="sidebar-link @Activo("Inventario")" asp-controller="Inventario" asp-action="Index">
-                    <i class="bi bi-box-seam"></i> Inventario
-                </a>
+                    <a class="sidebar-link @Activo("Evento")" asp-controller="Evento" asp-action="Index">
+                        <i class="bi bi-calendar-event"></i> Eventos
+                    </a>
+
+                    <div class="sidebar-seccion">Clientes</div>
+                    <a class="sidebar-link @Activo("Cliente")" asp-controller="Cliente" asp-action="Index">
+                        <i class="bi bi-people"></i> Clientes
+                    </a>
+                }
+
+                @if (TieneRol(Roles.AccesoInventario))
+                {
+                    <div class="sidebar-seccion">Restaurante</div>
+                    <a class="sidebar-link @Activo("Inventario")" asp-controller="Inventario" asp-action="Index">
+                        <i class="bi bi-box-seam"></i> Inventario
+                    </a>
+                }
+
+                
+                @if (TieneRol(Roles.AccesoHousekeeping))
+                {
+                    <div class="sidebar-seccion">Housekeeping</div>
+                    <a class="sidebar-link @Activo("Housekeeping")" asp-controller="Housekeeping" asp-action="Index">
+                        <i class="bi bi-stars"></i> Tareas de limpieza
+                    </a>
+                }
+
+                @if (User.IsInRole(Roles.Administrador))
+                {
+                    <div class="sidebar-seccion">Administración</div>
+                    <a class="sidebar-link @Activo("Usuario")" asp-controller="Usuario" asp-action="Index">
+                        <i class="bi bi-person-gear"></i> Usuarios
+                    </a>
+                }
             </nav>
+
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="sidebar-usuario">
+                    <div class="sidebar-usuario-datos">
+                        <i class="bi bi-person-circle"></i>
+                        <div>
+                            <div class="sidebar-usuario-nombre">@nombreUsuario</div>
+                            <div class="sidebar-usuario-rol">@rolUsuario</div>
+                        </div>
+                    </div>
+                    <div class="sidebar-usuario-acciones">
+                        <a class="sidebar-link" asp-controller="Cuenta" asp-action="CambiarContrasena">
+                            <i class="bi bi-key"></i> Cambiar contraseña
+                        </a>
+                        <form asp-controller="Cuenta" asp-action="CerrarSesion" method="post">
+                            <button type="submit" class="sidebar-link w-100 border-0 bg-transparent text-start">
+                                <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
         </aside>
 
         <div class="contenido">
-            <header class="barra-superior">
-                <button class="btn btn-icono d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral" aria-controls="menuLateral" aria-label="Abrir menú">
+            <header class="barra-superior d-lg-none">
+                <button class="btn btn-icono" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral" aria-controls="menuLateral" aria-label="Abrir menú">
                     <i class="bi bi-list"></i>
                 </button>
-                <span class="barra-titulo">@ViewData["Title"]</span>
+                <span class="barra-titulo">El Colibrí</span>
             </header>
 
             <main class="pagina" role="main">

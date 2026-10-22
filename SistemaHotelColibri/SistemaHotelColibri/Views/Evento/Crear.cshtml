@@ -1,0 +1,24 @@
+@using SistemaHotelColibri.ViewModels.Eventos
+@model EventoFormViewModel
+@{
+    ViewData["Title"] = "Nuevo evento";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Nuevo evento</h1>
+        <p>Complete los datos para registrar un evento.</p>
+    </div>
+</div>
+
+<form asp-action="Crear" method="post" class="tarjeta tarjeta-cuerpo">
+    <partial name="_Formulario" model="Model" />
+    <div class="d-flex gap-2 justify-content-end mt-4">
+        <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Guardar evento</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

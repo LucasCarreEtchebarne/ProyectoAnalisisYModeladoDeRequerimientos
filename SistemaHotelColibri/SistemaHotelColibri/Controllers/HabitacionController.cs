@@ -1,14 +1,15 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Habitaciones;
+using SistemaHotelColibri.ViewModels.Comun;
 using SistemaHotelColibri.ViewModels.Habitaciones;
 
 namespace SistemaHotelColibri.Controllers;
 
+[Authorize(Roles = Roles.AccesoHospedaje)]
 public class HabitacionController : ControladorBase
 {
-    private const string Activas = "Activas";
-
     private readonly IAgregarHabitacionBL _agregarBL;
     private readonly IObtenerHabitacionBL _obtenerBL;
     private readonly IObtenerHabitacionPorIdBL _obtenerPorIdBL;
@@ -29,13 +30,28 @@ public class HabitacionController : ControladorBase
         _eliminarBL = eliminarBL;
     }
 
-    public async Task<IActionResult> Index(string? estado)
+    public async Task<IActionResult> Index(string? busqueda, string? estado, int pagina = 1)
     {
-        var estadoSeleccionado = estado ?? Activas;
-        var filtro = estadoSeleccionado == Activas ? null : estadoSeleccionado;
+        var estadoSeleccionado = estado ?? Estados.Habitacion.Activas;
 
-        ViewBag.EstadoSeleccionado = estadoSeleccionado;
-        ViewBag.OpcionesEstado = Estados.Habitacion.Todos.Prepend(Activas).ToArray();
+        var filtro = new FiltroListado
+        {
+            Busqueda = busqueda,
+            Estado = estadoSeleccionado == FiltroListado.TodosLosEstados ? null : estadoSeleccionado,
+            Pagina = pagina
+        };
+
+        ViewBag.Busqueda = new BarraBusquedaViewModel
+        {
+            Busqueda = busqueda,
+            Placeholder = "Número, tipo, tipo de cama, vista o descripción",
+            Filtros =
+            [
+                FiltroSeleccion.Crear("estado", "Estado",
+                    Estados.Habitacion.Todos.Prepend(Estados.Habitacion.Activas).Append(FiltroListado.TodosLosEstados),
+                    estadoSeleccionado)
+            ]
+        };
         return View(await _obtenerBL.ObtenerAsync(filtro));
     }
 
@@ -90,14 +106,8 @@ public class HabitacionController : ControladorBase
             return RedirectToAction(nameof(Index));
         }
 
-        if (habitacion.EstadoHabitacion == Estados.Habitacion.Inactiva)
-        {
-            MensajeError(Mensajes.HabitacionInactiva);
-            return RedirectToAction(nameof(Detalle), new { id });
-        }
-
         ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
-        ViewBag.EstadosHabitacion = Estados.Habitacion.Editables;
+        ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
         return View(HabitacionFormViewModel.DesdeDto(habitacion));
     }
 
@@ -109,7 +119,7 @@ public class HabitacionController : ControladorBase
         if (!ModelState.IsValid)
         {
             ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
-            ViewBag.EstadosHabitacion = Estados.Habitacion.Editables;
+            ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
             return View(modelo);
         }
 
@@ -118,7 +128,7 @@ public class HabitacionController : ControladorBase
         {
             ModelState.AddModelError(string.Empty, resultado.Mensaje);
             ViewBag.TiposHabitacion = Catalogos.TiposHabitacion;
-            ViewBag.EstadosHabitacion = Estados.Habitacion.Editables;
+            ViewBag.EstadosHabitacion = Estados.Habitacion.Todos;
             return View(modelo);
         }
 

@@ -1,0 +1,79 @@
+@using SistemaHotelColibri.Abstract.Modelos.Clientes
+@using SistemaHotelColibri.Abstract.Modelos.Eventos
+@using SistemaHotelColibri.ViewModels.Eventos
+@model EventoFormViewModel
+@{
+    var clientes = ((List<ClienteDto>)ViewBag.Clientes)
+        .Where(c => c.EstadoCliente == Estados.Cliente.Activo || c.IdCliente == Model.IdCliente);
+    var espacios = ((List<EspacioEventoDto>)ViewBag.Espacios)
+        .Where(s => s.EstadoEspacio == Estados.EspacioEvento.Activo || s.IdEspacio == Model.IdEspacio);
+    var estados = (string[])ViewBag.EstadosEvento;
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<div class="row g-3">
+    <div class="col-12 col-md-6">
+        <label asp-for="NombreEvento" class="form-label">Nombre del evento *</label>
+        <input asp-for="NombreEvento" class="form-control" maxlength="100" autofocus />
+        <span asp-validation-for="NombreEvento" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="IdCliente" class="form-label">Cliente *</label>
+        <select asp-for="IdCliente" class="form-select">
+            <option value="">Seleccione un cliente</option>
+            @foreach (var c in clientes)
+            {
+                <option value="@c.IdCliente" selected="@(Model.IdCliente == c.IdCliente)">@c.NombreMostrar (@c.Identificacion)</option>
+            }
+        </select>
+        <span asp-validation-for="IdCliente" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="IdEspacio" class="form-label">Espacio *</label>
+        <select asp-for="IdEspacio" class="form-select">
+            <option value="">Seleccione un espacio</option>
+            @foreach (var s in espacios)
+            {
+                <option value="@s.IdEspacio" data-capacidad="@s.CapacidadMaxima" selected="@(Model.IdEspacio == s.IdEspacio)">@s.NombreEspacio (cap. @s.CapacidadMaxima)</option>
+            }
+        </select>
+        <span asp-validation-for="IdEspacio" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="FechaEvento" class="form-label">Fecha del evento *</label>
+        <input asp-for="FechaEvento" class="form-control" type="date" />
+        <span asp-validation-for="FechaEvento" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-3">
+        <label asp-for="HoraInicio" class="form-label">Hora de inicio *</label>
+        <input asp-for="HoraInicio" class="form-control" type="time" />
+        <span asp-validation-for="HoraInicio" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-3">
+        <label asp-for="HoraFin" class="form-label">Hora de fin *</label>
+        <input asp-for="HoraFin" class="form-control" type="time" />
+        <span asp-validation-for="HoraFin" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-3">
+        <label asp-for="Participantes" class="form-label">Participantes *</label>
+        <input asp-for="Participantes" class="form-control" type="number" min="1" step="1" />
+        <span asp-validation-for="Participantes" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-3">
+        <label asp-for="MontoAcordado" class="form-label">Monto acordado *</label>
+        <input asp-for="MontoAcordado" class="form-control" type="number" min="0" step="0.01" />
+        <span asp-validation-for="MontoAcordado" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-4">
+        <label asp-for="EstadoEvento" class="form-label">Estado del evento *</label>
+        <select asp-for="EstadoEvento" class="form-select" asp-items="@(new SelectList(estados))"></select>
+        <div class="form-text">Permite reactivar un evento cancelado.</div>
+        <span asp-validation-for="EstadoEvento" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Descripcion" class="form-label">Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control" rows="3" maxlength="250"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+</div>

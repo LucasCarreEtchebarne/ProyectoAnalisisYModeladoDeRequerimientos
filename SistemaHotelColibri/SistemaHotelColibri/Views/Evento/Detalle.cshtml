@@ -1,0 +1,39 @@
+@using SistemaHotelColibri.Abstract.Modelos.Eventos
+@model EventoDto
+@{
+    ViewData["Title"] = "Detalle de evento";
+    var puedeCancelar = Model.EstadoEvento == Estados.Evento.Programado;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>@Model.NombreEvento</h1>
+        <p><partial name="_EstadoEvento" model="Model" /></p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+        <a class="btn btn-primary" asp-action="Editar" asp-route-id="@Model.IdEvento"><i class="bi bi-pencil"></i> Editar</a>
+        @if (puedeCancelar)
+        {
+            <form asp-action="Eliminar" asp-route-id="@Model.IdEvento" method="post"
+                  data-confirmar="¿Desea cancelar el evento «@Model.NombreEvento»?"
+                  data-confirmar-boton="Cancelar evento">
+                <button class="btn btn-outline-danger" type="submit"><i class="bi bi-slash-circle"></i> Cancelar evento</button>
+            </form>
+        }
+    </div>
+</div>
+
+<div class="tarjeta tarjeta-cuerpo">
+    <div class="row">
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Cliente</div><div class="dato-valor">@Model.NombreCliente</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Identificación</div><div class="dato-valor">@Model.IdentificacionCliente</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Espacio</div><div class="dato-valor">@Model.NombreEspacio</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Capacidad del espacio</div><div class="dato-valor">@Model.CapacidadEspacio</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Fecha</div><div class="dato-valor">@Formato.Fecha(Model.FechaEvento)</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Horario</div><div class="dato-valor">@Formato.Hora(Model.HoraInicio) - @Formato.Hora(Model.HoraFin)</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Participantes</div><div class="dato-valor">@Model.Participantes</div></div>
+        <div class="col-6 col-md-3"><div class="dato-etiqueta">Monto acordado</div><div class="dato-valor">@Formato.Colones(Model.MontoAcordado)</div></div>
+        <div class="col-12 mt-2"><div class="dato-etiqueta">Descripción</div><div class="dato-valor">@(Model.Descripcion ?? "—")</div></div>
+    </div>
+</div>

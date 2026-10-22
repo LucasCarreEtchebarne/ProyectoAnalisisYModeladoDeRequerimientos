@@ -19,7 +19,23 @@ public partial class Habitacion
 
     public int Piso { get; set; }
 
+    public int CantidadCamas { get; set; }
+
+    public string TipoCama { get; set; } = null!;
+
+    public bool BanoPrivado { get; set; }
+
+    public string? Vista { get; set; }
+
+    public bool AireAcondicionado { get; set; }
+
+    public bool Television { get; set; }
+
+    public bool Wifi { get; set; }
+
     public string? Descripcion { get; set; }
+
+    public virtual ICollection<HabitacionImagen> HabitacionImagen { get; set; } = new List<HabitacionImagen>();
 
     public virtual ICollection<Housekeeping> Housekeeping { get; set; } = new List<Housekeeping>();
 

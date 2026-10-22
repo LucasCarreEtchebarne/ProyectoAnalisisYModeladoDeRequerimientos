@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using SistemaHotelColibri.Abstract.Comun;
 
@@ -5,6 +6,9 @@ namespace SistemaHotelColibri.Controllers;
 
 public abstract class ControladorBase : Controller
 {
+    protected int IdUsuarioActual =>
+        int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : 0;
+
     protected void MensajeExito(string mensaje) => TempData["MensajeExito"] = mensaje;
 
     protected void MensajeError(string mensaje) => TempData["MensajeError"] = mensaje;

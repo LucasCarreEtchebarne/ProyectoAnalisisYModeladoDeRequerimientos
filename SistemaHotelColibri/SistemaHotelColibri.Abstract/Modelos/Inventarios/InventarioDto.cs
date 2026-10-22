@@ -6,7 +6,11 @@ public class InventarioDto
 {
     public int IdProducto { get; set; }
     public string NombreProducto { get; set; } = string.Empty;
-    public string CategoriaProducto { get; set; } = string.Empty;
+    public int IdCategoria { get; set; }
+    public string NombreCategoria { get; set; } = string.Empty;
+    public string AreaCategoria { get; set; } = string.Empty;
+    public int? IdProveedor { get; set; }
+    public string? NombreProveedor { get; set; }
     public string UnidadMedida { get; set; } = string.Empty;
     public decimal Stock { get; set; }
     public decimal StockMinimo { get; set; }

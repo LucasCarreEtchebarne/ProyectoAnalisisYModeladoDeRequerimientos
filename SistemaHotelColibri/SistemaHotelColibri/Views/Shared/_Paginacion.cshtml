@@ -1,0 +1,75 @@
+@using Microsoft.AspNetCore.WebUtilities
+@model SistemaHotelColibri.Abstract.Comun.IPaginacion
+@{
+    string UrlPagina(int pagina)
+    {
+        var parametros = Context.Request.Query
+            .Where(p => !string.Equals(p.Key, "pagina", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(p => p.Key, p => (string?)p.Value.ToString());
+        parametros["pagina"] = pagina.ToString();
+        return QueryHelpers.AddQueryString(Context.Request.Path, parametros);
+    }
+
+    const int Vecinas = 2;
+    var desde = Math.Max(1, Model.PaginaActual - Vecinas);
+    var hasta = Math.Min(Model.TotalPaginas, Model.PaginaActual + Vecinas);
+}
+
+<div class="paginacion">
+    <span class="small text-secondary">
+        @if (Model.TotalRegistros == 0)
+        {
+            <text>Sin registros</text>
+        }
+        else
+        {
+            <text>Mostrando @Model.PrimerRegistro–@Model.UltimoRegistro de @Model.TotalRegistros</text>
+        }
+    </span>
+
+    @if (Model.TotalPaginas > 1)
+    {
+        <nav aria-label="Paginación">
+            <ul class="pagination pagination-sm mb-0">
+                @if (Model.TienePaginaAnterior)
+                {
+                    <li class="page-item"><a class="page-link" href="@UrlPagina(Model.PaginaActual - 1)" aria-label="Anterior"><i class="bi bi-chevron-left"></i></a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><span class="page-link" aria-hidden="true"><i class="bi bi-chevron-left"></i></span></li>
+                }
+                @if (desde > 1)
+                {
+                    <li class="page-item"><a class="page-link" href="@UrlPagina(1)">1</a></li>
+                    @if (desde > 2)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                }
+                @for (var i = desde; i <= hasta; i++)
+                {
+                    <li class="page-item @(i == Model.PaginaActual ? "active" : "")">
+                        <a class="page-link" href="@UrlPagina(i)" aria-current="@(i == Model.PaginaActual ? "page" : null)">@i</a>
+                    </li>
+                }
+                @if (hasta < Model.TotalPaginas)
+                {
+                    @if (hasta < Model.TotalPaginas - 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                    <li class="page-item"><a class="page-link" href="@UrlPagina(Model.TotalPaginas)">@Model.TotalPaginas</a></li>
+                }
+                @if (Model.TienePaginaSiguiente)
+                {
+                    <li class="page-item"><a class="page-link" href="@UrlPagina(Model.PaginaActual + 1)" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><span class="page-link" aria-hidden="true"><i class="bi bi-chevron-right"></i></span></li>
+                }
+            </ul>
+        </nav>
+    }
+</div>

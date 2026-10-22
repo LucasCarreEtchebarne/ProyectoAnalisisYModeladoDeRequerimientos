@@ -8,12 +8,16 @@ internal static class ReglasInventario
     public static void Normalizar(InventarioDto producto)
     {
         producto.NombreProducto = producto.NombreProducto.Trim();
-        producto.CategoriaProducto = producto.CategoriaProducto.Trim();
         producto.Descripcion = string.IsNullOrWhiteSpace(producto.Descripcion) ? null : producto.Descripcion.Trim();
     }
 
     public static string? Validar(InventarioDto producto)
     {
+        if (producto.IdCategoria <= 0)
+        {
+            return Mensajes.CategoriaInvalida;
+        }
+
         if (producto.Stock < 0)
         {
             return Mensajes.StockNegativo;

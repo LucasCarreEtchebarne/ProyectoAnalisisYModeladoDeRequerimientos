@@ -1,0 +1,22 @@
+@using SistemaHotelColibri.Abstract.Modelos.Reservas
+@model ReservaDto
+@if (Model.EstadoReserva == Estados.Reserva.Cancelada)
+{
+    <span class="estado estado-inactivo">Cancelada</span>
+}
+else if (Model.EstadoReserva == Estados.Reserva.CheckIn)
+{
+    <span class="estado estado-alerta">Check-in</span>
+}
+else if (Model.EstadoReserva == Estados.Reserva.CheckOut)
+{
+    <span class="estado estado-inactivo">Check-out</span>
+}
+else if (Model.EstadoReserva == Estados.Reserva.Confirmada)
+{
+    <span class="estado estado-activo">Confirmada</span>
+}
+else
+{
+    <span class="estado estado-alerta">Pendiente</span>
+}
