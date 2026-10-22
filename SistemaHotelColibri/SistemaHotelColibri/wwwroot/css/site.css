@@ -256,6 +256,8 @@ body {
 .estado-activo { background: #dcfce7; color: #166534; }
 .estado-inactivo { background: #e5e7eb; color: #4b5563; }
 .estado-alerta { background: #fef3c7; color: #92400e; }
+.estado-proceso { background: #dbeafe; color: #1e40af; }
+.estado-cancelado { background: #fee2e2; color: #991b1b; }
 
 .indicador {
     display: flex;

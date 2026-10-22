@@ -23,5 +23,9 @@ public partial class Housekeeping
 
     public string? Observaciones { get; set; }
 
+    public string? MotivoCancelacion { get; set; }
+
+    public DateTime? FechaCancelacion { get; set; }
+
     public virtual Habitacion IdHabitacionNavigation { get; set; } = null!;
 }
