@@ -1,0 +1,86 @@
+﻿@using SistemaHotelColibri.Abstract.Modelos.TareasHousekeeping
+@model List<TareaHousekeepingDto>
+@{
+    ViewData["Title"] = "Housekeeping";
+    var estadoSeleccionado = (string)ViewBag.EstadoSeleccionado;
+    var opcionesEstado = (string[])ViewBag.OpcionesEstado;
+    var vencidas = Model.Count(t => t.EstaVencida);
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Housekeeping</h1>
+        <p>Tareas de limpieza y mantenimiento de las habitaciones.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nueva tarea</a>
+</div>
+
+@if (vencidas > 0)
+{
+    <div class="alert alert-warning d-flex align-items-center gap-2">
+        <i class="bi bi-alarm"></i>
+        <span><strong>@vencidas</strong> tarea(s) activas ya pasaron su fecha límite.</span>
+    </div>
+}
+
+<form method="get" class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <label class="small text-secondary" for="estado">Mostrar</label>
+    <select class="form-select form-select-sm w-auto" id="estado" name="estado" onchange="this.form.submit()">
+        @foreach (var opcion in opcionesEstado)
+        {
+            <option value="@opcion" selected="@(opcion == estadoSeleccionado)">@Formato.EstadoTarea(opcion)</option>
+        }
+    </select>
+</form>
+
+<div class="tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Habitación</th>
+                    <th>Tipo de tarea</th>
+                    <th>Asignado a</th>
+                    <th>Fecha límite</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-secondary py-5">
+                            <i class="bi bi-inbox d-block fs-3 mb-2"></i>
+                            @Mensajes.NoExistenTareas
+                        </td>
+                    </tr>
+                }
+                @foreach (var t in Model)
+                {
+                    <tr class="@(t.EstaActiva ? "" : "fila-inactiva")">
+                        <td class="text-secondary">
+                            <a class="text-decoration-none" asp-action="Detalle" asp-route-id="@t.IdTarea">#@t.IdTarea</a>
+                        </td>
+                        <td class="fw-semibold">@t.NumeroHabitacion</td>
+                        <td>@t.TipoTarea</td>
+                        <td>@t.NombreUsuario</td>
+                        <td class="text-nowrap">@(t.FechaLimite.HasValue ? Formato.FechaHora(t.FechaLimite.Value) : "—")</td>
+                        <td><partial name="_EstadoTarea" model="t" /></td>
+                        <td class="text-end text-nowrap">
+                            <partial name="_AccionesEstado" model="t" />
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@t.IdTarea" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
+                            @if (t.EstaActiva)
+                            {
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@t.IdTarea" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                                <a class="btn btn-sm btn-outline-danger" asp-action="Cancelar" asp-route-id="@t.IdTarea" title="Cancelar tarea" aria-label="Cancelar tarea"><i class="bi bi-x-circle"></i></a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<p class="small text-secondary mt-2">@Model.Count tarea(s)</p>

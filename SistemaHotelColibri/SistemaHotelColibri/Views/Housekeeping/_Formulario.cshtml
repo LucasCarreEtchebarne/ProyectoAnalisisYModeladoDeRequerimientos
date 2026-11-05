@@ -1,0 +1,51 @@
+﻿@using SistemaHotelColibri.ViewModels.TareasHousekeeping
+@model TareaFormViewModel
+@{
+    var habitaciones = (SelectList)ViewBag.Habitaciones;
+    var personal = (SelectList)ViewBag.Personal;
+    var tipos = (string[])ViewBag.TiposTarea;
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+@if (!personal.Any())
+{
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        No hay colaboradores activos con el rol <strong>Housekeeping</strong>. Registre uno en Usuarios para poder asignar tareas.
+    </div>
+}
+
+<div class="row g-3">
+    <div class="col-12 col-md-6">
+        <label asp-for="IdHabitacion" class="form-label">Habitación *</label>
+        <select asp-for="IdHabitacion" class="form-select" asp-items="habitaciones" autofocus>
+            <option value="">Seleccione una habitación</option>
+        </select>
+        <span asp-validation-for="IdHabitacion" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="IdUsuario" class="form-label">Colaborador asignado *</label>
+        <select asp-for="IdUsuario" class="form-select" asp-items="personal">
+            <option value="">Seleccione un colaborador</option>
+        </select>
+        <span asp-validation-for="IdUsuario" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="TipoTarea" class="form-label">Tipo de tarea *</label>
+        <select asp-for="TipoTarea" class="form-select" asp-items="@(new SelectList(tipos))">
+            <option value="">Seleccione el tipo de tarea</option>
+        </select>
+        <span asp-validation-for="TipoTarea" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="FechaLimite" class="form-label">Fecha límite</label>
+        <input asp-for="FechaLimite" class="form-control" type="datetime-local" />
+        <span asp-validation-for="FechaLimite" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Observaciones" class="form-label">Observaciones</label>
+        <textarea asp-for="Observaciones" class="form-control" rows="3" maxlength="250"></textarea>
+        <span asp-validation-for="Observaciones" class="text-danger"></span>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+﻿@using SistemaHotelColibri.Abstract.Modelos.TareasHousekeeping
+@model TareaHousekeepingDto
+@{
+    // Botones del flujo de estados (HSK-005). Deben coincidir con ReglasTarea.
+    var volverA = (string?)ViewData["VolverA"];
+    var claseBoton = volverA == "Detalle" ? "btn" : "btn btn-sm";
+    var acciones = new List<(string Estado, string Texto, string Icono, string Clase)>();
+
+    if (Model.EstadoTarea == Estados.Tarea.Pendiente)
+    {
+        acciones.Add((Estados.Tarea.EnProceso, "Iniciar", "bi-play-fill", "btn-outline-primary"));
+        acciones.Add((Estados.Tarea.Completada, "Completar", "bi-check2-circle", "btn-outline-success"));
+    }
+    else if (Model.EstadoTarea == Estados.Tarea.EnProceso)
+    {
+        acciones.Add((Estados.Tarea.Completada, "Completar", "bi-check2-circle", "btn-outline-success"));
+        acciones.Add((Estados.Tarea.Pendiente, "Regresar a pendiente", "bi-arrow-counterclockwise", "btn-outline-secondary"));
+    }
+}
+@foreach (var accion in acciones)
+{
+    <form asp-action="CambiarEstado" asp-route-id="@Model.IdTarea" method="post" class="d-inline"
+          data-confirmar="¿Desea cambiar la tarea #@Model.IdTarea a «@Formato.EstadoTarea(accion.Estado)»?"
+          data-confirmar-boton="@accion.Texto">
+        <input type="hidden" name="nuevoEstado" value="@accion.Estado" />
+        <input type="hidden" name="volverA" value="@volverA" />
+        <button class="@claseBoton @accion.Clase" type="submit" title="@accion.Texto" aria-label="@accion.Texto">
+            <i class="bi @accion.Icono"></i>@if (volverA == "Detalle") {
+            <text> @accion.Texto</text>
+        }
+    </button>
+</form>
+}

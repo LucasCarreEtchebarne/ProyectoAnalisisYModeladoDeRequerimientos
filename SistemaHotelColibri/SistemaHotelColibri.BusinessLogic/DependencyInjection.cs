@@ -1,15 +1,17 @@
 using Microsoft.Extensions.DependencyInjection;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Clientes;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Eventos;
-using SistemaHotelColibri.BusinessLogic.Eventos;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Inventarios;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Reservas;
+using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.TareasHousekeeping;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Usuarios;
-using SistemaHotelColibri.BusinessLogic.Reservas;
 using SistemaHotelColibri.BusinessLogic.Clientes;
+using SistemaHotelColibri.BusinessLogic.Eventos;
 using SistemaHotelColibri.BusinessLogic.Habitaciones;
 using SistemaHotelColibri.BusinessLogic.Inventarios;
+using SistemaHotelColibri.BusinessLogic.Reservas;
+using SistemaHotelColibri.BusinessLogic.TareasHousekeeping;
 using SistemaHotelColibri.BusinessLogic.Usuarios;
 
 namespace SistemaHotelColibri.BusinessLogic;
@@ -66,6 +68,17 @@ public static class DependencyInjection
         services.AddScoped<ICambiarContrasenaBL, CambiarContrasenaBL>();
         services.AddScoped<IRecuperarContrasenaBL, RecuperarContrasenaBL>();
         services.AddScoped<IObtenerRolBL, ObtenerRolBL>();
+
+        services.AddScoped<IValidadorTareaBL, ValidadorTareaBL>();
+        services.AddScoped<IAgregarTareaBL, AgregarTareaBL>();
+        services.AddScoped<IObtenerTareaBL, ObtenerTareaBL>();
+        services.AddScoped<IObtenerTareaPorIdBL, ObtenerTareaPorIdBL>();
+        services.AddScoped<IEditarTareaBL, EditarTareaBL>();
+        services.AddScoped<ICambiarEstadoTareaBL, CambiarEstadoTareaBL>();
+        services.AddScoped<ICancelarTareaBL, CancelarTareaBL>();
+        services.AddScoped<IObtenerPersonalHousekeepingBL, ObtenerPersonalHousekeepingBL>();
+        services.AddScoped<IObtenerHabitacionesTareaBL, ObtenerHabitacionesTareaBL>();
+
 
         return services;
     }

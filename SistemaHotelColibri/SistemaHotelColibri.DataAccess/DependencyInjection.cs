@@ -1,3 +1,5 @@
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.TareasHousekeeping;
+using SistemaHotelColibri.DataAccess.TareasHousekeeping;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,7 @@ using SistemaHotelColibri.DataAccess.Habitaciones;
 using SistemaHotelColibri.DataAccess.Identidad;
 using SistemaHotelColibri.DataAccess.Inventarios;
 using SistemaHotelColibri.DataAccess.Usuarios;
+
 
 namespace SistemaHotelColibri.DataAccess;
 
@@ -120,6 +123,16 @@ public static class DependencyInjection
         services.AddScoped<IObtenerRolDA, ObtenerRolDA>();
         services.AddScoped<IExisteNombreUsuarioDA, ExisteNombreUsuarioDA>();
         services.AddScoped<IExisteCorreoUsuarioDA, ExisteCorreoUsuarioDA>();
+
+        services.AddScoped<IAgregarTareaDA, AgregarTareaDA>();
+        services.AddScoped<IObtenerTareaDA, ObtenerTareaDA>();
+        services.AddScoped<IObtenerTareaPorIdDA, ObtenerTareaPorIdDA>();
+        services.AddScoped<IEditarTareaDA, EditarTareaDA>();
+        services.AddScoped<ICambiarEstadoTareaDA, CambiarEstadoTareaDA>();
+        services.AddScoped<ICancelarTareaDA, CancelarTareaDA>();
+        services.AddScoped<IExisteTareaActivaDA, ExisteTareaActivaDA>();
+        services.AddScoped<IObtenerPersonalHousekeepingDA, ObtenerPersonalHousekeepingDA>();
+        services.AddScoped<IObtenerHabitacionesTareaDA, ObtenerHabitacionesTareaDA>();
 
         return services;
     }

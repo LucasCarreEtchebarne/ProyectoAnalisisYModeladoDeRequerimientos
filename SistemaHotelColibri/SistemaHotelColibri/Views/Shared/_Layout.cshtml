@@ -61,6 +61,15 @@
                     </a>
                 }
 
+                
+                @if (TieneRol(Roles.AccesoHousekeeping))
+                {
+                    <div class="sidebar-seccion">Housekeeping</div>
+                    <a class="sidebar-link @Activo("Housekeeping")" asp-controller="Housekeeping" asp-action="Index">
+                        <i class="bi bi-stars"></i> Tareas de limpieza
+                    </a>
+                }
+
                 @if (User.IsInRole(Roles.Administrador))
                 {
                     <div class="sidebar-seccion">Administración</div>

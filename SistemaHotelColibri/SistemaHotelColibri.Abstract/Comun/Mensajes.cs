@@ -115,4 +115,21 @@ public static class Mensajes
     public const string MontoAcordadoInvalido = "El monto acordado no puede ser negativo.";
     public const string EstadoEventoInvalido = "El estado de evento seleccionado no es válido.";
     public const string NoExistenEventos = "No existen eventos registrados.";
+
+    public const string TareaRegistrada = "La tarea de housekeeping se registró con el código #{0}.";
+    public const string TareaModificada = "La tarea de housekeeping se modificó correctamente.";
+    public const string TareaEstadoActualizado = "La tarea #{0} cambió al estado «{1}».";
+    public const string TareaCancelada = "La tarea #{0} se canceló correctamente.";
+    public const string NoExistenTareas = "No hay tareas de housekeeping para mostrar.";
+    public const string TareaNoModificable = "Solo se pueden modificar tareas en estado Pendiente o En proceso.";
+    public const string TareaNoCancelable = "Solo se pueden cancelar tareas en estado Pendiente o En proceso.";
+    public const string TareaDuplicada = "La habitación ya tiene una tarea activa (pendiente o en proceso) de ese mismo tipo.";
+    public const string TipoTareaInvalido = "El tipo de tarea seleccionado no es válido.";
+    public const string EstadoTareaInvalido = "El estado de tarea seleccionado no es válido.";
+    public const string TransicionEstadoInvalida = "No se puede cambiar una tarea de «{0}» a «{1}».";
+    public const string HabitacionTareaNoExiste = "La habitación seleccionada no existe.";
+    public const string PersonalNoValido = "El colaborador seleccionado no existe, está inactivo o no tiene el rol Housekeeping.";
+    public const string FechaLimiteInvalida = "La fecha límite debe ser posterior a la fecha de asignación.";
+    public const string MotivoCancelacionObligatorio = "Debe indicar el motivo de la cancelación.";
+    public const string ErrorModificarTarea = "No se pudo modificar la tarea, intente nuevamente.";
 }

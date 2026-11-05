@@ -1,0 +1,22 @@
+﻿@using SistemaHotelColibri.Abstract.Modelos.TareasHousekeeping
+@model TareaHousekeepingDto
+@if (Model.EstadoTarea == Estados.Tarea.Completada)
+{
+    <span class="estado estado-activo">Completada</span>
+}
+else if (Model.EstadoTarea == Estados.Tarea.Cancelada)
+{
+    <span class="estado estado-cancelado">Cancelada</span>
+}
+else if (Model.EstadoTarea == Estados.Tarea.EnProceso)
+{
+    <span class="estado estado-proceso">En proceso</span>
+}
+else
+{
+    <span class="estado estado-alerta">Pendiente</span>
+}
+@if (Model.EstaVencida)
+{
+    <span class="estado estado-cancelado"><i class="bi bi-alarm"></i> Vencida</span>
+}

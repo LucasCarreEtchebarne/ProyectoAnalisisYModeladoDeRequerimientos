@@ -1,0 +1,24 @@
+﻿@using SistemaHotelColibri.Abstract.Modelos.TareasHousekeeping
+@model TareaHousekeepingDto
+@{
+    ViewData["Title"] = "Cancelar tarea";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Cancelar tarea #@Model.IdTarea</h1>
+        <p>@Model.TipoTarea · Habitación @Model.NumeroHabitacion · Asignada a @Model.NombreUsuario</p>
+    </div>
+</div>
+
+<form asp-action="Cancelar" asp-route-id="@Model.IdTarea" method="post" class="tarjeta tarjeta-cuerpo"
+      data-confirmar="¿Desea cancelar la tarea #@Model.IdTarea? Una tarea cancelada ya no se puede modificar."
+      data-confirmar-boton="Cancelar tarea">
+    <label for="motivo" class="form-label">Motivo de la cancelación *</label>
+    <textarea id="motivo" name="motivo" class="form-control" rows="3" maxlength="250" required autofocus></textarea>
+    <div class="form-text">Máximo 250 caracteres.</div>
+    <div class="d-flex gap-2 justify-content-end mt-4">
+        <a class="btn btn-outline-secondary" asp-action="Detalle" asp-route-id="@Model.IdTarea">Volver</a>
+        <button type="submit" class="btn btn-danger"><i class="bi bi-x-circle"></i> Cancelar tarea</button>
+    </div>
+</form>
