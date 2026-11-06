@@ -8,6 +8,7 @@ public class FiltroListado
 
     public string? Busqueda { get; set; }
     public string? Estado { get; set; }
+    public string? Categoria { get; set; }
     public int Pagina { get; set; } = 1;
     public int TamanoPagina { get; set; } = TamanoPaginaPorDefecto;
 }
