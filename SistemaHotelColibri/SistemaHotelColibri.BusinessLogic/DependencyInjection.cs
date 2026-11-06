@@ -1,8 +1,9 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Clientes;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Eventos;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Inventarios;
+using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Menus;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Reservas;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.TareasHousekeeping;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Usuarios;
@@ -10,6 +11,7 @@ using SistemaHotelColibri.BusinessLogic.Clientes;
 using SistemaHotelColibri.BusinessLogic.Eventos;
 using SistemaHotelColibri.BusinessLogic.Habitaciones;
 using SistemaHotelColibri.BusinessLogic.Inventarios;
+using SistemaHotelColibri.BusinessLogic.Menus;
 using SistemaHotelColibri.BusinessLogic.Reservas;
 using SistemaHotelColibri.BusinessLogic.TareasHousekeeping;
 using SistemaHotelColibri.BusinessLogic.Usuarios;
@@ -20,6 +22,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddBusinessLogic(this IServiceCollection services)
     {
+        services.AddScoped<IAgregarMenuBL, AgregarMenuBL>();
+        services.AddScoped<IObtenerMenuBL, ObtenerMenuBL>();
+        services.AddScoped<IObtenerMenuPorIdBL, ObtenerMenuPorIdBL>();
+        services.AddScoped<IEditarMenuBL, EditarMenuBL>();
+        services.AddScoped<IEliminarMenuBL, EliminarMenuBL>();
         services.AddScoped<IAgregarInventarioBL, AgregarInventarioBL>();
         services.AddScoped<IObtenerInventarioBL, ObtenerInventarioBL>();
         services.AddScoped<IObtenerInventarioPorIdBL, ObtenerInventarioPorIdBL>();

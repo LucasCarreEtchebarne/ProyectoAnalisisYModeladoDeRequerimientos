@@ -132,4 +132,13 @@ public static class Mensajes
     public const string FechaLimiteInvalida = "La fecha límite debe ser posterior a la fecha de asignación.";
     public const string MotivoCancelacionObligatorio = "Debe indicar el motivo de la cancelación.";
     public const string ErrorModificarTarea = "No se pudo modificar la tarea, intente nuevamente.";
+
+    public const string MenuRegistrado = "Se ha registrado el producto correctamente.";
+    public const string MenuCamposIncompletos = "Se debe completar la información faltante.";
+    public const string MenuDuplicado = "Este producto ya se encuentra registrado.";
+    public const string PrecioMenuInvalido = "El precio ingresado no es válido.";
+    public const string EstadoMenuInvalido = "El estado de producto seleccionado no es válido.";
+    public const string ErrorRegistrarMenu = "No se pudo registrar el producto, intente nuevamente.";
+    public const string ErrorModificarMenu = "No se pudo modificar el producto, intente nuevamente.";
+    public const string NoExistenProductosMenu = "No existen productos registrados en el menú.";
 }

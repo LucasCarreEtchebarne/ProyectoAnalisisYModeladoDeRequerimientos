@@ -1,4 +1,4 @@
-using SistemaHotelColibri.Abstract.Interfaces.DataAccess.TareasHousekeeping;
+﻿using SistemaHotelColibri.Abstract.Interfaces.DataAccess.TareasHousekeeping;
 using SistemaHotelColibri.DataAccess.TareasHousekeeping;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +10,7 @@ using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Eventos;
 using SistemaHotelColibri.DataAccess.Eventos;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Inventarios;
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Menus;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Reservas;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Usuarios;
 using SistemaHotelColibri.DataAccess.Reservas;
@@ -19,6 +20,7 @@ using SistemaHotelColibri.DataAccess.Correo;
 using SistemaHotelColibri.DataAccess.Habitaciones;
 using SistemaHotelColibri.DataAccess.Identidad;
 using SistemaHotelColibri.DataAccess.Inventarios;
+using SistemaHotelColibri.DataAccess.Menus;
 using SistemaHotelColibri.DataAccess.Usuarios;
 
 
@@ -68,6 +70,12 @@ public static class DependencyInjection
 
         services.AddScoped<IAgregarInventarioDA, AgregarInventarioDA>();
         services.AddScoped<IExisteNombreInventarioDA, ExisteNombreInventarioDA>();
+        services.AddScoped<IAgregarMenuDA, AgregarMenuDA>();
+        services.AddScoped<IObtenerMenuDA, ObtenerMenuDA>();
+        services.AddScoped<IObtenerMenuPorIdDA, ObtenerMenuPorIdDA>();
+        services.AddScoped<IEditarMenuDA, EditarMenuDA>();
+        services.AddScoped<IEliminarMenuDA, EliminarMenuDA>();
+        services.AddScoped<IExisteNombreMenuDA, ExisteNombreMenuDA>();
         services.AddScoped<IObtenerInventarioDA, ObtenerInventarioDA>();
         services.AddScoped<IObtenerInventarioPorIdDA, ObtenerInventarioPorIdDA>();
         services.AddScoped<IEditarInventarioDA, EditarInventarioDA>();
