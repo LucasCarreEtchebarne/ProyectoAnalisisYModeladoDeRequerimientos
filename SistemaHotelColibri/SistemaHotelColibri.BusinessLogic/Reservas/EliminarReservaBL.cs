@@ -6,18 +6,18 @@ namespace SistemaHotelColibri.BusinessLogic.Reservas;
 
 public class EliminarReservaBL : IEliminarReservaBL
 {
-    private readonly IEliminarReservaDA _da;
-    private readonly IObtenerReservaPorIdDA _obtenerDA;
+    private readonly IEliminarReservaDA _eliminarDA;
+    private readonly IObtenerReservaPorIdDA _obtenerPorIdDA;
 
-    public EliminarReservaBL(IEliminarReservaDA da, IObtenerReservaPorIdDA obtenerDA)
+    public EliminarReservaBL(IEliminarReservaDA eliminarDA, IObtenerReservaPorIdDA obtenerPorIdDA)
     {
-        _da = da;
-        _obtenerDA = obtenerDA;
+        _eliminarDA = eliminarDA;
+        _obtenerPorIdDA = obtenerPorIdDA;
     }
 
     public async Task<ResultadoOperacion> EliminarAsync(int idReserva)
     {
-        var reserva = await _obtenerDA.ObtenerPorIdAsync(idReserva);
+        var reserva = await _obtenerPorIdDA.ObtenerPorIdAsync(idReserva);
         if (reserva == null)
         {
             return ResultadoOperacion.Error(Mensajes.NoEncontrado);
@@ -35,7 +35,7 @@ public class EliminarReservaBL : IEliminarReservaBL
 
         try
         {
-            await _da.EliminarAsync(idReserva);
+            await _eliminarDA.EliminarAsync(idReserva);
             return ResultadoOperacion.Ok(Mensajes.ReservaCancelada);
         }
         catch (Exception)

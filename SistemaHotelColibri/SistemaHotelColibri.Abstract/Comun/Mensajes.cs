@@ -76,7 +76,7 @@ public static class Mensajes
     public const string RolInvalido = "Seleccione un rol válido.";
     public const string NombreUsuarioInvalido = "El nombre de usuario solo admite letras, números, punto, guion y guion bajo.";
     public const string AccionSobreUsuarioPropio = "No puede inactivar, bloquear ni cambiar el rol de su propio usuario.";
-    public const string ReservaRegistrada = "Se ha registrado la reserva correctamente.";
+    public const string ReservaRegistrada = "Se ha registrado la reserva correctamente.";    
     public const string ErrorRegistrarReserva = "No se pudo registrar la reserva, intente nuevamente.";
     public const string ReservaModificada = "Reserva modificada correctamente.";
     public const string ErrorModificarReserva = "No se pudo modificar la reserva, intente nuevamente.";
