@@ -9,31 +9,45 @@ namespace SistemaHotelColibri.BusinessLogic.Reservas;
 
 public class AgregarReservaBL : IAgregarReservaBL
 {
-    private readonly IAgregarReservaDA _da;
-    private readonly ValidadorReserva _validador;
+    private readonly IAgregarReservaDA _agregarDA;
+    private readonly IObtenerClientePorIdDA _obtenerClientePorIdDA;
+    private readonly IObtenerHabitacionPorIdDA _obtenerHabitacionPorIdDA;
+    private readonly IHabitacionDisponibleReservaDA _habitacionDisponibleDA;
 
     public AgregarReservaBL(
-        IAgregarReservaDA da,
-        IObtenerClientePorIdDA clienteDA,
-        IObtenerHabitacionPorIdDA habitacionDA,
-        IHabitacionDisponibleReservaDA disponibleDA)
+        IAgregarReservaDA agregarDA,
+        IObtenerClientePorIdDA obtenerClientePorIdDA,
+        IObtenerHabitacionPorIdDA obtenerHabitacionPorIdDA,
+        IHabitacionDisponibleReservaDA habitacionDisponibleDA)
     {
-        _da = da;
-        _validador = new ValidadorReserva(clienteDA, habitacionDA, disponibleDA);
+        _agregarDA = agregarDA;
+        _obtenerClientePorIdDA = obtenerClientePorIdDA;
+        _obtenerHabitacionPorIdDA = obtenerHabitacionPorIdDA;
+        _habitacionDisponibleDA = habitacionDisponibleDA;
     }
 
     public async Task<ResultadoOperacion> AgregarAsync(ReservaDto reserva)
     {
-        ValidadorReserva.Normalizar(reserva);
-        var error = await _validador.ValidarAsync(reserva, null);
+        ReglasReserva.Normalizar(reserva);
+
+        var cliente = await _obtenerClientePorIdDA.ObtenerPorIdAsync(reserva.IdCliente);
+        var habitacion = await _obtenerHabitacionPorIdDA.ObtenerPorIdAsync(reserva.IdHabitacion);
+        var error = ReglasReserva.Validar(reserva, null, cliente, habitacion);
         if (error != null)
         {
             return ResultadoOperacion.Error(error);
         }
 
+        if (reserva.EstadoReserva != Estados.Reserva.Cancelada && reserva.EstadoReserva != Estados.Reserva.CheckOut
+            && !await _habitacionDisponibleDA.EstaDisponibleAsync(
+                reserva.IdHabitacion, reserva.FechaEntrada, reserva.FechaSalida, reserva.IdReserva))
+        {
+            return ResultadoOperacion.Error(Mensajes.ReservaHabitacionNoDisponible);
+        }
+
         try
         {
-            var id = await _da.AgregarAsync(reserva);
+            var id = await _agregarDA.AgregarAsync(reserva);
             return ResultadoOperacion.Ok(Mensajes.ReservaRegistrada, id);
         }
         catch (Exception)

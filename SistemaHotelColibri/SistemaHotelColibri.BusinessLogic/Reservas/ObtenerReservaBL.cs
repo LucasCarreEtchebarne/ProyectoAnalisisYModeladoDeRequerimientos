@@ -7,41 +7,16 @@ namespace SistemaHotelColibri.BusinessLogic.Reservas;
 
 public class ObtenerReservaBL : IObtenerReservaBL
 {
-    private readonly IObtenerReservaDA _da;
+    private readonly IObtenerReservaDA _obtenerDA;
 
-    public ObtenerReservaBL(IObtenerReservaDA da)
+    public ObtenerReservaBL(IObtenerReservaDA obtenerDA)
     {
-        _da = da;
+        _obtenerDA = obtenerDA;
     }
 
     public Task<ResultadoPaginado<ReservaDto>> ObtenerAsync(FiltroListado filtro)
     {
         filtro.Busqueda = filtro.Busqueda?.Trim();
-        return _da.ObtenerAsync(filtro);
+        return _obtenerDA.ObtenerAsync(filtro);
     }
-}
-
-public class ObtenerReservaPorIdBL : IObtenerReservaPorIdBL
-{
-    private readonly IObtenerReservaPorIdDA _da;
-
-    public ObtenerReservaPorIdBL(IObtenerReservaPorIdDA da)
-    {
-        _da = da;
-    }
-
-    public Task<ReservaDto?> ObtenerPorIdAsync(int idReserva) => _da.ObtenerPorIdAsync(idReserva);
-}
-
-public class ObtenerOpcionesReservaBL : IObtenerOpcionesReservaBL
-{
-    private readonly IObtenerOpcionesReservaDA _da;
-
-    public ObtenerOpcionesReservaBL(IObtenerOpcionesReservaDA da)
-    {
-        _da = da;
-    }
-
-    public Task<OpcionesReservaDto> ObtenerAsync(int idClienteActual = 0, int idHabitacionActual = 0) =>
-        _da.ObtenerAsync(idClienteActual, idHabitacionActual);
 }
