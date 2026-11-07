@@ -58,6 +58,13 @@
                     <div class="sidebar-seccion">Restaurante</div>
                 }
 
+                @if (TieneRol(Roles.AccesoMesas))
+                {
+                    <a class="sidebar-link @Activo("Mesa")" asp-controller="Mesa" asp-action="Index">
+                        <i class="bi bi-grid-3x3-gap"></i> Mesas
+                    </a>
+                }
+
                 @if (TieneRol(Roles.AccesoMenu))
                 {
                     <a class="sidebar-link @Activo("Menu")" asp-controller="Menu" asp-action="Index">

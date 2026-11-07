@@ -1,0 +1,30 @@
+@using SistemaHotelColibri.ViewModels.Mesas
+@model MesaFormViewModel
+@{
+    var estados = (string[])ViewBag.EstadosMesa;
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<div class="row g-3">
+    <div class="col-12 col-md-4">
+        <label asp-for="NumeroMesa" class="form-label">Número de mesa *</label>
+        <input asp-for="NumeroMesa" class="form-control" type="number" min="1" step="1" autofocus />
+        <span asp-validation-for="NumeroMesa" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-4">
+        <label asp-for="Capacidad" class="form-label">Capacidad *</label>
+        <input asp-for="Capacidad" class="form-control" type="number" min="1" step="1" />
+        <span asp-validation-for="Capacidad" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-4">
+        <label asp-for="EstadoMesa" class="form-label">Estado de mesa *</label>
+        <select asp-for="EstadoMesa" class="form-select" asp-items="@(new SelectList(estados))"></select>
+        <span asp-validation-for="EstadoMesa" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Descripcion" class="form-label">Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control" rows="3" maxlength="250"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+</div>
