@@ -33,6 +33,30 @@
             </a>
         </div>
     }
+    @if (TieneRol(Roles.AccesoMesas))
+    {
+        <div class="col-12 col-md-6 col-xl-4">
+            <a class="tarjeta indicador" asp-controller="Mesa" asp-action="Index">
+                <div class="indicador-icono"><i class="bi bi-grid-3x3-gap"></i></div>
+                <div>
+                    <div class="fw-semibold">Mesas</div>
+                    <div class="indicador-etiqueta">Consulta y gestión de mesas del restaurante</div>
+                </div>
+            </a>
+        </div>
+    }
+    @if (TieneRol(Roles.AccesoMenu))
+    {
+        <div class="col-12 col-md-6 col-xl-4">
+            <a class="tarjeta indicador" asp-controller="Menu" asp-action="Index">
+                <div class="indicador-icono"><i class="bi bi-journal-text"></i></div>
+                <div>
+                    <div class="fw-semibold">Menú</div>
+                    <div class="indicador-etiqueta">Productos y precios del menú</div>
+                </div>
+            </a>
+        </div>
+    }
     @if (TieneRol(Roles.AccesoInventario))
     {
         <div class="col-12 col-md-6 col-xl-4">

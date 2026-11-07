@@ -1,0 +1,24 @@
+@using SistemaHotelColibri.ViewModels.Menus
+@model MenuFormViewModel
+@{
+    ViewData["Title"] = "Editar producto del menú";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Editar producto del menú</h1>
+        <p>Modifique los datos del producto.</p>
+    </div>
+</div>
+
+<form asp-action="Editar" asp-route-id="@Model.IdProductoMenu" method="post" class="tarjeta tarjeta-cuerpo">
+    <partial name="_Formulario" model="Model" />
+    <div class="d-flex gap-2 justify-content-end mt-4">
+        <a class="btn btn-outline-secondary" asp-action="Detalle" asp-route-id="@Model.IdProductoMenu">Cancelar</a>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Guardar cambios</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

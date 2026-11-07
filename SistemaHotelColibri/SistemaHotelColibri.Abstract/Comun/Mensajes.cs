@@ -76,7 +76,7 @@ public static class Mensajes
     public const string RolInvalido = "Seleccione un rol válido.";
     public const string NombreUsuarioInvalido = "El nombre de usuario solo admite letras, números, punto, guion y guion bajo.";
     public const string AccionSobreUsuarioPropio = "No puede inactivar, bloquear ni cambiar el rol de su propio usuario.";
-    public const string ReservaRegistrada = "Se ha registrado la reserva correctamente.";
+    public const string ReservaRegistrada = "Se ha registrado la reserva correctamente.";    
     public const string ErrorRegistrarReserva = "No se pudo registrar la reserva, intente nuevamente.";
     public const string ReservaModificada = "Reserva modificada correctamente.";
     public const string ErrorModificarReserva = "No se pudo modificar la reserva, intente nuevamente.";
@@ -132,4 +132,27 @@ public static class Mensajes
     public const string FechaLimiteInvalida = "La fecha límite debe ser posterior a la fecha de asignación.";
     public const string MotivoCancelacionObligatorio = "Debe indicar el motivo de la cancelación.";
     public const string ErrorModificarTarea = "No se pudo modificar la tarea, intente nuevamente.";
+
+    public const string MenuRegistrado = "Se ha registrado el producto correctamente.";
+    public const string MenuCamposIncompletos = "Se debe completar la información faltante.";
+    public const string MenuDuplicado = "Este producto ya se encuentra registrado.";
+    public const string PrecioMenuInvalido = "El precio ingresado no es válido.";
+    public const string EstadoMenuInvalido = "El estado de producto seleccionado no es válido.";
+    public const string ErrorRegistrarMenu = "No se pudo registrar el producto, intente nuevamente.";
+    public const string ErrorModificarMenu = "No se pudo modificar el producto, intente nuevamente.";
+    public const string NoExistenProductosMenu = "No existen productos registrados en el menú.";
+
+    public const string MesaRegistrada = "Mesa registrada correctamente.";
+    public const string MesaDuplicada = "Esta mesa ya se encuentra registrada.";
+    public const string MesaModificada = "Mesa modificada correctamente.";
+    public const string MesaInactivada = "Mesa inactivada correctamente.";
+    public const string ErrorRegistrarMesa = "No se pudo registrar la mesa, intente nuevamente.";
+    public const string ErrorModificarMesa = "No se pudo modificar la mesa, intente nuevamente.";
+    public const string ErrorInactivarMesa = "No se pudo inactivar la mesa, intente nuevamente.";
+    public const string MesaOcupadaNoModificable = "La mesa se encuentra ocupada y no puede modificarse en este momento.";
+    public const string MesaConPedidoActivo = "No se puede inactivar una mesa con un pedido activo.";
+    public const string CapacidadMesaInvalida = "La capacidad ingresada no es válida.";
+    public const string NumeroMesaInvalido = "El número de mesa debe ser mayor a cero.";
+    public const string EstadoMesaInvalido = "El estado de mesa seleccionado no es válido.";
+    public const string NoExistenMesas = "No existen mesas registradas.";
 }

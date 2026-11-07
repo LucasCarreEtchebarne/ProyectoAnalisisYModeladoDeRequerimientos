@@ -1,0 +1,42 @@
+@using SistemaHotelColibri.ViewModels.Menus
+@model MenuFormViewModel
+@{
+    var categorias = (string[])ViewBag.Categorias;
+    var estados = (string[])ViewBag.Estados;
+}
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<div class="row g-3">
+    <div class="col-12 col-md-6">
+        <label asp-for="NombreProducto" class="form-label">Nombre del producto *</label>
+        <input asp-for="NombreProducto" class="form-control" maxlength="100" autofocus />
+        <span asp-validation-for="NombreProducto" class="text-danger"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="CategoriaMenu" class="form-label">Categoría *</label>
+        <select asp-for="CategoriaMenu" class="form-select">
+            <option value="">Seleccione una categoría</option>
+            @foreach (var categoria in categorias)
+            {
+                <option value="@categoria" selected="@(categoria == Model.CategoriaMenu)">@categoria</option>
+            }
+        </select>
+        <span asp-validation-for="CategoriaMenu" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-6">
+        <label asp-for="Precio" class="form-label">Precio *</label>
+        <input asp-for="Precio" class="form-control" type="number" min="0" step="0.01" />
+        <span asp-validation-for="Precio" class="text-danger"></span>
+    </div>
+    <div class="col-6 col-md-6">
+        <label asp-for="EstadoProductoMenu" class="form-label">Estado *</label>
+        <select asp-for="EstadoProductoMenu" class="form-select" asp-items="@(new SelectList(estados))"></select>
+        <span asp-validation-for="EstadoProductoMenu" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Descripcion" class="form-label">Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control" rows="3" maxlength="250"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+</div>

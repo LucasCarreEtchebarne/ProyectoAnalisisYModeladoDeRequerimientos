@@ -53,15 +53,32 @@
                     </a>
                 }
 
-                @if (TieneRol(Roles.AccesoInventario))
+                @if (TieneRol(Roles.AccesoMenu) || TieneRol(Roles.AccesoInventario))
                 {
                     <div class="sidebar-seccion">Restaurante</div>
+                }
+
+                @if (TieneRol(Roles.AccesoMesas))
+                {
+                    <a class="sidebar-link @Activo("Mesa")" asp-controller="Mesa" asp-action="Index">
+                        <i class="bi bi-grid-3x3-gap"></i> Mesas
+                    </a>
+                }
+
+                @if (TieneRol(Roles.AccesoMenu))
+                {
+                    <a class="sidebar-link @Activo("Menu")" asp-controller="Menu" asp-action="Index">
+                        <i class="bi bi-journal-richtext"></i> Menú
+                    </a>
+                }
+
+                @if (TieneRol(Roles.AccesoInventario))
+                {
                     <a class="sidebar-link @Activo("Inventario")" asp-controller="Inventario" asp-action="Index">
                         <i class="bi bi-box-seam"></i> Inventario
                     </a>
                 }
 
-                
                 @if (TieneRol(Roles.AccesoHousekeeping))
                 {
                     <div class="sidebar-seccion">Housekeeping</div>
