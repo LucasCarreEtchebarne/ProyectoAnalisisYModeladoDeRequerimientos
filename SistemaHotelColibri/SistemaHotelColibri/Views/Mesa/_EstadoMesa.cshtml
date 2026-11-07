@@ -1,0 +1,18 @@
+@using SistemaHotelColibri.Abstract.Modelos.Mesas
+@model MesaDto
+@if (Model.EstadoMesa == Estados.Mesa.Ocupada)
+{
+    <span class="estado estado-alerta">Ocupada</span>
+}
+else if (Model.EstadoMesa == Estados.Mesa.Reservada)
+{
+    <span class="estado estado-alerta">Reservada</span>
+}
+else if (Model.EstadoMesa == Estados.Mesa.Inactiva)
+{
+    <span class="estado estado-inactivo">Inactiva</span>
+}
+else
+{
+    <span class="estado estado-activo">Disponible</span>
+}

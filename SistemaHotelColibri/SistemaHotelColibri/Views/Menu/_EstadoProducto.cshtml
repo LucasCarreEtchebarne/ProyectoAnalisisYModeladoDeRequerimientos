@@ -1,0 +1,14 @@
+@using SistemaHotelColibri.Abstract.Modelos.Menus
+@model MenuDto
+@if (Model.EstadoProductoMenu == Estados.ProductoMenu.Inactivo)
+{
+    <span class="estado estado-inactivo">Inactivo</span>
+}
+else if (Model.EstadoProductoMenu == Estados.ProductoMenu.Agotado)
+{
+    <span class="estado estado-alerta">Agotado</span>
+}
+else
+{
+    <span class="estado estado-activo">Disponible</span>
+}

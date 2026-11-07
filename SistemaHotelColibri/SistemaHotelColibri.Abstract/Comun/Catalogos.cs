@@ -16,5 +16,8 @@ public static class Catalogos
 
     public static readonly string[] VistasHabitacion = ["Jardín", "Piscina", "Montaña", "Ciudad", "Interior"];
 
+    public static readonly string[] CategoriasMenu =
+        ["Entradas", "Acompañamientos", "Platos Fuertes - Carnes Rojas", "Platos Fuertes - Carnes Blancas", "Platos Fuertes - De la casa", "Postres", "Bebidas Frías", "Cervezas, Vinos y Cocteles", "Bebidas Calientes"];
+
     public static readonly string[] AreasInventario = ["Restaurante", "Habitaciones"];
 }

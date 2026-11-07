@@ -35,7 +35,8 @@ public static class Estados
         public const string Inactiva = "Inactiva";
         public const string Activas = "Activas";
         public static readonly string[] Todos = [Disponible, Ocupada, Limpieza, Mantenimiento, Inactiva];
-        public static readonly string[] Editables = [Disponible, Ocupada, Limpieza, Mantenimiento];    }
+        public static readonly string[] Editables = [Disponible, Ocupada, Limpieza, Mantenimiento];
+    }
 
     public static class Mesa
     {
@@ -43,7 +44,9 @@ public static class Estados
         public const string Ocupada = "Ocupada";
         public const string Reservada = "Reservada";
         public const string Inactiva = "Inactiva";
+        public const string Activas = "Activas";
         public static readonly string[] Todos = [Disponible, Ocupada, Reservada, Inactiva];
+        public static readonly string[] Editables = [Disponible, Ocupada, Reservada];
     }
 
     public static class ReservaMesa

@@ -9,40 +9,54 @@ namespace SistemaHotelColibri.BusinessLogic.Reservas;
 
 public class EditarReservaBL : IEditarReservaBL
 {
-    private readonly IEditarReservaDA _da;
-    private readonly IObtenerReservaPorIdDA _obtenerDA;
-    private readonly ValidadorReserva _validador;
+    private readonly IEditarReservaDA _editarDA;
+    private readonly IObtenerReservaPorIdDA _obtenerPorIdDA;
+    private readonly IObtenerClientePorIdDA _obtenerClientePorIdDA;
+    private readonly IObtenerHabitacionPorIdDA _obtenerHabitacionPorIdDA;
+    private readonly IHabitacionDisponibleReservaDA _habitacionDisponibleDA;
 
     public EditarReservaBL(
-        IEditarReservaDA da,
-        IObtenerReservaPorIdDA obtenerDA,
-        IObtenerClientePorIdDA clienteDA,
-        IObtenerHabitacionPorIdDA habitacionDA,
-        IHabitacionDisponibleReservaDA disponibleDA)
+        IEditarReservaDA editarDA,
+        IObtenerReservaPorIdDA obtenerPorIdDA,
+        IObtenerClientePorIdDA obtenerClientePorIdDA,
+        IObtenerHabitacionPorIdDA obtenerHabitacionPorIdDA,
+        IHabitacionDisponibleReservaDA habitacionDisponibleDA)
     {
-        _da = da;
-        _obtenerDA = obtenerDA;
-        _validador = new ValidadorReserva(clienteDA, habitacionDA, disponibleDA);
+        _editarDA = editarDA;
+        _obtenerPorIdDA = obtenerPorIdDA;
+        _obtenerClientePorIdDA = obtenerClientePorIdDA;
+        _obtenerHabitacionPorIdDA = obtenerHabitacionPorIdDA;
+        _habitacionDisponibleDA = habitacionDisponibleDA;
     }
 
     public async Task<ResultadoOperacion> EditarAsync(ReservaDto reserva)
     {
-        var original = await _obtenerDA.ObtenerPorIdAsync(reserva.IdReserva);
+        var original = await _obtenerPorIdDA.ObtenerPorIdAsync(reserva.IdReserva);
         if (original == null)
         {
             return ResultadoOperacion.Error(Mensajes.NoEncontrado);
         }
 
-        ValidadorReserva.Normalizar(reserva);
-        var error = await _validador.ValidarAsync(reserva, original);
+        ReglasReserva.Normalizar(reserva);
+
+        var cliente = await _obtenerClientePorIdDA.ObtenerPorIdAsync(reserva.IdCliente);
+        var habitacion = await _obtenerHabitacionPorIdDA.ObtenerPorIdAsync(reserva.IdHabitacion);
+        var error = ReglasReserva.Validar(reserva, original, cliente, habitacion);
         if (error != null)
         {
             return ResultadoOperacion.Error(error);
         }
 
+        if (reserva.EstadoReserva != Estados.Reserva.Cancelada && reserva.EstadoReserva != Estados.Reserva.CheckOut
+            && !await _habitacionDisponibleDA.EstaDisponibleAsync(
+                reserva.IdHabitacion, reserva.FechaEntrada, reserva.FechaSalida, reserva.IdReserva))
+        {
+            return ResultadoOperacion.Error(Mensajes.ReservaHabitacionNoDisponible);
+        }
+
         try
         {
-            await _da.EditarAsync(reserva);
+            await _editarDA.EditarAsync(reserva);
             return ResultadoOperacion.Ok(Mensajes.ReservaModificada, reserva.IdReserva);
         }
         catch (Exception)
