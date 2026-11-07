@@ -1,0 +1,41 @@
+@using SistemaHotelColibri.Abstract.Modelos.Mesas
+@model MesaDto
+@{
+    ViewData["Title"] = "Detalle de mesa";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Mesa @Model.NumeroMesa</h1>
+        <p>Código #@Model.IdMesa · <partial name="_EstadoMesa" model="Model" /></p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+        <a class="btn btn-primary" asp-action="Editar" asp-route-id="@Model.IdMesa"><i class="bi bi-pencil"></i> Editar</a>
+        @if (Model.EstadoMesa != Estados.Mesa.Inactiva)
+        {
+            <form asp-action="Eliminar" asp-route-id="@Model.IdMesa" method="post"
+                  data-confirmar="¿Desea inactivar la mesa «@Model.NumeroMesa»?"
+                  data-confirmar-boton="Inactivar">
+                <button class="btn btn-outline-danger" type="submit"><i class="bi bi-slash-circle"></i> Inactivar</button>
+            </form>
+        }
+    </div>
+</div>
+
+<div class="tarjeta tarjeta-cuerpo">
+    <div class="row">
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Número de mesa</div>
+            <div class="dato-valor">@Model.NumeroMesa</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="dato-etiqueta">Capacidad</div>
+            <div class="dato-valor">@Model.Capacidad</div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="dato-etiqueta">Descripción</div>
+            <div class="dato-valor">@(Model.Descripcion ?? "—")</div>
+        </div>
+    </div>
+</div>

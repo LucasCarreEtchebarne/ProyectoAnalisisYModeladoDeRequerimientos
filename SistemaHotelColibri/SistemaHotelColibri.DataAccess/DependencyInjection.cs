@@ -11,6 +11,8 @@ using SistemaHotelColibri.DataAccess.Eventos;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Inventarios;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Menus;
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Mesas;
+using SistemaHotelColibri.DataAccess.Mesas;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Reservas;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Usuarios;
 using SistemaHotelColibri.DataAccess.Reservas;
@@ -82,6 +84,14 @@ public static class DependencyInjection
         services.AddScoped<IEliminarInventarioDA, EliminarInventarioDA>();
         services.AddScoped<IObtenerAlertasInventarioDA, ObtenerAlertasInventarioDA>();
         services.AddScoped<IObtenerCategoriaInventarioDA, ObtenerCategoriaInventarioDA>();
+
+        services.AddScoped<IAgregarMesaDA, AgregarMesaDA>();
+        services.AddScoped<IExisteNumeroMesaDA, ExisteNumeroMesaDA>();
+        services.AddScoped<IObtenerMesaDA, ObtenerMesaDA>();
+        services.AddScoped<IObtenerMesaPorIdDA, ObtenerMesaPorIdDA>();
+        services.AddScoped<IEditarMesaDA, EditarMesaDA>();
+        services.AddScoped<IEliminarMesaDA, EliminarMesaDA>();
+        services.AddScoped<ITienePedidoActivoMesaDA, TienePedidoActivoMesaDA>();
 
         services.AddScoped<IAgregarHabitacionDA, AgregarHabitacionDA>();
         services.AddScoped<IExisteNumeroHabitacionDA, ExisteNumeroHabitacionDA>();

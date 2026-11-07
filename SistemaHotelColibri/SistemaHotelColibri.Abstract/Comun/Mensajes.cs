@@ -141,4 +141,18 @@ public static class Mensajes
     public const string ErrorRegistrarMenu = "No se pudo registrar el producto, intente nuevamente.";
     public const string ErrorModificarMenu = "No se pudo modificar el producto, intente nuevamente.";
     public const string NoExistenProductosMenu = "No existen productos registrados en el menú.";
+
+    public const string MesaRegistrada = "Mesa registrada correctamente.";
+    public const string MesaDuplicada = "Esta mesa ya se encuentra registrada.";
+    public const string MesaModificada = "Mesa modificada correctamente.";
+    public const string MesaInactivada = "Mesa inactivada correctamente.";
+    public const string ErrorRegistrarMesa = "No se pudo registrar la mesa, intente nuevamente.";
+    public const string ErrorModificarMesa = "No se pudo modificar la mesa, intente nuevamente.";
+    public const string ErrorInactivarMesa = "No se pudo inactivar la mesa, intente nuevamente.";
+    public const string MesaOcupadaNoModificable = "La mesa se encuentra ocupada y no puede modificarse en este momento.";
+    public const string MesaConPedidoActivo = "No se puede inactivar una mesa con un pedido activo.";
+    public const string CapacidadMesaInvalida = "La capacidad ingresada no es válida.";
+    public const string NumeroMesaInvalido = "El número de mesa debe ser mayor a cero.";
+    public const string EstadoMesaInvalido = "El estado de mesa seleccionado no es válido.";
+    public const string NoExistenMesas = "No existen mesas registradas.";
 }
