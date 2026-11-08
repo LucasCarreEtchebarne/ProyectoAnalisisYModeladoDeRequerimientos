@@ -24,7 +24,8 @@ using SistemaHotelColibri.DataAccess.Identidad;
 using SistemaHotelColibri.DataAccess.Inventarios;
 using SistemaHotelColibri.DataAccess.Menus;
 using SistemaHotelColibri.DataAccess.Usuarios;
-
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Pedidos;
+using SistemaHotelColibri.DataAccess.Pedidos;
 
 namespace SistemaHotelColibri.DataAccess;
 
@@ -39,18 +40,18 @@ public static class DependencyInjection
         services.AddDbContext<IdentidadContext>(opciones => opciones.UseSqlServer(cadenaConexion));
 
         services.AddIdentity<Usuario, Rol>(opciones =>
-            {
-                opciones.User.RequireUniqueEmail = true;
-                opciones.Password.RequiredLength = 8;
-                opciones.Password.RequireDigit = true;
-                opciones.Password.RequireUppercase = true;
-                opciones.Password.RequireLowercase = true;
-                opciones.Password.RequireNonAlphanumeric = false;
-                opciones.Lockout.AllowedForNewUsers = true;
-                opciones.Lockout.MaxFailedAccessAttempts = 5;
-                opciones.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-                opciones.SignIn.RequireConfirmedAccount = false;
-            })
+        {
+            opciones.User.RequireUniqueEmail = true;
+            opciones.Password.RequiredLength = 8;
+            opciones.Password.RequireDigit = true;
+            opciones.Password.RequireUppercase = true;
+            opciones.Password.RequireLowercase = true;
+            opciones.Password.RequireNonAlphanumeric = false;
+            opciones.Lockout.AllowedForNewUsers = true;
+            opciones.Lockout.MaxFailedAccessAttempts = 5;
+            opciones.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            opciones.SignIn.RequireConfirmedAccount = false;
+        })
             .AddEntityFrameworkStores<IdentidadContext>()
             .AddDefaultTokenProviders()
             .AddErrorDescriber<ErroresIdentidadEspanol>()
@@ -93,6 +94,11 @@ public static class DependencyInjection
         services.AddScoped<IEliminarMesaDA, EliminarMesaDA>();
         services.AddScoped<ITienePedidoActivoMesaDA, TienePedidoActivoMesaDA>();
 
+        services.AddScoped<IAgregarPedidoDA, AgregarPedidoDA>();
+        services.AddScoped<IObtenerPedidoDA, ObtenerPedidoDA>();
+        services.AddScoped<IObtenerPedidoPorIdDA, ObtenerPedidoPorIdDA>();
+        services.AddScoped<IEditarPedidoDA, EditarPedidoDA>();
+
         services.AddScoped<IAgregarHabitacionDA, AgregarHabitacionDA>();
         services.AddScoped<IExisteNumeroHabitacionDA, ExisteNumeroHabitacionDA>();
         services.AddScoped<IObtenerHabitacionDA, ObtenerHabitacionDA>();
@@ -108,6 +114,7 @@ public static class DependencyInjection
         services.AddScoped<IEditarClienteDA, EditarClienteDA>();
         services.AddScoped<IEliminarClienteDA, EliminarClienteDA>();
         services.AddScoped<IBuscarClienteDA, BuscarClienteDA>();
+        services.AddScoped<IObtenerHistorialClienteDA, ObtenerHistorialClienteDA>();
 
         services.AddScoped<IAgregarReservaDA, AgregarReservaDA>();
         services.AddScoped<IObtenerReservaDA, ObtenerReservaDA>();
