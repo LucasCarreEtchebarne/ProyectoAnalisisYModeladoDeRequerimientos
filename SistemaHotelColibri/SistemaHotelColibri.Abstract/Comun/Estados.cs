@@ -100,7 +100,10 @@ public static class Estados
         public const string Confirmado = "Confirmado";
         public const string Entregado = "Entregado";
         public const string Cancelado = "Cancelado";
-        public static readonly string[] Todos = [Pendiente, Confirmado, Entregado, Cancelado];
+        public const string Inactivo = "Inactivo";
+
+        public static readonly string[] Todos =
+            [Pendiente, Confirmado, Entregado, Cancelado, Inactivo];
     }
 
     public static class Reserva
