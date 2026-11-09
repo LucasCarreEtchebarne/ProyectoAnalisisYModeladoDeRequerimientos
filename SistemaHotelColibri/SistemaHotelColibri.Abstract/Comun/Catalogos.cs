@@ -20,4 +20,13 @@ public static class Catalogos
         ["Entradas", "Acompañamientos", "Platos Fuertes - Carnes Rojas", "Platos Fuertes - Carnes Blancas", "Platos Fuertes - De la casa", "Postres", "Bebidas Frías", "Cervezas, Vinos y Cocteles", "Bebidas Calientes"];
 
     public static readonly string[] AreasInventario = ["Restaurante", "Habitaciones"];
+
+    public static class TipoPedido
+    {
+        public const string Mesa = "Mesa";
+        public const string Habitacion = "Habitacion";
+        public const string Llevar = "Llevar";
+
+        public static readonly string[] Todos = [Mesa, Habitacion, Llevar];
+    }
 }

@@ -1,0 +1,112 @@
+﻿@using SistemaHotelColibri.Abstract.Modelos.Clientes
+@model HistorialClienteDto
+@{
+    ViewData["Title"] = "Historial del cliente";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Historial de @Model.Cliente.NombreMostrar</h1>
+        <p>Reservas, pedidos y facturas asociadas al cliente.</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Detalle" asp-route-id="@Model.Cliente.IdCliente">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+
+<h2 class="h5 mt-3">Reservas (@Model.Reservas.Count)</h2>
+<div class="tarjeta mb-4">
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Número</th><th>Habitación</th><th>Entrada</th><th>Salida</th><th>Estado</th>
+                    <th class="text-end">Monto</th><th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Reservas.Count == 0)
+                {
+                    <tr><td colspan="7" class="text-center text-secondary py-4">El cliente no tiene reservas.</td></tr>
+                }
+                @foreach (var r in Model.Reservas)
+                {
+                    <tr>
+                        <td>#@r.IdReserva</td>
+                        <td>@r.NumeroHabitacion</td>
+                        <td>@Formato.Fecha(r.FechaEntrada)</td>
+                        <td>@Formato.Fecha(r.FechaSalida)</td>
+                        <td>@r.EstadoReserva</td>
+                        <td class="text-end">@Formato.Colones(r.MontoHospedaje)</td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-secondary" asp-controller="Reserva" asp-action="Detalle" asp-route-id="@r.IdReserva"><i class="bi bi-eye"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h2 class="h5">Pedidos (@Model.Pedidos.Count)</h2>
+<div class="tarjeta mb-4">
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Número</th><th>Fecha</th><th>Tipo</th><th>Estado</th>
+                    <th class="text-end">Total</th><th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Pedidos.Count == 0)
+                {
+                    <tr><td colspan="6" class="text-center text-secondary py-4">El cliente no tiene pedidos.</td></tr>
+                }
+                @foreach (var p in Model.Pedidos)
+                {
+                    <tr>
+                        <td>#@p.IdPedido</td>
+                        <td>@Formato.FechaHora(p.FechaHoraPedido)</td>
+                        <td>@p.TipoPedido</td>
+                        <td>@p.EstadoPedido</td>
+                        <td class="text-end">@Formato.Colones(p.Total)</td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-secondary" asp-controller="Pedido" asp-action="Detalle" asp-route-id="@p.IdPedido"><i class="bi bi-eye"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h2 class="h5">Facturas (@Model.Facturas.Count)</h2>
+<div class="tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Número</th><th>Fecha de emisión</th><th>Tipo</th><th>Estado</th>
+                    <th class="text-end">Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Facturas.Count == 0)
+                {
+                    <tr><td colspan="5" class="text-center text-secondary py-4">El cliente no tiene facturas.</td></tr>
+                }
+                @foreach (var f in Model.Facturas)
+                {
+                    <tr>
+                        <td>@(f.NumeroFactura ?? $"#{f.IdFactura}")</td>
+                        <td>@Formato.FechaHora(f.FechaEmision)</td>
+                        <td>@f.TipoFactura</td>
+                        <td>@f.EstadoFactura</td>
+                        <td class="text-end">@Formato.Colones(f.MontoTotal)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

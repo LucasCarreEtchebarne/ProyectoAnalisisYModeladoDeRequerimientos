@@ -17,6 +17,8 @@ using SistemaHotelColibri.BusinessLogic.Menus;
 using SistemaHotelColibri.BusinessLogic.Reservas;
 using SistemaHotelColibri.BusinessLogic.TareasHousekeeping;
 using SistemaHotelColibri.BusinessLogic.Usuarios;
+using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Pedidos;
+using SistemaHotelColibri.BusinessLogic.Pedidos;
 
 namespace SistemaHotelColibri.BusinessLogic;
 
@@ -43,6 +45,12 @@ public static class DependencyInjection
         services.AddScoped<IEditarMesaBL, EditarMesaBL>();
         services.AddScoped<IEliminarMesaBL, EliminarMesaBL>();
 
+        services.AddScoped<IAgregarPedidoBL, AgregarPedidoBL>();
+        services.AddScoped<IObtenerPedidoBL, ObtenerPedidoBL>();
+        services.AddScoped<IObtenerPedidoPorIdBL, ObtenerPedidoPorIdBL>();
+        services.AddScoped<IValidadorPedidoBL, ValidadorPedidoBL>();
+        services.AddScoped<IEditarPedidoBL, EditarPedidoBL>();
+
         services.AddScoped<IAgregarHabitacionBL, AgregarHabitacionBL>();
         services.AddScoped<IObtenerHabitacionBL, ObtenerHabitacionBL>();
         services.AddScoped<IObtenerHabitacionPorIdBL, ObtenerHabitacionPorIdBL>();
@@ -55,6 +63,7 @@ public static class DependencyInjection
         services.AddScoped<IEditarClienteBL, EditarClienteBL>();
         services.AddScoped<IEliminarClienteBL, EliminarClienteBL>();
         services.AddScoped<IBuscarClienteBL, BuscarClienteBL>();
+        services.AddScoped<IObtenerHistorialClienteBL, ObtenerHistorialClienteBL>();
 
         services.AddScoped<IAgregarReservaBL, AgregarReservaBL>();
         services.AddScoped<IObtenerReservaBL, ObtenerReservaBL>();
@@ -93,7 +102,6 @@ public static class DependencyInjection
         services.AddScoped<ICancelarTareaBL, CancelarTareaBL>();
         services.AddScoped<IObtenerPersonalHousekeepingBL, ObtenerPersonalHousekeepingBL>();
         services.AddScoped<IObtenerHabitacionesTareaBL, ObtenerHabitacionesTareaBL>();
-
 
         return services;
     }

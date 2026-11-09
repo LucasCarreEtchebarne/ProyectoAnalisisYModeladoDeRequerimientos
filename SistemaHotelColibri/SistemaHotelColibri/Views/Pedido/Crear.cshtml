@@ -1,0 +1,180 @@
+﻿@using SistemaHotelColibri.ViewModels.Pedidos
+@model PedidoFormViewModel
+
+@{
+    ViewData["Title"] = Model.IdPedido > 0 ? $"Editar pedido #{Model.IdPedido}" : "Nuevo pedido";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>@ViewData["Title"]</h1>
+        <p>Seleccioná el tipo de pedido y agregá los productos.</p>
+    </div>
+</div>
+
+<form method="post" class="tarjeta tarjeta-cuerpo">
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="TipoPedido" class="form-label"></label>
+            <select asp-for="TipoPedido" class="form-select" required>
+                <option value="">Seleccioná el tipo</option>
+                <option value="@Catalogos.TipoPedido.Mesa">Mesa</option>
+                <option value="@Catalogos.TipoPedido.Habitacion">Habitación</option>
+                <option value="@Catalogos.TipoPedido.Llevar">Para llevar</option>
+            </select>
+        </div>
+
+        <div class="col-md-6" id="campoMesa">
+            <label asp-for="IdMesa" class="form-label"></label>
+            <select asp-for="IdMesa" asp-items="Model.Mesas" class="form-select">
+                <option value="">Seleccioná la mesa</option>
+            </select>
+        </div>
+
+        <div class="col-md-6" id="campoReserva">
+            <label asp-for="IdReserva" class="form-label"></label>
+            <select asp-for="IdReserva" asp-items="Model.Reservas" class="form-select">
+                <option value="">Seleccioná la reserva</option>
+            </select>
+        </div>
+
+        <div class="col-md-6" id="campoCliente">
+            <label asp-for="IdCliente" class="form-label"></label>
+            <select asp-for="IdCliente" asp-items="Model.Clientes" class="form-select">
+                <option value="">Sin cliente asociado</option>
+            </select>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="Observaciones" class="form-label"></label>
+            <textarea asp-for="Observaciones" class="form-control" rows="2" maxlength="250"></textarea>
+        </div>
+    </div>
+
+    <h2 class="h5 mt-4">Productos</h2>
+
+    @if (Model.Productos.Count == 0)
+    {
+        <div class="alert alert-warning">No hay productos disponibles en el menú.</div>
+    }
+
+    <div id="lineasPedido">
+        @for (var i = 0; i < Model.Detalles.Count; i++)
+        {
+            <div class="row g-2 mb-2 align-items-end" data-linea>
+                <div class="col-md-7">
+                    <label asp-for="Detalles[i].IdProductoMenu" class="form-label">Producto</label>
+                    <select asp-for="Detalles[i].IdProductoMenu" asp-items="Model.Productos"
+                            class="form-select" data-producto required>
+                        <option value="">Seleccioná un producto</option>
+                    </select>
+                </div>
+
+                <div class="col-7 col-md-3">
+                    <label asp-for="Detalles[i].Cantidad" class="form-label">Cantidad</label>
+                    <input asp-for="Detalles[i].Cantidad" type="number" min="1"
+                           class="form-control" data-cantidad required />
+                </div>
+
+                <div class="col-5 col-md-2">
+                    <button type="button" class="btn btn-outline-danger w-100" data-quitar>
+                        Quitar
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <button type="button" id="agregarProducto" class="btn btn-outline-primary mt-2">
+        Agregar producto
+    </button>
+
+    <div class="d-flex gap-2 justify-content-end mt-4">
+        @if (Model.IdPedido > 0)
+        {
+            <a asp-action="Detalle" asp-route-id="@Model.IdPedido" class="btn btn-outline-secondary">Cancelar</a>
+        }
+        else
+        {
+            <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+        }
+        <button type="submit" class="btn btn-primary" disabled="@(Model.Productos.Count == 0)">
+            @(Model.IdPedido > 0 ? "Guardar cambios" : "Guardar pedido")
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        (() => {
+            const tipo = document.getElementById('TipoPedido');
+            const lineas = document.getElementById('lineasPedido');
+            const plantilla = lineas.querySelector('[data-linea]').cloneNode(true);
+
+            function mostrarCampo(id, visible, requerido = false) {
+                const campo = document.getElementById(id);
+                const selector = campo.querySelector('select');
+                campo.hidden = !visible;
+                selector.disabled = !visible;
+                selector.required = visible && requerido;
+            }
+
+            function actualizarOrigen() {
+                const esMesa = tipo.value === '@Catalogos.TipoPedido.Mesa';
+                const esHabitacion = tipo.value === '@Catalogos.TipoPedido.Habitacion';
+                const esParaLlevar = tipo.value === '@Catalogos.TipoPedido.Llevar';
+
+                mostrarCampo('campoMesa', esMesa, true);
+                mostrarCampo('campoReserva', esHabitacion, true);
+                mostrarCampo('campoCliente', esMesa || esParaLlevar);
+            }
+
+            function actualizarLineas() {
+                const filas = lineas.querySelectorAll('[data-linea]');
+
+                filas.forEach((fila, indice) => {
+                    const producto = fila.querySelector('[data-producto]');
+                    const cantidad = fila.querySelector('[data-cantidad]');
+
+                    producto.name = `Detalles[${indice}].IdProductoMenu`;
+                    producto.id = `Detalles_${indice}__IdProductoMenu`;
+                    cantidad.name = `Detalles[${indice}].Cantidad`;
+                    cantidad.id = `Detalles_${indice}__Cantidad`;
+
+                    const etiquetas = fila.querySelectorAll('label');
+                    etiquetas[0].htmlFor = producto.id;
+                    etiquetas[1].htmlFor = cantidad.id;
+
+                    fila.querySelector('[data-quitar]').disabled = filas.length === 1;
+                });
+            }
+
+            document.getElementById('agregarProducto').addEventListener('click', () => {
+                const fila = plantilla.cloneNode(true);
+                const producto = fila.querySelector('[data-producto]');
+
+                producto.value = '';
+                fila.querySelector('[data-cantidad]').value = '1';
+
+                lineas.appendChild(fila);
+                actualizarLineas();
+                producto.focus();
+            });
+
+            lineas.addEventListener('click', evento => {
+                const boton = evento.target.closest('[data-quitar]');
+
+                if (boton && lineas.children.length > 1) {
+                    boton.closest('[data-linea]').remove();
+                    actualizarLineas();
+                }
+            });
+
+            tipo.addEventListener('change', actualizarOrigen);
+            actualizarOrigen();
+            actualizarLineas();
+        })();
+    </script>
+}

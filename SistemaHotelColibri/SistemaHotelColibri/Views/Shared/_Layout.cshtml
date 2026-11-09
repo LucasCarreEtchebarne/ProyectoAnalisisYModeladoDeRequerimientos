@@ -70,6 +70,10 @@
                     <a class="sidebar-link @Activo("Menu")" asp-controller="Menu" asp-action="Index">
                         <i class="bi bi-journal-richtext"></i> Menú
                     </a>
+
+                    <a class="sidebar-link @Activo("Pedido")" asp-controller="Pedido" asp-action="Index">
+                        <i class="bi bi-receipt"></i> Pedidos
+                    </a>
                 }
 
                 @if (TieneRol(Roles.AccesoInventario))
@@ -91,7 +95,7 @@
                 {
                     <div class="sidebar-seccion">Administración</div>
                     <a class="sidebar-link @Activo("Usuario")" asp-controller="Usuario" asp-action="Index">
-                        <i class="bi bi-person-gear"></i> Usuarios
+                        <i class="bi bi-people"></i> Usuarios
                     </a>
                 }
             </nav>

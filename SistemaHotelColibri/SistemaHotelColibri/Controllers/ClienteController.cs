@@ -17,6 +17,7 @@ public class ClienteController : ControladorBase
     private readonly IEditarClienteBL _editarBL;
     private readonly IEliminarClienteBL _eliminarBL;
     private readonly IBuscarClienteBL _buscarBL;
+    private readonly IObtenerHistorialClienteBL _historialBL;
 
     public ClienteController(
         IAgregarClienteBL agregarBL,
@@ -24,7 +25,8 @@ public class ClienteController : ControladorBase
         IObtenerClientePorIdBL obtenerPorIdBL,
         IEditarClienteBL editarBL,
         IEliminarClienteBL eliminarBL,
-        IBuscarClienteBL buscarBL)
+        IBuscarClienteBL buscarBL,
+        IObtenerHistorialClienteBL historialBL)
     {
         _agregarBL = agregarBL;
         _obtenerBL = obtenerBL;
@@ -32,6 +34,7 @@ public class ClienteController : ControladorBase
         _editarBL = editarBL;
         _eliminarBL = eliminarBL;
         _buscarBL = buscarBL;
+        _historialBL = historialBL;
     }
 
     public async Task<IActionResult> Index(string? estado, string? busqueda)
@@ -60,6 +63,18 @@ public class ClienteController : ControladorBase
         }
 
         return View(cliente);
+    }
+
+    public async Task<IActionResult> Historial(int id)
+    {
+        var historial = await _historialBL.ObtenerAsync(id);
+        if (historial == null)
+        {
+            MensajeError(Mensajes.NoEncontrado);
+            return RedirectToAction(nameof(Index));
+        }
+
+        return View(historial);
     }
 
     public IActionResult Crear()

@@ -315,7 +315,8 @@ CREATE TABLE PEDIDO (
     TipoPedido          NVARCHAR(20) NOT NULL
         CHECK (TipoPedido IN ('Mesa','Habitacion','Llevar')),
     EstadoPedido        NVARCHAR(20) NOT NULL DEFAULT 'Pendiente'
-        CHECK (EstadoPedido IN ('Pendiente','Confirmado','Entregado','Cancelado')),
+        CONSTRAINT CK_PEDIDO_EstadoPedido
+        CHECK (EstadoPedido IN ('Pendiente','Confirmado','Entregado','Cancelado','Inactivo')),
     FechaHoraPedido     DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
     Observaciones       NVARCHAR(250) NULL,
     CONSTRAINT CK_Pedido_Origen CHECK (
