@@ -33,6 +33,6 @@ public class AgregarPedidoBL : IAgregarPedidoBL
         var idPedido = await _agregarPedidoDA.AgregarAsync(pedido);
 
         return ResultadoOperacion.Ok(
-            $"El pedido #{idPedido} se registró correctamente.", idPedido);
+            "El pedido se registró correctamente.", idPedido);
     }
 }

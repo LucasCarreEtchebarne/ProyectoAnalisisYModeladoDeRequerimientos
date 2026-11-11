@@ -48,6 +48,6 @@ public class AgregarClienteBL : IAgregarClienteBL
 
         var idGenerado = await _agregarDA.AgregarAsync(cliente);
 
-        return ResultadoOperacion.Ok(string.Format(Mensajes.ClienteRegistrado, idGenerado), idGenerado);
+        return ResultadoOperacion.Ok(string.Format(Mensajes.ClienteRegistrado, cliente.NombreMostrar), idGenerado);
     }
 }

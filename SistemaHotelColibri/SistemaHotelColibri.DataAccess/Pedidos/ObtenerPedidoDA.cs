@@ -32,8 +32,9 @@ public class ObtenerPedidoDA : IObtenerPedidoDA
             var texto = filtro.Busqueda.Trim();
 
             consulta = consulta.Where(pedido =>
-                pedido.IdPedido.ToString().Contains(texto) ||
                 pedido.TipoPedido.Contains(texto) ||
+                (pedido.IdMesaNavigation != null && pedido.IdMesaNavigation.NumeroMesa.ToString() == texto) ||
+                (pedido.IdHabitacionNavigation != null && pedido.IdHabitacionNavigation.NumeroHabitacion.Contains(texto)) ||
                 (pedido.IdClienteNavigation != null &&
                  (pedido.IdClienteNavigation.Nombre + " " +
                   pedido.IdClienteNavigation.PrimerApellido + " " +
@@ -42,6 +43,8 @@ public class ObtenerPedidoDA : IObtenerPedidoDA
 
         var pagina = await consulta
             .Include(pedido => pedido.IdClienteNavigation)
+            .Include(pedido => pedido.IdMesaNavigation)
+            .Include(pedido => pedido.IdHabitacionNavigation)
             .Include(pedido => pedido.DetallePedido)
                 .ThenInclude(detalle => detalle.IdProductoMenuNavigation)
             .OrderByDescending(pedido => pedido.FechaHoraPedido)

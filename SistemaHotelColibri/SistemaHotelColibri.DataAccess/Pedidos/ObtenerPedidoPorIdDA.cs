@@ -19,6 +19,8 @@ public class ObtenerPedidoPorIdDA : IObtenerPedidoPorIdDA
         var pedido = await _contexto.Pedido
             .AsNoTracking()
             .Include(pedido => pedido.IdClienteNavigation)
+            .Include(pedido => pedido.IdMesaNavigation)
+            .Include(pedido => pedido.IdHabitacionNavigation)
             .Include(pedido => pedido.DetallePedido)
                 .ThenInclude(detalle => detalle.IdProductoMenuNavigation)
             .FirstOrDefaultAsync(pedido => pedido.IdPedido == idPedido);

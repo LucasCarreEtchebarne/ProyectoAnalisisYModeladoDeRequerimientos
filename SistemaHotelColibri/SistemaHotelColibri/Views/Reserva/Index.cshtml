@@ -20,7 +20,6 @@
         <table class="table table-hover tabla-datos">
             <thead>
                 <tr>
-                    <th>Reserva</th>
                     <th>Cliente</th>
                     <th>Habitación</th>
                     <th>Entrada</th>
@@ -35,7 +34,7 @@
                 @if (Model.Elementos.Count == 0)
                 {
                     <tr>
-                        <td colspan="9" class="text-center text-secondary py-5">
+                        <td colspan="8" class="text-center text-secondary py-5">
                             <i class="bi bi-inbox d-block fs-3 mb-2"></i>
                             @Mensajes.NoExistenReservas
                         </td>
@@ -44,8 +43,7 @@
                 @foreach (var r in Model.Elementos)
                 {
                     <tr class="@(r.EstadoReserva == Estados.Reserva.Cancelada ? "fila-inactiva" : "")">
-                        <td><a class="fw-semibold text-decoration-none" asp-action="Detalle" asp-route-id="@r.IdReserva">#@r.IdReserva</a></td>
-                        <td>@r.NombreCliente</td>
+                        <td><a class="fw-semibold text-decoration-none" asp-action="Detalle" asp-route-id="@r.IdReserva">@r.NombreCliente</a></td>
                         <td>@r.NumeroHabitacion</td>
                         <td class="text-nowrap">@Formato.Fecha(r.FechaEntrada)</td>
                         <td class="text-nowrap">@Formato.Fecha(r.FechaSalida)</td>
@@ -58,7 +56,7 @@
                             @if (r.EstadoReserva != Estados.Reserva.Cancelada && r.EstadoReserva != Estados.Reserva.CheckIn && r.EstadoReserva != Estados.Reserva.CheckOut)
                             {
                                 <form asp-action="Eliminar" asp-route-id="@r.IdReserva" method="post" class="d-inline"
-                                      data-confirmar="¿Desea cancelar la reserva #@r.IdReserva de @r.NombreCliente?"
+                                      data-confirmar="¿Desea cancelar la reserva de @r.NombreCliente en la habitación @r.NumeroHabitacion (@Formato.Fecha(r.FechaEntrada) al @Formato.Fecha(r.FechaSalida))?"
                                       data-confirmar-boton="Cancelar reserva">
                                     <button class="btn btn-sm btn-outline-danger" type="submit" title="Cancelar" aria-label="Cancelar"><i class="bi bi-slash-circle"></i></button>
                                 </form>

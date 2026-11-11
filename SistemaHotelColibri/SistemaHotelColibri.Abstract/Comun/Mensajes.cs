@@ -40,7 +40,7 @@ public static class Mensajes
 
     public const string FormatoInvalido = "El campo {0} no tiene un formato válido.";
     public const string CorreoInvalido = "El correo electrónico no tiene un formato válido.";
-    public const string ClienteRegistrado = "El cliente se registró correctamente con el código #{0}.";
+    public const string ClienteRegistrado = "El cliente «{0}» se registró correctamente.";
     public const string ClienteDuplicado = "Ya existe un cliente registrado con esa identificación.";
     public const string CorreoClienteDuplicado = "Ya existe un cliente registrado con ese correo electrónico.";
     public const string ClienteModificado = "Los datos del cliente se actualizaron correctamente.";
@@ -116,10 +116,10 @@ public static class Mensajes
     public const string EstadoEventoInvalido = "El estado de evento seleccionado no es válido.";
     public const string NoExistenEventos = "No existen eventos registrados.";
 
-    public const string TareaRegistrada = "La tarea de housekeeping se registró con el código #{0}.";
+    public const string TareaRegistrada = "La tarea de housekeeping se registró correctamente.";
     public const string TareaModificada = "La tarea de housekeeping se modificó correctamente.";
-    public const string TareaEstadoActualizado = "La tarea #{0} cambió al estado «{1}».";
-    public const string TareaCancelada = "La tarea #{0} se canceló correctamente.";
+    public const string TareaEstadoActualizado = "La tarea cambió al estado «{0}».";
+    public const string TareaCancelada = "La tarea se canceló correctamente.";
     public const string NoExistenTareas = "No hay tareas de housekeeping para mostrar.";
     public const string TareaNoModificable = "Solo se pueden modificar tareas en estado Pendiente o En proceso.";
     public const string TareaNoCancelable = "Solo se pueden cancelar tareas en estado Pendiente o En proceso.";
