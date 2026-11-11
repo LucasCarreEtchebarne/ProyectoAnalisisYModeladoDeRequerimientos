@@ -276,8 +276,12 @@ CREATE TABLE HOUSEKEEPING (
     EstadoTarea         NVARCHAR(20) NOT NULL DEFAULT 'Pendiente'
         CHECK (EstadoTarea IN ('Pendiente','EnProceso','Completada','Cancelada')),
     Observaciones       NVARCHAR(250) NULL,
+    MotivoCancelacion   NVARCHAR(250) NULL,
+    FechaCancelacion    DATETIME2 NULL,
     CONSTRAINT CK_Housekeeping_Completada
-        CHECK (EstadoTarea <> 'Completada' OR FechaCompletada IS NOT NULL)
+        CHECK (EstadoTarea <> 'Completada' OR FechaCompletada IS NOT NULL),
+    CONSTRAINT CK_Housekeeping_Cancelada
+        CHECK (EstadoTarea <> 'Cancelada' OR (MotivoCancelacion IS NOT NULL AND FechaCancelacion IS NOT NULL))
 );
 
 CREATE TABLE EVENTO (
