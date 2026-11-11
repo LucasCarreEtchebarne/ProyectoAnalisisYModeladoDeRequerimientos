@@ -1,0 +1,22 @@
+@model SistemaHotelColibri.Abstract.Modelos.Facturas.FacturaDto
+
+<dl class="totales-factura">
+    <dt>Subtotal</dt>
+    <dd>@Formato.Colones(Model.Subtotal)</dd>
+    @if (Model.MontoServicio > 0)
+    {
+        <dt>Servicio (10 %, restaurante)</dt>
+        <dd>@Formato.Colones(Model.MontoServicio)</dd>
+    }
+    <dt>IVA (13 %)</dt>
+    <dd>@Formato.Colones(Model.MontoIva)</dd>
+    <dt class="totales-factura-total">Total</dt>
+    <dd class="totales-factura-total">@Formato.Colones(Model.MontoTotal)</dd>
+    @if (Model.EstadoFactura != Estados.Factura.Anulada)
+    {
+        <dt>Pagado</dt>
+        <dd>@Formato.Colones(Model.TotalPagado)</dd>
+        <dt class="fw-semibold">Saldo</dt>
+        <dd class="fw-semibold @(Model.Saldo > 0 ? "text-danger" : "text-success")">@Formato.Colones(Model.Saldo)</dd>
+    }
+</dl>

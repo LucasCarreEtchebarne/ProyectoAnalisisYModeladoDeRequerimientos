@@ -26,6 +26,8 @@ using SistemaHotelColibri.DataAccess.Menus;
 using SistemaHotelColibri.DataAccess.Usuarios;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Pedidos;
 using SistemaHotelColibri.DataAccess.Pedidos;
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Facturas;
+using SistemaHotelColibri.DataAccess.Facturas;
 
 namespace SistemaHotelColibri.DataAccess;
 
@@ -158,6 +160,14 @@ public static class DependencyInjection
         services.AddScoped<IExisteTareaActivaDA, ExisteTareaActivaDA>();
         services.AddScoped<IObtenerPersonalHousekeepingDA, ObtenerPersonalHousekeepingDA>();
         services.AddScoped<IObtenerHabitacionesTareaDA, ObtenerHabitacionesTareaDA>();
+
+        services.AddScoped<IObtenerFacturaDA, ObtenerFacturaDA>();
+        services.AddScoped<IObtenerFacturaPorIdDA, ObtenerFacturaPorIdDA>();
+        services.AddScoped<IObtenerReservaFacturableDA, ObtenerReservaFacturableDA>();
+        services.AddScoped<IObtenerPedidoFacturableDA, ObtenerPedidoFacturableDA>();
+        services.AddScoped<IRegistrarFacturaDA, RegistrarFacturaDA>();
+        services.AddScoped<IAnularFacturaDA, AnularFacturaDA>();
+        services.AddScoped<IRegistrarPagoDA, RegistrarPagoDA>();
 
         return services;
     }

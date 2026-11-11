@@ -15,6 +15,13 @@
             <select class="form-select" id="filtro-@filtro.Nombre" name="@filtro.Nombre" asp-items="filtro.Opciones" onchange="this.form.submit()"></select>
         </div>
     }
+    @foreach (var fecha in Model.FiltrosFecha)
+    {
+        <div class="barra-busqueda-filtro">
+            <label class="form-label small" for="filtro-@fecha.Nombre">@fecha.Etiqueta</label>
+            <input class="form-control" type="date" id="filtro-@fecha.Nombre" name="@fecha.Nombre" value="@fecha.Valor?.ToString("yyyy-MM-dd")" />
+        </div>
+    }
     <div class="barra-busqueda-acciones">
         <button class="btn btn-primary" type="submit">Buscar</button>
         <a class="btn btn-outline-secondary" href="@Context.Request.Path">Limpiar</a>

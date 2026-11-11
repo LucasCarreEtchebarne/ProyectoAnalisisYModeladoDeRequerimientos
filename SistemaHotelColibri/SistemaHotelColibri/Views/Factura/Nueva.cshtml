@@ -1,0 +1,41 @@
+@{
+    ViewData["Title"] = "Nueva factura";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Nueva factura</h1>
+        <p>Seleccione qué servicios desea facturar. Todas las facturas incluyen IVA (13 %); lo del restaurante incluye además 10 % de servicio.</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-md-4">
+        <a class="tarjeta indicador" asp-action="Hospedaje">
+            <div class="indicador-icono"><i class="bi bi-door-closed"></i></div>
+            <div>
+                <div class="fw-semibold">Hospedaje</div>
+                <div class="indicador-etiqueta">Una reserva en CheckIn o CheckOut: noches × precio por noche.</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-12 col-md-4">
+        <a class="tarjeta indicador" asp-action="Restaurante">
+            <div class="indicador-icono"><i class="bi bi-cup-hot"></i></div>
+            <div>
+                <div class="fw-semibold">Restaurante</div>
+                <div class="indicador-etiqueta">Un pedido pendiente: productos consumidos + servicio.</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-12 col-md-4">
+        <a class="tarjeta indicador" asp-action="Consolidada">
+            <div class="indicador-icono"><i class="bi bi-receipt-cutoff"></i></div>
+            <div>
+                <div class="fw-semibold">Consolidada</div>
+                <div class="indicador-etiqueta">Hospedaje y pedidos del huésped en una sola factura.</div>
+            </div>
+        </a>
+    </div>
+</div>

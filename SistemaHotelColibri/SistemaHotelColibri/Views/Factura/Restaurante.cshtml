@@ -1,0 +1,62 @@
+@using SistemaHotelColibri.Abstract.Modelos.Facturas
+@model List<PedidoFacturableDto>
+@{
+    ViewData["Title"] = "Factura de restaurante";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Factura de restaurante</h1>
+        <p>Pedidos pendientes que aún no se han facturado. Al facturar, el pedido pasa a Entregado.</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Nueva"><i class="bi bi-arrow-left"></i> Volver</a>
+</div>
+
+<partial name="_BarraBusqueda" model="@(new BarraBusquedaViewModel { Busqueda = (string?)ViewBag.Busqueda, Placeholder = "Cliente, identificación, número de mesa o habitación" })" />
+
+<div class="tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Productos</th>
+                    <th class="text-end">Subtotal</th>
+                    <th class="text-end">Total con servicio e IVA</th>
+                    <th class="text-end"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-secondary py-5">
+                            <i class="bi bi-inbox d-block fs-3 mb-2"></i>
+                            No hay pedidos pendientes de facturar.
+                        </td>
+                    </tr>
+                }
+                @foreach (var p in Model)
+                {
+                    var total = Facturacion.CalcularTotales(p.Total, p.Total).Total;
+                    <tr>
+                        <td>@p.Origen <span class="d-block small text-secondary">@Formato.FechaHora(p.FechaHoraPedido)</span></td>
+                        <td>@(p.NombreCliente ?? "Cliente de contado")</td>
+                        <td class="small">@string.Join(", ", p.Lineas.Select(l => $"{l.Cantidad} × {l.NombreProducto}"))</td>
+                        <td class="text-end text-nowrap">@Formato.Colones(p.Total)</td>
+                        <td class="text-end text-nowrap fw-semibold">@Formato.Colones(total)</td>
+                        <td class="text-end">
+                            <form asp-action="Restaurante" method="post"
+                                  data-confirmar="¿Emitir la factura del pedido de @p.Origen por @Formato.Colones(total)?"
+                                  data-confirmar-boton="Emitir factura">
+                                <input type="hidden" name="idPedido" value="@p.IdPedido" />
+                                <button type="submit" class="btn btn-sm btn-primary text-nowrap"><i class="bi bi-receipt"></i> Facturar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -91,6 +91,14 @@
                     </a>
                 }
 
+                @if (TieneRol(Roles.AccesoFacturacion))
+                {
+                    <div class="sidebar-seccion">Facturación</div>
+                    <a class="sidebar-link @Activo("Factura")" asp-controller="Factura" asp-action="Index">
+                        <i class="bi bi-receipt"></i> Facturas y pagos
+                    </a>
+                }
+
                 @if (User.IsInRole(Roles.Administrador))
                 {
                     <div class="sidebar-seccion">Administración</div>

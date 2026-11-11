@@ -1,0 +1,18 @@
+@using SistemaHotelColibri.Abstract.Modelos.Facturas
+@model List<ReservaFacturableDto>
+@{
+    ViewData["Title"] = "Factura de hospedaje";
+    ViewData["Accion"] = "Facturar";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Factura de hospedaje</h1>
+        <p>Reservas en CheckIn o CheckOut que aún no se han facturado.</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Nueva"><i class="bi bi-arrow-left"></i> Volver</a>
+</div>
+
+<partial name="_BarraBusqueda" model="@(new BarraBusquedaViewModel { Busqueda = (string?)ViewBag.Busqueda, Placeholder = "Cliente, identificación o habitación" })" />
+
+<partial name="_TablaReservas" model="Model" />

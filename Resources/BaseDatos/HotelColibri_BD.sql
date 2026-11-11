@@ -361,13 +361,18 @@ CREATE TABLE FACTURA (
     FechaEmision        DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
     TipoFactura         NVARCHAR(20) NOT NULL
         CHECK (TipoFactura IN ('Hospedaje','Restaurante','Evento','Mixta')),
+    Subtotal            DECIMAL(12,2) NOT NULL DEFAULT 0 CHECK (Subtotal >= 0),
+    MontoServicio       DECIMAL(12,2) NOT NULL DEFAULT 0 CHECK (MontoServicio >= 0),
+    MontoIVA            DECIMAL(12,2) NOT NULL DEFAULT 0 CHECK (MontoIVA >= 0),
     MontoTotal          DECIMAL(12,2) NOT NULL DEFAULT 0 CHECK (MontoTotal >= 0),
     EstadoFactura       NVARCHAR(20) NOT NULL DEFAULT 'Pendiente'
         CHECK (EstadoFactura IN ('Pendiente','Pagada','Anulada')),
     MotivoAnulacion     NVARCHAR(250) NULL,
     FechaAnulacion      DATETIME2 NULL,
     CONSTRAINT CK_Factura_Anulacion
-        CHECK (EstadoFactura <> 'Anulada' OR MotivoAnulacion IS NOT NULL)
+        CHECK (EstadoFactura <> 'Anulada' OR (MotivoAnulacion IS NOT NULL AND FechaAnulacion IS NOT NULL)),
+    CONSTRAINT CK_Factura_Total
+        CHECK (MontoTotal = Subtotal + MontoServicio + MontoIVA)
 );
 
 CREATE TABLE DETALLE_FACTURA (
@@ -579,13 +584,13 @@ UPDATE INVENTARIO SET Stock = 29.800 WHERE IdProducto = 2;
 UPDATE INVENTARIO SET Stock = 116.000 WHERE IdProducto = 3;
 UPDATE INVENTARIO SET Stock = 9.960  WHERE IdProducto = 4;
 
-INSERT INTO FACTURA (IdCliente, IdUsuario, TipoFactura, MontoTotal, EstadoFactura) VALUES
-(2, 3, N'Restaurante', 12000, N'Pagada');
+INSERT INTO FACTURA (IdCliente, IdUsuario, TipoFactura, Subtotal, MontoServicio, MontoIVA, MontoTotal, EstadoFactura) VALUES
+(2, 3, N'Restaurante', 12000, 1200, 1560, 14760, N'Pagada');
 INSERT INTO DETALLE_FACTURA (IdFactura, TipoConcepto, IdPedido, Descripcion, Cantidad, PrecioUnitario) VALUES
 (1, N'Restaurante', 1, N'Gallo pinto con huevo', 2, 4500),
 (1, N'Restaurante', 1, N'Café chorreado',        2, 1500);
 INSERT INTO PAGO (IdFactura, IdUsuario, MetodoPago, MontoPagado, MontoRecibido, CambioDevuelto) VALUES
-(1, 3, N'Efectivo', 12000, 15000, 3000);
+(1, 3, N'Efectivo', 14760, 15000, 240);
 
 INSERT INTO HOUSEKEEPING (IdHabitacion, IdUsuario, TipoTarea, FechaLimite) VALUES
 (2, 4, N'Limpieza general', DATEADD(HOUR, 4, SYSDATETIME()));
@@ -593,8 +598,8 @@ INSERT INTO HOUSEKEEPING (IdHabitacion, IdUsuario, TipoTarea, FechaLimite) VALUE
 INSERT INTO EVENTO (IdCliente, IdEspacio, NombreEvento, FechaEvento, HoraInicio, HoraFin, Participantes, MontoAcordado) VALUES
 (1, 1, N'Reunión corporativa', '2026-11-15', '09:00', '13:00', 25, 350000);
 
-INSERT INTO FACTURA (IdCliente, IdUsuario, TipoFactura, MontoTotal, EstadoFactura) VALUES
-(1, 2, N'Mixta', 440000, N'Pendiente');
+INSERT INTO FACTURA (IdCliente, IdUsuario, TipoFactura, Subtotal, MontoServicio, MontoIVA, MontoTotal, EstadoFactura) VALUES
+(1, 2, N'Mixta', 440000, 0, 57200, 497200, N'Pendiente');
 INSERT INTO DETALLE_FACTURA (IdFactura, TipoConcepto, IdReserva, IdEvento, Descripcion, Cantidad, PrecioUnitario) VALUES
 (2, N'Hospedaje', 1, NULL, N'Habitación 101 — 2 noches', 2, 45000),
 (2, N'Evento', NULL, 1, N'Reunión corporativa — Salón Colibrí', 1, 350000);
