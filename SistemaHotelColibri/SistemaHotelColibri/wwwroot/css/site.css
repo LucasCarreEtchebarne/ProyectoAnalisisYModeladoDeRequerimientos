@@ -357,3 +357,26 @@ a.indicador:hover { border-color: var(--color-acento); }
 .requisitos-contrasena i { color: var(--color-acento); }
 
 .formulario-angosto { max-width: 520px; }
+
+.totales-factura {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .35rem 1rem;
+    margin: 0;
+}
+.totales-factura dt { font-weight: 400; color: var(--color-texto-suave); }
+.totales-factura dd { margin: 0; text-align: right; white-space: nowrap; }
+.totales-factura .totales-factura-total {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-marca-oscuro);
+    border-top: 1px solid var(--color-borde);
+    padding-top: .4rem;
+}
+
+@media print {
+    .sidebar, .barra-superior, .pie, .no-imprimir, .alert-dismissible { display: none !important; }
+    .pagina { padding: 0; }
+    body { background: #fff; }
+    .tarjeta { border-color: #ccc; break-inside: avoid; }
+}

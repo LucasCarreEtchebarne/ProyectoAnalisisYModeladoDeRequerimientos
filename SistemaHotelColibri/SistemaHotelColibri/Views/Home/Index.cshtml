@@ -69,6 +69,18 @@
             </a>
         </div>
     }
+    @if (TieneRol(Roles.AccesoFacturacion))
+    {
+        <div class="col-12 col-md-6 col-xl-4">
+            <a class="tarjeta indicador" asp-controller="Factura" asp-action="Index">
+                <div class="indicador-icono"><i class="bi bi-receipt"></i></div>
+                <div>
+                    <div class="fw-semibold">Facturación</div>
+                    <div class="indicador-etiqueta">Facturas de hospedaje y restaurante, y pagos</div>
+                </div>
+            </a>
+        </div>
+    }
     @if (User.IsInRole(Roles.Administrador))
     {
         <div class="col-12 col-md-6 col-xl-4">

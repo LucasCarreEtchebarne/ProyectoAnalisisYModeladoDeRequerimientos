@@ -196,7 +196,7 @@ public class PedidoController : ControladorBase
             $"Mesa {mesa.NumeroMesa}", mesa.IdMesa.ToString())).ToList();
 
         modelo.Reservas = reservas.Select(reserva => new SelectListItem(
-            $"Habitación {reserva.NumeroHabitacion} · {reserva.NombreCliente} · Reserva #{reserva.IdReserva}",
+            $"Habitación {reserva.NumeroHabitacion} · {reserva.NombreCliente}",
             reserva.IdReserva.ToString())).ToList();
 
         modelo.Clientes = clientes.Select(cliente => new SelectListItem(

@@ -1,0 +1,67 @@
+@using SistemaHotelColibri.Abstract.Modelos.Facturas
+@model List<ReservaFacturableDto>
+@{
+    var accion = (string)ViewData["Accion"]!;
+}
+
+<div class="tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Habitación</th>
+                    <th>Estadía</th>
+                    <th class="text-end">Noches</th>
+                    <th>Estado</th>
+                    <th class="text-end">Hospedaje</th>
+                    @if (accion == "Facturar")
+                    {
+                        <th class="text-end">Total con IVA</th>
+                    }
+                    <th class="text-end"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="8" class="text-center text-secondary py-5">
+                            <i class="bi bi-inbox d-block fs-3 mb-2"></i>
+                            No hay reservas en CheckIn o CheckOut pendientes de facturar.
+                        </td>
+                    </tr>
+                }
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>@r.NombreCliente <span class="d-block small text-secondary">@r.IdentificacionCliente</span></td>
+                        <td>@r.NumeroHabitacion</td>
+                        <td class="text-nowrap">@Formato.Fecha(r.FechaEntrada) al @Formato.Fecha(r.FechaSalida)</td>
+                        <td class="text-end">@r.CantidadNoches</td>
+                        <td>@r.EstadoReserva</td>
+                        <td class="text-end text-nowrap">@Formato.Colones(r.MontoHospedaje)</td>
+                        @if (accion == "Facturar")
+                        {
+                            <td class="text-end text-nowrap fw-semibold">@Formato.Colones(Facturacion.CalcularTotales(r.MontoHospedaje, 0).Total)</td>
+                            <td class="text-end">
+                                <form asp-action="Hospedaje" method="post"
+                                      data-confirmar="¿Emitir la factura de hospedaje de @r.NombreCliente (habitación @r.NumeroHabitacion) por @Formato.Colones(Facturacion.CalcularTotales(r.MontoHospedaje, 0).Total)?"
+                                      data-confirmar-boton="Emitir factura">
+                                    <input type="hidden" name="idReserva" value="@r.IdReserva" />
+                                    <button type="submit" class="btn btn-sm btn-primary text-nowrap"><i class="bi bi-receipt"></i> Facturar</button>
+                                </form>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-primary text-nowrap" asp-action="Consolidada" asp-route-idReserva="@r.IdReserva">Seleccionar <i class="bi bi-arrow-right"></i></a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

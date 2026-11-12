@@ -40,7 +40,7 @@ public static class Mensajes
 
     public const string FormatoInvalido = "El campo {0} no tiene un formato válido.";
     public const string CorreoInvalido = "El correo electrónico no tiene un formato válido.";
-    public const string ClienteRegistrado = "El cliente se registró correctamente con el código #{0}.";
+    public const string ClienteRegistrado = "El cliente «{0}» se registró correctamente.";
     public const string ClienteDuplicado = "Ya existe un cliente registrado con esa identificación.";
     public const string CorreoClienteDuplicado = "Ya existe un cliente registrado con ese correo electrónico.";
     public const string ClienteModificado = "Los datos del cliente se actualizaron correctamente.";
@@ -116,10 +116,10 @@ public static class Mensajes
     public const string EstadoEventoInvalido = "El estado de evento seleccionado no es válido.";
     public const string NoExistenEventos = "No existen eventos registrados.";
 
-    public const string TareaRegistrada = "La tarea de housekeeping se registró con el código #{0}.";
+    public const string TareaRegistrada = "La tarea de housekeeping se registró correctamente.";
     public const string TareaModificada = "La tarea de housekeeping se modificó correctamente.";
-    public const string TareaEstadoActualizado = "La tarea #{0} cambió al estado «{1}».";
-    public const string TareaCancelada = "La tarea #{0} se canceló correctamente.";
+    public const string TareaEstadoActualizado = "La tarea cambió al estado «{0}».";
+    public const string TareaCancelada = "La tarea se canceló correctamente.";
     public const string NoExistenTareas = "No hay tareas de housekeeping para mostrar.";
     public const string TareaNoModificable = "Solo se pueden modificar tareas en estado Pendiente o En proceso.";
     public const string TareaNoCancelable = "Solo se pueden cancelar tareas en estado Pendiente o En proceso.";
@@ -155,4 +155,28 @@ public static class Mensajes
     public const string NumeroMesaInvalido = "El número de mesa debe ser mayor a cero.";
     public const string EstadoMesaInvalido = "El estado de mesa seleccionado no es válido.";
     public const string NoExistenMesas = "No existen mesas registradas.";
+
+    public const string FacturaRegistrada = "Se emitió la factura {0} por {1}.";
+    public const string ReservaNoFacturable = "Solo se pueden facturar reservas en estado CheckIn o CheckOut.";
+    public const string ReservaYaFacturada = "La reserva ya está incluida en una factura vigente.";
+    public const string ReservaSinNoches = "La reserva no tiene noches para facturar.";
+    public const string PedidoNoFacturable = "Solo se pueden facturar pedidos en estado Pendiente.";
+    public const string PedidoYaFacturado = "El pedido ya está incluido en una factura vigente.";
+    public const string PedidoSinProductos = "El pedido no tiene productos para facturar.";
+    public const string PedidoNoPerteneceReserva = "Uno de los pedidos seleccionados no pertenece al huésped de la reserva.";
+    public const string SeleccioneUnPedido = "Seleccione al menos un pedido para la factura consolidada. Si solo es hospedaje, use la factura de hospedaje.";
+    public const string FacturaYaAnulada = "La factura ya está anulada.";
+    public const string FacturaAnulada = "La factura {0} se anuló correctamente. Los pagos quedaron reversados.";
+    public const string MotivoAnulacionObligatorio = "Debe indicar el motivo de la anulación.";
+    public const string FacturaNoAdmitePagos = "Solo se pueden registrar pagos en facturas pendientes.";
+    public const string MetodoPagoInvalido = "Seleccione un método de pago válido.";
+    public const string MontoPagoInvalido = "El monto a pagar debe ser mayor a cero.";
+    public const string MontoPagoExcedeSaldo = "El monto a pagar no puede ser mayor al saldo pendiente ({0}).";
+    public const string MontoRecibidoInsuficiente = "El monto recibido en efectivo no puede ser menor al monto a pagar.";
+    public const string TipoTarjetaInvalido = "Seleccione el tipo de tarjeta.";
+    public const string UltimosDigitosInvalidos = "Indique los últimos 4 dígitos de la tarjeta (solo números).";
+    public const string ReferenciaObligatoria = "Indique el número de referencia de la transferencia o SINPE.";
+    public const string PagoRegistrado = "Pago de {0} registrado.";
+    public const string PagoRegistradoFacturaPagada = "Pago de {0} registrado. La factura quedó pagada.";
+    public const string NoExistenFacturas = "No se encontraron facturas.";
 }

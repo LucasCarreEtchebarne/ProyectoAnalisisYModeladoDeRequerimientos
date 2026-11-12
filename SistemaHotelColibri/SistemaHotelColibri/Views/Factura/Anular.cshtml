@@ -1,0 +1,42 @@
+@model SistemaHotelColibri.ViewModels.Facturas.AnularFacturaViewModel
+@{
+    ViewData["Title"] = "Anular factura";
+    var factura = (SistemaHotelColibri.Abstract.Modelos.Facturas.FacturaDto)ViewBag.Factura;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Anular factura @factura.NumeroFactura</h1>
+        <p>@factura.ClienteMostrado · @factura.TipoFactura · @Formato.Colones(factura.MontoTotal)</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Detalle" asp-route-id="@factura.IdFactura"><i class="bi bi-arrow-left"></i> Volver</a>
+</div>
+
+<div class="alert alert-warning d-flex gap-2">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <div>
+        La anulación no se puede deshacer.
+        @if (factura.TotalPagado > 0)
+        {
+            <text>Los pagos registrados (@Formato.Colones(factura.TotalPagado)) quedarán <strong>reversados</strong>.</text>
+        }
+        La reserva y los pedidos de esta factura quedarán disponibles para facturarse de nuevo.
+    </div>
+</div>
+
+<form asp-action="Anular" asp-route-id="@factura.IdFactura" method="post" class="tarjeta tarjeta-cuerpo formulario-angosto"
+      data-confirmar="¿Confirma la anulación de la factura @factura.NumeroFactura?" data-confirmar-boton="Anular factura">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <label asp-for="Motivo" class="form-label">Motivo de la anulación *</label>
+    <textarea asp-for="Motivo" class="form-control" rows="3" maxlength="250" autofocus></textarea>
+    <span asp-validation-for="Motivo" class="text-danger"></span>
+
+    <div class="d-flex gap-2 justify-content-end mt-4">
+        <a class="btn btn-outline-secondary" asp-action="Detalle" asp-route-id="@factura.IdFactura">Cancelar</a>
+        <button type="submit" class="btn btn-danger"><i class="bi bi-x-circle"></i> Anular factura</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

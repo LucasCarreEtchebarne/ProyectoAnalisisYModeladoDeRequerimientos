@@ -23,7 +23,7 @@
         <table class="table table-hover tabla-datos">
             <thead>
                 <tr>
-                    <th>Número</th>
+                    <th>Origen</th>
                     <th>Fecha</th>
                     <th>Tipo</th>
                     <th>Cliente</th>
@@ -45,7 +45,7 @@
                 @foreach (var pedido in Model.Elementos)
                 {
                     <tr class="@(pedido.EstadoPedido == Estados.Pedido.Inactivo ? "fila-inactiva" : "")">
-                        <td>#@pedido.IdPedido</td>
+                        <td><a class="fw-semibold text-decoration-none" asp-action="Detalle" asp-route-id="@pedido.IdPedido">@pedido.Origen</a></td>
                         <td>@pedido.FechaHoraPedido.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>@pedido.TipoPedido</td>
                         <td>@(pedido.NombreCliente ?? "Sin cliente asociado")</td>
@@ -57,7 +57,7 @@
                             {
                                 <a asp-action="Editar" asp-route-id="@pedido.IdPedido" class="btn btn-sm btn-outline-secondary" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
                                 <form asp-action="Inactivar" asp-route-id="@pedido.IdPedido" method="post" class="d-inline"
-                                      data-confirmar="¿Desea cancelar el pedido #@pedido.IdPedido?"
+                                      data-confirmar="¿Desea cancelar el pedido de @pedido.Origen del @pedido.FechaHoraPedido.ToString("dd/MM/yyyy HH:mm")?"
                                       data-confirmar-boton="Inactivar">
                                     <button class="btn btn-sm btn-outline-danger" type="submit" title="Inactivar" aria-label="Inactivar"><i class="bi bi-slash-circle"></i></button>
                                 </form>

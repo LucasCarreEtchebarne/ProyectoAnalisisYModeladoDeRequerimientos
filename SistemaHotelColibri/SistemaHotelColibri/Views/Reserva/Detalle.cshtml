@@ -9,8 +9,8 @@
 
 <div class="encabezado-pagina">
     <div>
-        <h1>Reserva #@Model.IdReserva</h1>
-        <p><partial name="_EstadoReserva" model="Model" /></p>
+        <h1>Reserva de @Model.NombreCliente</h1>
+        <p>Habitación @Model.NumeroHabitacion · @Formato.Fecha(Model.FechaEntrada) al @Formato.Fecha(Model.FechaSalida) · <partial name="_EstadoReserva" model="Model" /></p>
     </div>
     <div class="d-flex flex-wrap gap-2">
         <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
@@ -18,7 +18,7 @@
         @if (puedeCancelar)
         {
             <form asp-action="Eliminar" asp-route-id="@Model.IdReserva" method="post"
-                  data-confirmar="¿Desea cancelar la reserva #@Model.IdReserva?"
+                  data-confirmar="¿Desea cancelar la reserva de @Model.NombreCliente en la habitación @Model.NumeroHabitacion?"
                   data-confirmar-boton="Cancelar reserva">
                 <button class="btn btn-outline-danger" type="submit"><i class="bi bi-slash-circle"></i> Cancelar reserva</button>
             </form>

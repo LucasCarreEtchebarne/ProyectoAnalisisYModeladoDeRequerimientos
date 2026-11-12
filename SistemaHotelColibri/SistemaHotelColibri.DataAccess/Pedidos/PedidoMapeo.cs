@@ -24,6 +24,8 @@ internal static class PedidoMapeo
             NombreCliente = cliente == null
                 ? null
                 : $"{cliente.Nombre} {cliente.PrimerApellido} {cliente.SegundoApellido}".Trim(),
+            NumeroMesa = pedido.IdMesaNavigation?.NumeroMesa,
+            NumeroHabitacion = pedido.IdHabitacionNavigation?.NumeroHabitacion,
             Detalles = pedido.DetallePedido
                 .OrderBy(detalle => detalle.IdDetallePedido)
                 .Select(detalle => new DetallePedidoDto
