@@ -1,3 +1,11 @@
+// Los mensajes de éxito se cierran solos después de 5 segundos
+document.querySelectorAll('.alert-success.alert-dismissible').forEach(function (alerta) {
+    setTimeout(function () {
+        bootstrap.Alert.getOrCreateInstance(alerta).close();
+    }, 5000);
+});
+
+// Modal de confirmación para formularios con data-confirmar
 (function () {
     const modalElemento = document.getElementById('modalConfirmacion');
     if (!modalElemento) return;

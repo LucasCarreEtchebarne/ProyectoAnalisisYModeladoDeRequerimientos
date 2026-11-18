@@ -1,16 +1,95 @@
 using System.ComponentModel.DataAnnotations;
 using SistemaHotelColibri.Abstract.Comun;
+using SistemaHotelColibri.Abstract.Modelos.Clientes;
 using SistemaHotelColibri.Abstract.Modelos.Reservas;
 
 namespace SistemaHotelColibri.ViewModels.Reservas;
 
-public class ReservaFormViewModel
+public class ReservaFormViewModel : IValidatableObject
 {
+    private const string PatronIdentificacion = @"^[A-Za-z0-9-]{5,30}$";
+    private const string PatronNombre = @"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$";
+    private const string PatronTelefono = @"^[0-9+()\s-]{8,20}$";
+
     public int IdReserva { get; set; }
 
+    // Obligatorio solo cuando se elige un cliente ya registrado (ver Validate).
     [Display(Name = "cliente")]
-    [Required(ErrorMessage = Mensajes.CampoObligatorio)]
     public int? IdCliente { get; set; }
+
+    // ----- Cliente nuevo escrito en la misma reserva -----
+    public bool ClienteNuevo { get; set; }
+
+    // Respuesta a "¿Guardar la información del cliente en Clientes?"
+    public bool GuardarCliente { get; set; }
+
+    [Display(Name = "identificación")]
+    [StringLength(30, ErrorMessage = Mensajes.LongitudMaxima)]
+    [RegularExpression(PatronIdentificacion, ErrorMessage = Mensajes.FormatoInvalido)]
+    public string? ClienteIdentificacion { get; set; }
+
+    [Display(Name = "nombre")]
+    [StringLength(100, ErrorMessage = Mensajes.LongitudMaxima)]
+    [RegularExpression(PatronNombre, ErrorMessage = Mensajes.FormatoInvalido)]
+    public string? ClienteNombre { get; set; }
+
+    [Display(Name = "primer apellido")]
+    [StringLength(50, ErrorMessage = Mensajes.LongitudMaxima)]
+    [RegularExpression(PatronNombre, ErrorMessage = Mensajes.FormatoInvalido)]
+    public string? ClientePrimerApellido { get; set; }
+
+    [Display(Name = "segundo apellido")]
+    [StringLength(50, ErrorMessage = Mensajes.LongitudMaxima)]
+    [RegularExpression(PatronNombre, ErrorMessage = Mensajes.FormatoInvalido)]
+    public string? ClienteSegundoApellido { get; set; }
+
+    [Display(Name = "teléfono")]
+    [StringLength(20, ErrorMessage = Mensajes.LongitudMaxima)]
+    [RegularExpression(PatronTelefono, ErrorMessage = Mensajes.FormatoInvalido)]
+    public string? ClienteTelefono { get; set; }
+
+    [Display(Name = "correo electrónico")]
+    [StringLength(150, ErrorMessage = Mensajes.LongitudMaxima)]
+    [EmailAddress(ErrorMessage = Mensajes.CorreoInvalido)]
+    public string? ClienteCorreo { get; set; }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (!ClienteNuevo)
+        {
+            if (IdCliente is not > 0)
+            {
+                yield return new ValidationResult("Seleccioná un cliente o elegí «Cliente nuevo».", [nameof(IdCliente)]);
+            }
+
+            yield break;
+        }
+
+        if (string.IsNullOrWhiteSpace(ClienteIdentificacion))
+        {
+            yield return new ValidationResult("Escribí la identificación del cliente.", [nameof(ClienteIdentificacion)]);
+        }
+
+        if (string.IsNullOrWhiteSpace(ClienteNombre))
+        {
+            yield return new ValidationResult("Escribí el nombre del cliente.", [nameof(ClienteNombre)]);
+        }
+
+        if (string.IsNullOrWhiteSpace(ClientePrimerApellido))
+        {
+            yield return new ValidationResult("Escribí el primer apellido del cliente.", [nameof(ClientePrimerApellido)]);
+        }
+    }
+
+    public ClienteDto ClienteADto() => new()
+    {
+        Identificacion = ClienteIdentificacion ?? string.Empty,
+        Nombre = ClienteNombre ?? string.Empty,
+        PrimerApellido = ClientePrimerApellido ?? string.Empty,
+        SegundoApellido = ClienteSegundoApellido,
+        Telefono = ClienteTelefono,
+        CorreoElectronico = ClienteCorreo
+    };
 
     [Display(Name = "habitación")]
     [Required(ErrorMessage = Mensajes.CampoObligatorio)]

@@ -44,33 +44,10 @@ public class PedidoController : ControladorBase
         _obtenerMenuBL = obtenerMenuBL;
     }
 
-    public async Task<IActionResult> Index(
-        string? busqueda, string? estado, int pagina = 1)
+    // La página de Pedidos ahora es el salón (mesas, habitaciones y para llevar).
+    public IActionResult Index()
     {
-        var estadoSeleccionado = estado ?? FiltroListado.TodosLosEstados;
-
-        ViewBag.Busqueda = new BarraBusquedaViewModel
-        {
-            Busqueda = busqueda,
-            Placeholder = "Número de pedido, tipo o cliente",
-            Filtros =
-            [
-                FiltroSeleccion.Crear(
-                    "estado",
-                    "Estado",
-                    Estados.Pedido.Todos.Prepend(FiltroListado.TodosLosEstados),
-                    estadoSeleccionado)
-            ]
-        };
-
-        var pedidos = await _obtenerPedidoBL.ObtenerAsync(new FiltroListado
-        {
-            Busqueda = busqueda,
-            Estado = estadoSeleccionado,
-            Pagina = pagina
-        });
-
-        return View(pedidos);
+        return RedirectToAction("Index", "Salon");
     }
 
     public async Task<IActionResult> Detalle(int id)

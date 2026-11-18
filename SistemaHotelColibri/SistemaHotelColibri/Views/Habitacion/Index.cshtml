@@ -1,8 +1,10 @@
 @using SistemaHotelColibri.Abstract.Modelos.Habitaciones
+@using SistemaHotelColibri.Abstract.Modelos.Reservas
 @model ResultadoPaginado<HabitacionDto>
 @{
     ViewData["Title"] = "Habitaciones";
     var barraBusqueda = (BarraBusquedaViewModel)ViewBag.Busqueda;
+    var ocupacion = (Dictionary<int, OcupacionHabitacionDto>)ViewBag.Ocupacion;
 }
 
 <div class="encabezado-pagina">
@@ -12,6 +14,8 @@
     </div>
     <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nueva habitación</a>
 </div>
+
+<partial name="_TarjetasResumen" model="(List<TarjetaResumenViewModel>)ViewBag.Resumen" />
 
 <partial name="_BarraBusqueda" model="barraBusqueda" />
 
@@ -25,7 +29,7 @@
                     <th class="text-end">Capacidad</th>
                     <th class="text-end">Precio</th>
                     <th>Estado</th>
-                    <th class="text-end">Piso</th>
+                    <th>Reserva</th>
                     <th class="text-end">Acciones</th>
                 </tr>
             </thead>
@@ -48,11 +52,45 @@
                         <td>@h.TipoHabitacion</td>
                         <td class="text-end">@h.Capacidad</td>
                         <td class="text-end text-nowrap">@Formato.Colones(h.Precio)</td>
-                        <td><partial name="_EstadoHabitacion" model="h" /></td>
-                        <td class="text-end">@h.Piso</td>
+                        @{
+                            var oc = ocupacion.GetValueOrDefault(h.IdHabitacion);
+                            var actual = oc?.ReservaActual;
+                            var proxima = oc?.ProximaReserva;
+                        }
+                        <td>
+                            @if (oc?.Estado == OcupacionHabitacionDto.Reservada && h.EstadoHabitacion == Estados.Habitacion.Disponible)
+                            {
+                                <span class="estado estado-proceso"><i class="bi bi-calendar-check"></i> Reservada</span>
+                            }
+                            else
+                            {
+                                <partial name="_EstadoHabitacion" model="h" />
+                            }
+                        </td>
+                        <td>
+                            @if (actual != null)
+                            {
+                                <a class="text-decoration-none" asp-controller="Reserva" asp-action="Detalle" asp-route-id="@actual.IdReserva">
+                                    <div class="fw-semibold">@actual.NombreCliente</div>
+                                    <div class="texto-suave">
+                                        @(actual.EstadoReserva == Estados.Reserva.CheckIn ? "Hospedado" : "Llega") · @Formato.Fecha(actual.FechaEntrada) al @Formato.Fecha(actual.FechaSalida)
+                                    </div>
+                                </a>
+                            }
+                            @if (proxima != null)
+                            {
+                                <a class="texto-suave d-block text-decoration-none" asp-controller="Reserva" asp-action="Detalle" asp-route-id="@proxima.IdReserva">
+                                    <i class="bi bi-calendar-event"></i> Próxima: @Formato.Fecha(proxima.FechaEntrada) · @proxima.NombreCliente
+                                </a>
+                            }
+                            @if (actual == null && proxima == null)
+                            {
+                                <span class="texto-suave">Sin reservas</span>
+                            }
+                        </td>
                         <td class="text-end text-nowrap">
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@h.IdHabitacion" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@h.IdHabitacion" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@h.IdHabitacion" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i> Ver</a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@h.IdHabitacion" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i> Editar</a>
                             @if (h.EstadoHabitacion != Estados.Habitacion.Inactiva)
                             {
                                 <form asp-action="Eliminar" asp-route-id="@h.IdHabitacion" method="post" class="d-inline"

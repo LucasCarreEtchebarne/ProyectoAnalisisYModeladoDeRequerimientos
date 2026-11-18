@@ -52,6 +52,16 @@ public class RegistrarFacturaDA : IRegistrarFacturaDA
             await _contexto.Pedido
                 .Where(p => idPedidos.Contains(p.IdPedido))
                 .ExecuteUpdateAsync(s => s.SetProperty(p => p.EstadoPedido, Estados.Pedido.Entregado));
+
+            // Facturada la cuenta, su mesa vuelve a quedar disponible.
+            var mesas = await _contexto.Pedido
+                .Where(p => idPedidos.Contains(p.IdPedido) && p.IdMesa != null)
+                .Select(p => new { p.IdPedido, p.IdMesa })
+                .ToListAsync();
+            foreach (var mesa in mesas)
+            {
+                await Pedidos.SincronizadorMesaPedido.LiberarAsync(_contexto, mesa.IdMesa, mesa.IdPedido);
+            }
         }
 
         await transaccion.CommitAsync();

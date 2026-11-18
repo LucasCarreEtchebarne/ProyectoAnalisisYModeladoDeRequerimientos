@@ -1,0 +1,104 @@
+@using SistemaHotelColibri.ViewModels.Salon
+@model SalonViewModel
+@{
+    ViewData["Title"] = "Pedidos";
+
+    var pestanas = new[]
+    {
+        (Id: SalonViewModel.VistaMesas, Icono: "bi-grid-3x3-gap", Texto: "Mesas", Lista: Model.Mesas),
+        (Id: SalonViewModel.VistaHabitaciones, Icono: "bi-door-closed", Texto: "Habitaciones", Lista: Model.Habitaciones),
+        (Id: SalonViewModel.VistaLlevar, Icono: "bi-bag", Texto: "Para llevar", Lista: Model.ParaLlevar)
+    };
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Pedidos</h1>
+        <p>Tocá una mesa, una habitación o un pedido para llevar para agregar productos a su cuenta.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Cuenta" asp-route-tipo="@Catalogos.TipoPedido.Llevar" asp-route-id="0">
+        <i class="bi bi-bag-plus"></i> Nuevo para llevar
+    </a>
+</div>
+
+<partial name="_TarjetasResumen" model="Model.Resumen" />
+
+<section class="tarjeta tarjeta-cuerpo">
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+        <ul class="nav pestanas flex-grow-1 mb-0" role="tablist">
+            @foreach (var p in pestanas)
+            {
+                var enUso = p.Lista.Count(c => c.Cuenta != null);
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(Model.Vista == p.Id ? "active" : "")" data-bs-toggle="tab" data-bs-target="#vista-@p.Id"
+                            type="button" role="tab" data-vista="@p.Id">
+                        <i class="bi @p.Icono"></i> @p.Texto
+                        @if (enUso > 0)
+                        {
+                            <span class="contador-uso">@enUso</span>
+                        }
+                    </button>
+                </li>
+            }
+        </ul>
+        <div class="leyenda-mesas mb-2">
+            <span><i class="punto libre"></i> Libre</span>
+            <span><i class="punto en-uso"></i> En uso</span>
+            <span><i class="punto reservada"></i> Reservada / con huésped</span>
+        </div>
+    </div>
+
+    <div class="tab-content pt-3">
+        <div class="tab-pane fade @(Model.Vista == SalonViewModel.VistaMesas ? "show active" : "")" id="vista-@SalonViewModel.VistaMesas" role="tabpanel">
+            @if (Model.Mesas.Count == 0)
+            {
+                <div class="vacio"><i class="bi bi-grid-3x3-gap"></i><span>No hay mesas activas. Agregalas desde el módulo de Mesas.</span></div>
+            }
+            <div class="salon">
+                @foreach (var cuadro in Model.Mesas)
+                {
+                    <partial name="_Cuadro" model="cuadro" />
+                }
+            </div>
+        </div>
+
+        <div class="tab-pane fade @(Model.Vista == SalonViewModel.VistaHabitaciones ? "show active" : "")" id="vista-@SalonViewModel.VistaHabitaciones" role="tabpanel">
+            @if (Model.Habitaciones.Count == 0)
+            {
+                <div class="vacio"><i class="bi bi-door-closed"></i><span>No hay habitaciones activas.</span></div>
+            }
+            <div class="salon">
+                @foreach (var cuadro in Model.Habitaciones)
+                {
+                    <partial name="_Cuadro" model="cuadro" />
+                }
+            </div>
+        </div>
+
+        <div class="tab-pane fade @(Model.Vista == SalonViewModel.VistaLlevar ? "show active" : "")" id="vista-@SalonViewModel.VistaLlevar" role="tabpanel">
+            <div class="salon">
+                <a class="mesa-cuadro nuevo" asp-action="Cuenta" asp-route-tipo="@Catalogos.TipoPedido.Llevar" asp-route-id="0">
+                    <i class="bi bi-plus-lg mesa-cuadro-mas"></i>
+                    <span class="mesa-cuadro-detalle">Nuevo para llevar</span>
+                </a>
+                @foreach (var cuadro in Model.ParaLlevar)
+                {
+                    <partial name="_Cuadro" model="cuadro" />
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Recuerda la pestaña en la dirección para que al volver se quede en la misma.
+        document.querySelectorAll('[data-vista]').forEach(function (boton) {
+            boton.addEventListener('shown.bs.tab', function () {
+                const url = new URL(window.location);
+                url.searchParams.set('vista', boton.dataset.vista);
+                history.replaceState(null, '', url);
+            });
+        });
+    </script>
+}

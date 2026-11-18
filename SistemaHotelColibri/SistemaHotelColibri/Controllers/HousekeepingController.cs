@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.TareasHousekeeping;
+using SistemaHotelColibri.ViewModels.Comun;
 using SistemaHotelColibri.ViewModels.TareasHousekeeping;
 
 namespace SistemaHotelColibri.Controllers;
@@ -49,7 +50,18 @@ public class HousekeepingController : ControladorBase
 
         ViewBag.EstadoSeleccionado = estadoSeleccionado;
         ViewBag.OpcionesEstado = Estados.Tarea.Todos.Append(TodosLosEstados).ToArray();
-        return View(await _obtenerBL.ObtenerAsync(filtro));
+
+        var todas = await _obtenerBL.ObtenerAsync(null);
+        ViewBag.Resumen = new List<TarjetaResumenViewModel>
+        {
+            TarjetaEstado("Pendientes", todas.Count(t => t.EstadoTarea == Estados.Tarea.Pendiente), "bi-hourglass-split", "ambar", Estados.Tarea.Pendiente, estadoSeleccionado, "por iniciar"),
+            TarjetaEstado("En proceso", todas.Count(t => t.EstadoTarea == Estados.Tarea.EnProceso), "bi-arrow-repeat", "cielo", Estados.Tarea.EnProceso, estadoSeleccionado, "en este momento"),
+            TarjetaResumenViewModel.Crear("Vencidas", todas.Count(t => t.EstaVencida), "bi-alarm", "coral", null, false, "pasaron la fecha límite"),
+            TarjetaEstado("Completadas", todas.Count(t => t.EstadoTarea == Estados.Tarea.Completada), "bi-check2-circle", "verde", Estados.Tarea.Completada, estadoSeleccionado, "tareas")
+        };
+
+        var tareas = filtro == null ? todas : todas.Where(t => t.EstadoTarea == filtro).ToList();
+        return View(tareas);
     }
 
     public async Task<IActionResult> Detalle(int id)

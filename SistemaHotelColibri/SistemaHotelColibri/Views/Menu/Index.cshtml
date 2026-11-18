@@ -17,6 +17,8 @@
     }
 </div>
 
+<partial name="_TarjetasResumen" model="(List<TarjetaResumenViewModel>)ViewBag.Resumen" />
+
 <partial name="_BarraBusqueda" model="barraBusqueda" />
 
 <div class="tarjeta">
@@ -51,10 +53,10 @@
                         <td class="text-end text-nowrap">@Formato.Colones(p.Precio)</td>
                         <td><partial name="_EstadoProducto" model="p" /></td>
                         <td class="text-end text-nowrap">
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@p.IdProductoMenu" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@p.IdProductoMenu" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i> Ver</a>
                             @if (esAdministrador)
                             {
-                                <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@p.IdProductoMenu" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@p.IdProductoMenu" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i> Editar</a>
                                 @if (p.EstadoProductoMenu != Estados.ProductoMenu.Inactivo)
                                 {
                                     <form asp-action="Eliminar" asp-route-id="@p.IdProductoMenu" method="post" class="d-inline"

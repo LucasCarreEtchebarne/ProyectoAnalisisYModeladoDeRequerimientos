@@ -13,6 +13,8 @@
     <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nueva mesa</a>
 </div>
 
+<partial name="_TarjetasResumen" model="(List<TarjetaResumenViewModel>)ViewBag.Resumen" />
+
 <partial name="_BarraBusqueda" model="barraBusqueda" />
 
 <div class="tarjeta">
@@ -47,8 +49,8 @@
                         <td><partial name="_EstadoMesa" model="m" /></td>
                         <td>@(m.Descripcion ?? "—")</td>
                         <td class="text-end text-nowrap">
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@m.IdMesa" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@m.IdMesa" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@m.IdMesa" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i> Ver</a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@m.IdMesa" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i> Editar</a>
                             @if (m.EstadoMesa != Estados.Mesa.Inactiva)
                             {
                                 <form asp-action="Eliminar" asp-route-id="@m.IdMesa" method="post" class="d-inline"

@@ -52,6 +52,17 @@ public class MesaController : ControladorBase
                     estadoSeleccionado)
             ]
         };
+        async Task<int> Contar(string estadoContar) =>
+            (await _obtenerBL.ObtenerAsync(new FiltroListado { Estado = estadoContar, TamanoPagina = 1 })).TotalRegistros;
+
+        var detalle = $"de {await Contar(Estados.Mesa.Activas)} mesas";
+        ViewBag.Resumen = new List<TarjetaResumenViewModel>
+        {
+            TarjetaEstado("Disponibles", await Contar(Estados.Mesa.Disponible), "bi-check2-circle", "verde", Estados.Mesa.Disponible, estadoSeleccionado, detalle),
+            TarjetaEstado("Ocupadas", await Contar(Estados.Mesa.Ocupada), "bi-people-fill", "coral", Estados.Mesa.Ocupada, estadoSeleccionado, detalle),
+            TarjetaEstado("Reservadas", await Contar(Estados.Mesa.Reservada), "bi-bookmark-fill", "cielo", Estados.Mesa.Reservada, estadoSeleccionado, detalle)
+        };
+
         return View(await _obtenerBL.ObtenerAsync(filtro));
     }
 

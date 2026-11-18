@@ -1,0 +1,36 @@
+@using SistemaHotelColibri.ViewModels.Salon
+@model CuadroViewModel
+
+<a class="mesa-cuadro @Model.Estado" asp-action="Cuenta" asp-route-tipo="@Model.Tipo" asp-route-id="@Model.Id">
+    <span class="mesa-cuadro-etiqueta">@Model.Etiqueta</span>
+    <span class="mesa-cuadro-numero">@Model.Numero</span>
+    @if (Model.Capacidad != null)
+    {
+        <span class="mesa-cuadro-capacidad"><i class="bi bi-people"></i> @Model.Capacidad</span>
+    }
+
+    @if (Model.Cuenta != null)
+    {
+        <span class="mesa-cuadro-total">@Formato.Colones(Model.Cuenta.Total)</span>
+        <span class="mesa-cuadro-detalle">
+            <i class="bi bi-receipt"></i> @Model.Productos · <i class="bi bi-clock"></i> @Model.MinutosAbierta min
+        </span>
+    }
+    else if (Model.Estado == "reservada")
+    {
+        <span class="mesa-cuadro-detalle"><i class="bi bi-bookmark-fill"></i> Reservada</span>
+    }
+    else if (Model.Estado == "hospedada")
+    {
+        <span class="mesa-cuadro-detalle"><i class="bi bi-person-fill"></i> Con huésped</span>
+    }
+    else
+    {
+        <span class="mesa-cuadro-detalle"><i class="bi bi-plus-circle"></i> Abrir cuenta</span>
+    }
+
+    @if (Model.Nota != null)
+    {
+        <span class="mesa-cuadro-nota">@Model.Nota</span>
+    }
+</a>
