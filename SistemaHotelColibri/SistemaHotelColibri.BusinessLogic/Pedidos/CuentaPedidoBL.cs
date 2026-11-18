@@ -86,6 +86,22 @@ public class CuentaPedidoBL : ICuentaPedidoBL
         return resultado.Exito ? ResultadoOperacion.Ok("Nota guardada.", idPedido) : resultado;
     }
 
+    public async Task<ResultadoOperacion> AsignarClienteAsync(int idPedido, int? idCliente)
+    {
+        var cuenta = await ObtenerAbiertaAsync(idPedido);
+        if (cuenta == null)
+        {
+            return CuentaCerrada();
+        }
+
+        if (cuenta.IdCliente == idCliente)
+        {
+            return ResultadoOperacion.Ok("Sin cambios.", idPedido);
+        }
+
+        return await GuardarAsync(cuenta, Agrupar(cuenta), cuenta.Observaciones, idCliente);
+    }
+
     private async Task<PedidoDto?> ObtenerAbiertaAsync(int idPedido)
     {
         var abiertas = await _abiertasDA.ObtenerAsync();
@@ -100,7 +116,10 @@ public class CuentaPedidoBL : ICuentaPedidoBL
             .GroupBy(detalle => detalle.IdProductoMenu)
             .ToDictionary(grupo => grupo.Key, grupo => grupo.Sum(detalle => detalle.Cantidad));
 
-    private async Task<ResultadoOperacion> GuardarAsync(PedidoDto actual, Dictionary<int, int> lineas, string? observaciones)
+    private Task<ResultadoOperacion> GuardarAsync(PedidoDto actual, Dictionary<int, int> lineas, string? observaciones) =>
+        GuardarAsync(actual, lineas, observaciones, actual.IdCliente);
+
+    private async Task<ResultadoOperacion> GuardarAsync(PedidoDto actual, Dictionary<int, int> lineas, string? observaciones, int? idCliente)
     {
         // Se respeta el orden en que se fueron agregando los productos; los nuevos van al final.
         var orden = actual.Detalles.Select(detalle => detalle.IdProductoMenu).Distinct().ToList();
@@ -109,7 +128,7 @@ public class CuentaPedidoBL : ICuentaPedidoBL
         {
             IdPedido = actual.IdPedido,
             IdUsuario = actual.IdUsuario,
-            IdCliente = actual.IdCliente,
+            IdCliente = idCliente,
             TipoPedido = actual.TipoPedido,
             IdMesa = actual.IdMesa,
             IdHabitacion = actual.IdHabitacion,

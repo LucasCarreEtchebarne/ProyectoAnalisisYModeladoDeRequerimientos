@@ -1,0 +1,139 @@
+@model SistemaHotelColibri.Abstract.Modelos.Facturas.FacturaDto
+@{
+    ViewData["Title"] = "Factura " + Model.NumeroFactura;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Factura @Model.NumeroFactura</h1>
+        <p>@Model.TipoFactura · @Formato.FechaHora(Model.FechaEmision) · <partial name="_EstadoFactura" model="Model" /></p>
+    </div>
+    <div class="d-flex flex-wrap gap-2 no-imprimir">
+        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver</a>
+        <button type="button" class="btn btn-outline-secondary" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
+        @if (Model.EstadoFactura == Estados.Factura.Pendiente)
+        {
+            <a class="btn btn-primary" asp-action="RegistrarPago" asp-route-id="@Model.IdFactura"><i class="bi bi-cash-coin"></i> Registrar pago</a>
+        }
+        @if (Model.EstadoFactura != Estados.Factura.Anulada)
+        {
+            <a class="btn btn-outline-danger" asp-action="Anular" asp-route-id="@Model.IdFactura"><i class="bi bi-x-circle"></i> Anular</a>
+        }
+    </div>
+</div>
+
+@if (Model.EstadoFactura == Estados.Factura.Anulada)
+{
+    <div class="alert alert-secondary d-flex gap-2">
+        <i class="bi bi-x-circle-fill"></i>
+        <div>
+            <strong>Factura anulada</strong> el @(Model.FechaAnulacion.HasValue ? Formato.FechaHora(Model.FechaAnulacion.Value) : "—").
+            Motivo: @Model.MotivoAnulacion
+        </div>
+    </div>
+}
+
+<div class="row g-3 mb-3">
+    <div class="col-12 col-lg-7">
+        <div class="tarjeta tarjeta-cuerpo h-100">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="dato-etiqueta">Cliente</div>
+                    <div class="dato-valor">@Model.ClienteMostrado</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="dato-etiqueta">Identificación</div>
+                    <div class="dato-valor">@(Model.IdentificacionCliente ?? "—")</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="dato-etiqueta">Emitida por</div>
+                    <div class="dato-valor">@(Model.NombreUsuario ?? "—")</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="dato-etiqueta">Tipo de factura</div>
+                    <div class="dato-valor">@Model.TipoFactura</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-5">
+        <div class="tarjeta tarjeta-cuerpo h-100">
+            <partial name="_TotalesFactura" model="Model" />
+        </div>
+    </div>
+</div>
+
+<h2 class="h5">Detalle</h2>
+<div class="tarjeta mb-3">
+    <div class="table-responsive">
+        <table class="table tabla-datos">
+            <thead>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Descripción</th>
+                    <th class="text-end">Cantidad</th>
+                    <th class="text-end">Precio unitario</th>
+                    <th class="text-end">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var d in Model.Detalles)
+                {
+                    <tr>
+                        <td>@d.TipoConcepto</td>
+                        <td>@d.Descripcion</td>
+                        <td class="text-end">@Formato.Cantidad(d.Cantidad)</td>
+                        <td class="text-end text-nowrap">@Formato.Colones(d.PrecioUnitario)</td>
+                        <td class="text-end text-nowrap">@Formato.Colones(d.Subtotal)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h2 class="h5">Pagos</h2>
+<div class="tarjeta">
+    <div class="table-responsive">
+        <table class="table tabla-datos">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Método</th>
+                    <th>Detalle</th>
+                    <th class="text-end">Monto</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Pagos.Count == 0)
+                {
+                    <tr><td colspan="5" class="text-center text-secondary py-4">Sin pagos registrados.</td></tr>
+                }
+                @foreach (var p in Model.Pagos)
+                {
+                    <tr class="@(p.EstadoPago == Estados.Pago.Aprobado ? "" : "fila-inactiva")">
+                        <td class="text-nowrap">@Formato.FechaHora(p.FechaHoraPago)</td>
+                        <td>@p.MetodoPago</td>
+                        <td>
+                            @switch (p.MetodoPago)
+                            {
+                                case Facturacion.MetodoPago.Efectivo:
+                                    <text>Recibido @Formato.Colones(p.MontoRecibido ?? 0) · Vuelto @Formato.Colones(p.CambioDevuelto ?? 0)</text>
+                                    break;
+                                case Facturacion.MetodoPago.Tarjeta:
+                                    <text>@p.TipoTarjeta terminada en @p.UltimosCuatroDigitos</text>
+                                    break;
+                                default:
+                                    <text>Referencia @p.NumeroReferencia</text>
+                                    break;
+                            }
+                        </td>
+                        <td class="text-end text-nowrap">@Formato.Colones(p.MontoPagado)</td>
+                        <td>@p.EstadoPago</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

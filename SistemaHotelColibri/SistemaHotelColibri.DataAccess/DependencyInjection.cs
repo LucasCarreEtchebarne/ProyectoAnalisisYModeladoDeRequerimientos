@@ -103,9 +103,6 @@ public static class DependencyInjection
         services.AddScoped<IObtenerPedidosAbiertosDA, ObtenerPedidosAbiertosDA>();
         services.AddScoped<IObtenerReservasVigentesDA, ObtenerReservasVigentesDA>();
 
-        services.AddScoped<IFacturarPedidoDA, FacturarPedidoDA>();
-        services.AddScoped<IObtenerFacturaPorIdDA, ObtenerFacturaPorIdDA>();
-
         services.AddScoped<IAgregarHabitacionDA, AgregarHabitacionDA>();
         services.AddScoped<IExisteNumeroHabitacionDA, ExisteNumeroHabitacionDA>();
         services.AddScoped<IObtenerHabitacionDA, ObtenerHabitacionDA>();
@@ -165,6 +162,14 @@ public static class DependencyInjection
         services.AddScoped<IExisteTareaActivaDA, ExisteTareaActivaDA>();
         services.AddScoped<IObtenerPersonalHousekeepingDA, ObtenerPersonalHousekeepingDA>();
         services.AddScoped<IObtenerHabitacionesTareaDA, ObtenerHabitacionesTareaDA>();
+
+        services.AddScoped<IObtenerFacturaDA, ObtenerFacturaDA>();
+        services.AddScoped<IObtenerFacturaPorIdDA, ObtenerFacturaPorIdDA>();
+        services.AddScoped<IObtenerReservaFacturableDA, ObtenerReservaFacturableDA>();
+        services.AddScoped<IObtenerPedidoFacturableDA, ObtenerPedidoFacturableDA>();
+        services.AddScoped<IRegistrarFacturaDA, RegistrarFacturaDA>();
+        services.AddScoped<IAnularFacturaDA, AnularFacturaDA>();
+        services.AddScoped<IRegistrarPagoDA, RegistrarPagoDA>();
 
         return services;
     }

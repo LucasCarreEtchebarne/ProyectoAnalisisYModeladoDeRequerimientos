@@ -17,6 +17,12 @@ public partial class Factura
 
     public string TipoFactura { get; set; } = null!;
 
+    public decimal Subtotal { get; set; }
+
+    public decimal MontoServicio { get; set; }
+
+    public decimal MontoIva { get; set; }
+
     public decimal MontoTotal { get; set; }
 
     public string EstadoFactura { get; set; } = null!;

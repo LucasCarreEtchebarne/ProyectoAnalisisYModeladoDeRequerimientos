@@ -36,6 +36,6 @@ public class AgregarTareaBL : IAgregarTareaBL
 
         var idGenerado = await _agregarDA.AgregarAsync(tarea);
 
-        return ResultadoOperacion.Ok(string.Format(Mensajes.TareaRegistrada, idGenerado), idGenerado);
+        return ResultadoOperacion.Ok(Mensajes.TareaRegistrada, idGenerado);
     }
 }

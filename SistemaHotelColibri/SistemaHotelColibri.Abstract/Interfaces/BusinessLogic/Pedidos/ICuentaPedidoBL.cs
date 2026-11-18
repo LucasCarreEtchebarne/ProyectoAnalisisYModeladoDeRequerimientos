@@ -14,4 +14,7 @@ public interface ICuentaPedidoBL
     Task<ResultadoOperacion> AgregarProductoAsync(int idPedido, int idProductoMenu);
     Task<ResultadoOperacion> CambiarCantidadAsync(int idPedido, int idProductoMenu, int cambio);
     Task<ResultadoOperacion> GuardarNotaAsync(int idPedido, string? observaciones);
+
+    // Deja la cuenta a nombre de un cliente (o de nadie) antes de facturarla.
+    Task<ResultadoOperacion> AsignarClienteAsync(int idPedido, int? idCliente);
 }

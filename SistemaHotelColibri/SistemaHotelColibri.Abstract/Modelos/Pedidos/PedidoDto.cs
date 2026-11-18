@@ -26,7 +26,18 @@ public class PedidoDto
 
     public string? NombreCliente { get; set; }
 
+    public int? NumeroMesa { get; set; }
+
+    public string? NumeroHabitacion { get; set; }
+
     public List<DetallePedidoDto> Detalles { get; set; } = [];
 
     public decimal Total => Detalles.Sum(detalle => detalle.Subtotal);
+
+    public string Origen => TipoPedido switch
+    {
+        "Mesa" => NumeroMesa.HasValue ? $"Mesa {NumeroMesa}" : "Mesa",
+        "Habitacion" => string.IsNullOrEmpty(NumeroHabitacion) ? "Habitación" : $"Habitación {NumeroHabitacion}",
+        _ => "Para llevar"
+    };
 }

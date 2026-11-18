@@ -1,0 +1,13 @@
+@model SistemaHotelColibri.Abstract.Modelos.Facturas.FacturaDto
+@switch (Model.EstadoFactura)
+{
+    case Estados.Factura.Pagada:
+        <span class="estado estado-activo"><i class="bi bi-check-circle"></i> Pagada</span>
+        break;
+    case Estados.Factura.Anulada:
+        <span class="estado estado-inactivo"><i class="bi bi-x-circle"></i> Anulada</span>
+        break;
+    default:
+        <span class="estado estado-alerta"><i class="bi bi-hourglass-split"></i> Pendiente</span>
+        break;
+}

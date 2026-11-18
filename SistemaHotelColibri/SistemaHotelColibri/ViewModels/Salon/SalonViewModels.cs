@@ -119,6 +119,10 @@ public class CobroViewModel
     [BindNever]
     public PedidoDto? Cuenta { get; set; }
 
+    // Subtotal, servicio 10 %, IVA 13 % y total, calculados como en Facturación.
+    [BindNever]
+    public TotalesFactura? Totales { get; set; }
+
     [BindNever]
     public List<SelectListItem> Clientes { get; set; } = [];
 
@@ -127,7 +131,7 @@ public class CobroViewModel
 
     [Required(ErrorMessage = "Elegí el método de pago.")]
     [Display(Name = "Método de pago")]
-    public string MetodoPago { get; set; } = Catalogos.MetodoPago.Efectivo;
+    public string MetodoPago { get; set; } = Facturacion.MetodoPago.Efectivo;
 
     [Display(Name = "Monto recibido")]
     [Range(0, 99999999, ErrorMessage = "El monto recibido no es válido.")]

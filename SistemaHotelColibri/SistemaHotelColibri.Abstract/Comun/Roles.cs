@@ -14,4 +14,5 @@ public static class Roles
     public const string AccesoMesas = Administrador + "," + Mesero;
     public const string AccesoMenu = Administrador + "," + Recepcionista + "," + Mesero;
     public const string AccesoHousekeeping = Administrador + "," + Recepcionista + "," + Housekeeping;
+    public const string AccesoFacturacion = Administrador + "," + Recepcionista;
 }

@@ -1,0 +1,9 @@
+using SistemaHotelColibri.Abstract.Modelos.Facturas;
+
+namespace SistemaHotelColibri.Abstract.Interfaces.DataAccess.Facturas;
+
+public interface IObtenerReservaFacturableDA
+{
+    Task<List<ReservaFacturableDto>> ListarAsync(string? busqueda);
+    Task<ReservaFacturableDto?> ObtenerAsync(int idReserva);
+}

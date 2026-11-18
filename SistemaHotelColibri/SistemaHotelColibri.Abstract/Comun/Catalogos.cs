@@ -29,16 +29,4 @@ public static class Catalogos
 
         public static readonly string[] Todos = [Mesa, Habitacion, Llevar];
     }
-
-    public static class MetodoPago
-    {
-        public const string Efectivo = "Efectivo";
-        public const string Tarjeta = "Tarjeta";
-        public const string Sinpe = "SINPE";
-        public const string Transferencia = "Transferencia";
-
-        public static readonly string[] Todos = [Efectivo, Tarjeta, Sinpe, Transferencia];
-    }
-
-    public static readonly string[] TiposTarjeta = ["Visa", "MasterCard", "AmericanExpress", "Otra"];
 }

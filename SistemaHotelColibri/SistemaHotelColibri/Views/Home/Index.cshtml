@@ -20,23 +20,27 @@
         return fecha.Value.ToString("dd/MM/yyyy HH:mm");
     }
 
-    var accesos = new List<(string Controlador, string Icono, string Titulo, string Descripcion)>();
+    var accesos = new List<(string Controlador, string Accion, string Icono, string Titulo, string Descripcion)>();
     if (TieneRol(Roles.AccesoHospedaje))
     {
-        accesos.Add(("Reserva", "bi-calendar-plus", "Nueva reserva", "Crear una reserva de huésped"));
-        accesos.Add(("Cliente", "bi-person-plus", "Nuevo cliente", "Registrar un huésped nuevo"));
+        accesos.Add(("Reserva", "Crear", "bi-calendar-plus", "Nueva reserva", "Crear una reserva de huésped"));
+        accesos.Add(("Cliente", "Crear", "bi-person-plus", "Nuevo cliente", "Registrar un huésped nuevo"));
     }
     if (TieneRol(Roles.AccesoMenu))
     {
-        accesos.Add(("Salon", "bi-receipt", "Pedidos", "Mesas, habitaciones y para llevar"));
+        accesos.Add(("Salon", "Index", "bi-receipt", "Pedidos", "Mesas, habitaciones y para llevar"));
+    }
+    if (TieneRol(Roles.AccesoFacturacion))
+    {
+        accesos.Add(("Factura", "Index", "bi-cash-coin", "Facturación", "Facturas de hospedaje y restaurante, y pagos"));
     }
     if (TieneRol(Roles.AccesoHousekeeping))
     {
-        accesos.Add(("Housekeeping", "bi-stars", "Nueva tarea", "Asignar una tarea de limpieza"));
+        accesos.Add(("Housekeeping", "Crear", "bi-stars", "Nueva tarea", "Asignar una tarea de limpieza"));
     }
     if (TieneRol(Roles.AccesoInventario))
     {
-        accesos.Add(("Inventario", "bi-box-seam", "Registrar producto", "Agregar un producto al inventario"));
+        accesos.Add(("Inventario", "Crear", "bi-box-seam", "Registrar producto", "Agregar un producto al inventario"));
     }
 }
 
@@ -214,7 +218,7 @@
             @foreach (var acceso in accesos)
             {
                 <div class="col-12 col-md-6 col-xl">
-                    <a class="acceso-rapido" asp-controller="@acceso.Controlador" asp-action="@(acceso.Controlador == "Salon" ? "Index" : "Crear")">
+                    <a class="acceso-rapido" asp-controller="@acceso.Controlador" asp-action="@acceso.Accion">
                         <i class="bi @acceso.Icono acceso-rapido-icono"></i>
                         <div>
                             <div class="acceso-rapido-titulo">@acceso.Titulo</div>

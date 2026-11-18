@@ -32,8 +32,8 @@ internal static class SincronizadorMesaPedido
                      && m.EstadoMesa == Estados.Mesa.Ocupada
                      && !contexto.Pedido.Any(p => p.IdMesa == idMesa
                                               && p.IdPedido != idPedidoQueCierra
-                                              && (p.EstadoPedido == Estados.Pedido.Pendiente || p.EstadoPedido == Estados.Pedido.Confirmado)
-                                              && !p.DetalleFactura.Any()))
+                                              && p.EstadoPedido == Estados.Pedido.Pendiente
+                                              && !p.DetalleFactura.Any(d => d.IdFacturaNavigation.EstadoFactura != Estados.Factura.Anulada)))
             .ExecuteUpdateAsync(cambios => cambios.SetProperty(m => m.EstadoMesa, Estados.Mesa.Disponible));
     }
 }

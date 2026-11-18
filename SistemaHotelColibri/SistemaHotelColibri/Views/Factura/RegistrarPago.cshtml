@@ -1,0 +1,108 @@
+@model SistemaHotelColibri.ViewModels.Facturas.PagoFormViewModel
+@{
+    ViewData["Title"] = "Registrar pago";
+    var factura = (SistemaHotelColibri.Abstract.Modelos.Facturas.FacturaDto)ViewBag.Factura;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Registrar pago</h1>
+        <p>Factura @factura.NumeroFactura · @factura.ClienteMostrado</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Detalle" asp-route-id="@factura.IdFactura"><i class="bi bi-arrow-left"></i> Volver</a>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-lg-7">
+        <form asp-action="RegistrarPago" asp-route-id="@factura.IdFactura" method="post" class="tarjeta tarjeta-cuerpo" id="formPago">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="mb-3">
+                <label class="form-label">Método de pago *</label>
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach (var metodo in Facturacion.MetodoPago.Todos)
+                    {
+                        <input type="radio" class="btn-check" asp-for="MetodoPago" value="@metodo" id="metodo-@metodo" />
+                        <label class="btn btn-outline-primary" for="metodo-@metodo">@metodo</label>
+                    }
+                </div>
+                <span asp-validation-for="MetodoPago" class="text-danger"></span>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <label asp-for="MontoPagado" class="form-label">Monto a pagar *</label>
+                    <input asp-for="MontoPagado" class="form-control" type="number" min="0.01" step="0.01" max="@factura.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+                    <div class="form-text">Saldo pendiente: @Formato.Colones(factura.Saldo). Puede registrar un pago parcial.</div>
+                    <span asp-validation-for="MontoPagado" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6" data-metodo="Efectivo">
+                    <label asp-for="MontoRecibido" class="form-label">Monto recibido *</label>
+                    <input asp-for="MontoRecibido" class="form-control" type="number" min="0" step="0.01" />
+                    <div class="form-text">Vuelto: <strong id="vuelto">₡ 0.00</strong></div>
+                    <span asp-validation-for="MontoRecibido" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6" data-metodo="Tarjeta">
+                    <label asp-for="TipoTarjeta" class="form-label">Tipo de tarjeta *</label>
+                    <select asp-for="TipoTarjeta" class="form-select" asp-items="@(new SelectList(Facturacion.TiposTarjeta))">
+                        <option value="">Seleccione</option>
+                    </select>
+                    <span asp-validation-for="TipoTarjeta" class="text-danger"></span>
+                </div>
+                <div class="col-12 col-md-6" data-metodo="Tarjeta">
+                    <label asp-for="UltimosCuatroDigitos" class="form-label">Últimos 4 dígitos *</label>
+                    <input asp-for="UltimosCuatroDigitos" class="form-control" maxlength="4" inputmode="numeric" autocomplete="off" />
+                    <div class="form-text">Nunca se guarda el número completo de la tarjeta.</div>
+                    <span asp-validation-for="UltimosCuatroDigitos" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6" data-metodo="Tarjeta Transferencia SINPE">
+                    <label asp-for="NumeroReferencia" class="form-label">Número de referencia <span data-metodo="Transferencia SINPE">*</span></label>
+                    <input asp-for="NumeroReferencia" class="form-control" maxlength="50" autocomplete="off" />
+                    <span asp-validation-for="NumeroReferencia" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-end mt-4">
+                <a class="btn btn-outline-secondary" asp-action="Detalle" asp-route-id="@factura.IdFactura">Cancelar</a>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Registrar pago</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-12 col-lg-5">
+        <div class="tarjeta tarjeta-cuerpo">
+            <partial name="_TotalesFactura" model="factura" />
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const form = document.getElementById('formPago');
+            const monto = document.getElementById('MontoPagado');
+            const recibido = document.getElementById('MontoRecibido');
+            const vuelto = document.getElementById('vuelto');
+
+            function metodoActual() {
+                return form.querySelector('input[name="MetodoPago"]:checked')?.value;
+            }
+
+            function actualizar() {
+                const metodo = metodoActual();
+                form.querySelectorAll('[data-metodo]').forEach(el => {
+                    el.classList.toggle('d-none', !el.dataset.metodo.split(' ').includes(metodo));
+                });
+                const cambio = (parseFloat(recibido.value) || 0) - (parseFloat(monto.value) || 0);
+                vuelto.textContent = '₡ ' + Math.max(0, cambio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            form.querySelectorAll('input[name="MetodoPago"]').forEach(r => r.addEventListener('change', actualizar));
+            [monto, recibido].forEach(i => i.addEventListener('input', actualizar));
+            actualizar();
+        })();
+    </script>
+}

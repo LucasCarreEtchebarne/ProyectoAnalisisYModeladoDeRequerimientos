@@ -43,7 +43,7 @@ public class EditarPedidoBL : IEditarPedidoBL
         var editado = await _editarPedidoDA.EditarAsync(pedido);
 
         return editado
-            ? ResultadoOperacion.Ok($"El pedido #{pedido.IdPedido} se actualizó correctamente.", pedido.IdPedido)
+            ? ResultadoOperacion.Ok("El pedido se actualizó correctamente.", pedido.IdPedido)
             : ResultadoOperacion.Error("No se pudo modificar el pedido porque ya fue facturado.");
     }
 
@@ -68,7 +68,7 @@ public class EditarPedidoBL : IEditarPedidoBL
         var inactivado = await _editarPedidoDA.InactivarAsync(idPedido);
 
         return inactivado
-            ? ResultadoOperacion.Ok($"El pedido #{idPedido} se inactivó correctamente.")
+            ? ResultadoOperacion.Ok("El pedido se inactivó correctamente.")
             : ResultadoOperacion.Error("No se pudo inactivar el pedido porque ya fue facturado.");
     }
 }

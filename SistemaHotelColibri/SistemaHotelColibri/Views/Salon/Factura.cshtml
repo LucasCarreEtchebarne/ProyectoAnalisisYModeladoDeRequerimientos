@@ -2,6 +2,7 @@
 @model FacturaDto
 @{
     ViewData["Title"] = $"Factura {Model.NumeroFactura}";
+    var puedeVerFacturacion = Roles.AccesoFacturacion.Split(',').Any(User.IsInRole);
 }
 
 <div class="encabezado-pagina no-imprimir">
@@ -11,7 +12,11 @@
     </div>
     <div class="d-flex flex-wrap gap-2">
         <button type="button" class="btn btn-outline-secondary" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
-        <a class="btn btn-primary" asp-action="Index" asp-route-vista="@SistemaHotelColibri.ViewModels.Salon.CuentaViewModel.VistaDe(Model.TipoPedido ?? "")"><i class="bi bi-arrow-left"></i> Volver a pedidos</a>
+        @if (puedeVerFacturacion)
+        {
+            <a class="btn btn-outline-secondary" asp-controller="Factura" asp-action="Detalle" asp-route-id="@Model.IdFactura"><i class="bi bi-cash-coin"></i> Ver en Facturación</a>
+        }
+        <a class="btn btn-primary" asp-action="Index"><i class="bi bi-arrow-left"></i> Volver a pedidos</a>
     </div>
 </div>
 
@@ -20,35 +25,27 @@
         <img src="~/img/logo-colibri.png" alt="Cabinas El Colibrí" />
         <div class="text-end">
             <div class="factura-numero">@Model.NumeroFactura</div>
-            <div class="texto-suave">@Model.FechaEmision.ToString("dd/MM/yyyy hh:mm tt")</div>
-            <span class="estado estado-activo"><i class="bi bi-check2-circle"></i> @Model.EstadoFactura</span>
+            <div class="texto-suave">@Formato.FechaHora(Model.FechaEmision)</div>
+            <partial name="~/Views/Factura/_EstadoFactura.cshtml" model="Model" />
         </div>
     </header>
 
     <div class="factura-datos">
         <div>
             <div class="dato-etiqueta">Cliente</div>
-            <div class="dato-valor">@(Model.NombreCliente ?? "Consumidor final")</div>
-            @if (Model.IdentificacionCliente != null)
+            <div class="dato-valor">@Model.ClienteMostrado</div>
+            @if (!string.IsNullOrEmpty(Model.IdentificacionCliente))
             {
                 <div class="texto-suave">Identificación: @Model.IdentificacionCliente</div>
             }
         </div>
         <div>
             <div class="dato-etiqueta">Servicio</div>
-            <div class="dato-valor">
-                Restaurante@(Model.NumeroMesa != null ? $" · Mesa {Model.NumeroMesa}"
-                    : Model.NumeroHabitacion != null ? $" · Habitación {Model.NumeroHabitacion}"
-                    : Model.TipoPedido == Catalogos.TipoPedido.Llevar ? " · Para llevar" : "")
-            </div>
-            @if (Model.IdPedido != null)
-            {
-                <div class="texto-suave">Pedido #@Model.IdPedido</div>
-            }
+            <div class="dato-valor">@Model.TipoFactura</div>
         </div>
         <div>
             <div class="dato-etiqueta">Atendido por</div>
-            <div class="dato-valor">@Model.NombreUsuario</div>
+            <div class="dato-valor">@(Model.NombreUsuario ?? "—")</div>
         </div>
     </div>
 
@@ -78,7 +75,7 @@
 
     <div class="factura-pie">
         <div class="factura-pagos">
-            @foreach (var pago in Model.Pagos)
+            @foreach (var pago in Model.Pagos.Where(p => p.EstadoPago == Estados.Pago.Aprobado))
             {
                 <div class="dato-etiqueta">Pago</div>
                 <div class="fw-semibold">
@@ -97,8 +94,20 @@
                     <div class="texto-suave">Recibido @Formato.Colones(pago.MontoRecibido.Value) · Vuelto @Formato.Colones(pago.CambioDevuelto ?? 0)</div>
                 }
             }
+            @if (Model.Saldo > 0)
+            {
+                <div class="estado estado-alerta mt-2"><i class="bi bi-exclamation-triangle"></i> Saldo pendiente @Formato.Colones(Model.Saldo)</div>
+            }
         </div>
         <div class="factura-total">
+            <dl class="totales-factura mb-2">
+                <dt>Subtotal</dt>
+                <dd>@Formato.Colones(Model.Subtotal)</dd>
+                <dt>Servicio (10 %)</dt>
+                <dd>@Formato.Colones(Model.MontoServicio)</dd>
+                <dt>IVA (13 %)</dt>
+                <dd>@Formato.Colones(Model.MontoIva)</dd>
+            </dl>
             <span>Total</span>
             <strong>@Formato.Colones(Model.MontoTotal)</strong>
         </div>

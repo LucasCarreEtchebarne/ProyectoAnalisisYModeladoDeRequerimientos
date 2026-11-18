@@ -7,6 +7,17 @@ public class BarraBusquedaViewModel
     public string? Busqueda { get; set; }
     public string Placeholder { get; set; } = "Buscar...";
     public List<FiltroSeleccion> Filtros { get; set; } = [];
+    public List<FiltroFecha> FiltrosFecha { get; set; } = [];
+}
+
+public class FiltroFecha
+{
+    public string Nombre { get; set; } = string.Empty;
+    public string Etiqueta { get; set; } = string.Empty;
+    public DateOnly? Valor { get; set; }
+
+    public static FiltroFecha Crear(string nombre, string etiqueta, DateOnly? valor) =>
+        new() { Nombre = nombre, Etiqueta = etiqueta, Valor = valor };
 }
 
 public class FiltroSeleccion

@@ -6,12 +6,12 @@ namespace SistemaHotelColibri.BusinessLogic.Facturas;
 
 public class ObtenerFacturaPorIdBL : IObtenerFacturaPorIdBL
 {
-    private readonly IObtenerFacturaPorIdDA _obtenerDA;
+    private readonly IObtenerFacturaPorIdDA _obtenerPorIdDA;
 
-    public ObtenerFacturaPorIdBL(IObtenerFacturaPorIdDA obtenerDA)
+    public ObtenerFacturaPorIdBL(IObtenerFacturaPorIdDA obtenerPorIdDA)
     {
-        _obtenerDA = obtenerDA;
+        _obtenerPorIdDA = obtenerPorIdDA;
     }
 
-    public Task<FacturaDto?> ObtenerPorIdAsync(int idFactura) => _obtenerDA.ObtenerPorIdAsync(idFactura);
+    public Task<FacturaDto?> ObtenerPorIdAsync(int idFactura) => _obtenerPorIdDA.ObtenerPorIdAsync(idFactura);
 }

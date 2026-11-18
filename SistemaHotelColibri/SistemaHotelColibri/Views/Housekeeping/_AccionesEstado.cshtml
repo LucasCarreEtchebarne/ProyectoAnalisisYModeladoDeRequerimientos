@@ -20,7 +20,7 @@
 @foreach (var accion in acciones)
 {
     <form asp-action="CambiarEstado" asp-route-id="@Model.IdTarea" method="post" class="d-inline"
-          data-confirmar="¿Desea cambiar la tarea #@Model.IdTarea a «@Formato.EstadoTarea(accion.Estado)»?"
+          data-confirmar="¿Desea cambiar la tarea «@Model.TipoTarea» de la habitación @Model.NumeroHabitacion a «@Formato.EstadoTarea(accion.Estado)»?"
           data-confirmar-boton="@accion.Texto">
         <input type="hidden" name="nuevoEstado" value="@accion.Estado" />
         <input type="hidden" name="volverA" value="@volverA" />

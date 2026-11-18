@@ -30,6 +30,6 @@ public class ObtenerTareaPorIdDA : IObtenerTareaPorIdDA
         }
 
         var nombres = await _identidad.ObtenerNombresUsuarioAsync(new[] { tarea.IdUsuario });
-        return tarea.ADto(nombres.GetValueOrDefault(tarea.IdUsuario, "Usuario #" + tarea.IdUsuario));
+        return tarea.ADto(nombres.GetValueOrDefault(tarea.IdUsuario, "Usuario no encontrado"));
     }
 }

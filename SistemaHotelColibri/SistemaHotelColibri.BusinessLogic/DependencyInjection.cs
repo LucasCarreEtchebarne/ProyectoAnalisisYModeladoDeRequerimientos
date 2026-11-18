@@ -56,9 +56,6 @@ public static class DependencyInjection
         services.AddScoped<IClienteReservaBL, ClienteReservaBL>();
         services.AddScoped<IObtenerOcupacionHabitacionBL, ObtenerOcupacionHabitacionBL>();
 
-        services.AddScoped<IFacturarPedidoBL, FacturarPedidoBL>();
-        services.AddScoped<IObtenerFacturaPorIdBL, ObtenerFacturaPorIdBL>();
-
         services.AddScoped<IAgregarHabitacionBL, AgregarHabitacionBL>();
         services.AddScoped<IObtenerHabitacionBL, ObtenerHabitacionBL>();
         services.AddScoped<IObtenerHabitacionPorIdBL, ObtenerHabitacionPorIdBL>();
@@ -110,6 +107,16 @@ public static class DependencyInjection
         services.AddScoped<ICancelarTareaBL, CancelarTareaBL>();
         services.AddScoped<IObtenerPersonalHousekeepingBL, ObtenerPersonalHousekeepingBL>();
         services.AddScoped<IObtenerHabitacionesTareaBL, ObtenerHabitacionesTareaBL>();
+
+        services.AddScoped<IObtenerFacturaBL, ObtenerFacturaBL>();
+        services.AddScoped<IObtenerFacturaPorIdBL, ObtenerFacturaPorIdBL>();
+        services.AddScoped<IObtenerReservaFacturableBL, ObtenerReservaFacturableBL>();
+        services.AddScoped<IObtenerPedidoFacturableBL, ObtenerPedidoFacturableBL>();
+        services.AddScoped<IRegistrarFacturaHospedajeBL, RegistrarFacturaHospedajeBL>();
+        services.AddScoped<IRegistrarFacturaRestauranteBL, RegistrarFacturaRestauranteBL>();
+        services.AddScoped<IRegistrarFacturaConsolidadaBL, RegistrarFacturaConsolidadaBL>();
+        services.AddScoped<IAnularFacturaBL, AnularFacturaBL>();
+        services.AddScoped<IRegistrarPagoBL, RegistrarPagoBL>();
 
         return services;
     }

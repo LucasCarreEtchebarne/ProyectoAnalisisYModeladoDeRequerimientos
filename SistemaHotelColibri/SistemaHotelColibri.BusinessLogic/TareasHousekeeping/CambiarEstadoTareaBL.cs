@@ -45,7 +45,7 @@ public class CambiarEstadoTareaBL : ICambiarEstadoTareaBL
         }
 
         return ResultadoOperacion.Ok(
-            string.Format(Mensajes.TareaEstadoActualizado, idTarea, Formato.EstadoTarea(nuevoEstado)),
+            string.Format(Mensajes.TareaEstadoActualizado, Formato.EstadoTarea(nuevoEstado)),
             idTarea);
     }
 }

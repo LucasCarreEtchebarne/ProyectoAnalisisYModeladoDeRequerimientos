@@ -62,7 +62,7 @@ public partial class HotelColibriContext : DbContext
 
         modelBuilder.Entity<Bitacora>(entity =>
         {
-            entity.HasKey(e => e.IdBitacora).HasName("PK__BITACORA__ED3A1B1326CCBB8A");
+            entity.HasKey(e => e.IdBitacora).HasName("PK__BITACORA__ED3A1B13C3313AE4");
 
             entity.ToTable("BITACORA");
 
@@ -78,11 +78,11 @@ public partial class HotelColibriContext : DbContext
 
         modelBuilder.Entity<CategoriaInventario>(entity =>
         {
-            entity.HasKey(e => e.IdCategoria).HasName("PK__CATEGORI__A3C02A104125019E");
+            entity.HasKey(e => e.IdCategoria).HasName("PK__CATEGORI__A3C02A10527AB6A7");
 
             entity.ToTable("CATEGORIA_INVENTARIO");
 
-            entity.HasIndex(e => e.NombreCategoria, "UQ__CATEGORI__A21FBE9F2078476E").IsUnique();
+            entity.HasIndex(e => e.NombreCategoria, "UQ__CATEGORI__A21FBE9F7B2B9B8E").IsUnique();
 
             entity.Property(e => e.Area).HasMaxLength(20);
             entity.Property(e => e.Descripcion).HasMaxLength(250);
@@ -94,11 +94,11 @@ public partial class HotelColibriContext : DbContext
 
         modelBuilder.Entity<Cliente>(entity =>
         {
-            entity.HasKey(e => e.IdCliente).HasName("PK__CLIENTE__D594664251346643");
+            entity.HasKey(e => e.IdCliente).HasName("PK__CLIENTE__D594664259CA720F");
 
             entity.ToTable("CLIENTE");
 
-            entity.HasIndex(e => e.Identificacion, "UQ__CLIENTE__D6F931E560170258").IsUnique();
+            entity.HasIndex(e => e.Identificacion, "UQ__CLIENTE__D6F931E5DC8FBB9B").IsUnique();
 
             entity.HasIndex(e => e.CorreoElectronico, "UX_Cliente_Correo")
                 .IsUnique()
@@ -119,7 +119,7 @@ public partial class HotelColibriContext : DbContext
 
         modelBuilder.Entity<ConsultaIa>(entity =>
         {
-            entity.HasKey(e => e.IdConsultaIa).HasName("PK__CONSULTA__655A2C85C2FA3020");
+            entity.HasKey(e => e.IdConsultaIa).HasName("PK__CONSULTA__655A2C855CD63D5F");
 
             entity.ToTable("CONSULTA_IA");
 
@@ -131,7 +131,7 @@ public partial class HotelColibriContext : DbContext
 
         modelBuilder.Entity<DetalleFactura>(entity =>
         {
-            entity.HasKey(e => e.IdDetalleFactura).HasName("PK__DETALLE___DB5F46313E175954");
+            entity.HasKey(e => e.IdDetalleFactura).HasName("PK__DETALLE___DB5F46312675FEEB");
 
             entity.ToTable("DETALLE_FACTURA");
 
@@ -153,24 +153,24 @@ public partial class HotelColibriContext : DbContext
 
             entity.HasOne(d => d.IdEventoNavigation).WithMany(p => p.DetalleFactura)
                 .HasForeignKey(d => d.IdEvento)
-                .HasConstraintName("FK__DETALLE_F__IdEve__08D548FA");
+                .HasConstraintName("FK__DETALLE_F__IdEve__4D2051A6");
 
             entity.HasOne(d => d.IdFacturaNavigation).WithMany(p => p.DetalleFactura)
                 .HasForeignKey(d => d.IdFactura)
-                .HasConstraintName("FK__DETALLE_F__IdFac__0504B816");
+                .HasConstraintName("FK__DETALLE_F__IdFac__494FC0C2");
 
             entity.HasOne(d => d.IdPedidoNavigation).WithMany(p => p.DetalleFactura)
                 .HasForeignKey(d => d.IdPedido)
-                .HasConstraintName("FK__DETALLE_F__IdPed__07E124C1");
+                .HasConstraintName("FK__DETALLE_F__IdPed__4C2C2D6D");
 
             entity.HasOne(d => d.IdReservaNavigation).WithMany(p => p.DetalleFactura)
                 .HasForeignKey(d => d.IdReserva)
-                .HasConstraintName("FK__DETALLE_F__IdRes__06ED0088");
+                .HasConstraintName("FK__DETALLE_F__IdRes__4B380934");
         });
 
         modelBuilder.Entity<DetallePedido>(entity =>
         {
-            entity.HasKey(e => e.IdDetallePedido).HasName("PK__DETALLE___48AFFD95C186DFD7");
+            entity.HasKey(e => e.IdDetallePedido).HasName("PK__DETALLE___48AFFD9570B00EDB");
 
             entity.ToTable("DETALLE_PEDIDO");
 
@@ -185,21 +185,21 @@ public partial class HotelColibriContext : DbContext
 
             entity.HasOne(d => d.IdPedidoNavigation).WithMany(p => p.DetallePedido)
                 .HasForeignKey(d => d.IdPedido)
-                .HasConstraintName("FK__DETALLE_P__IdPed__6C390A4C");
+                .HasConstraintName("FK__DETALLE_P__IdPed__29D71569");
 
             entity.HasOne(d => d.IdProductoMenuNavigation).WithMany(p => p.DetallePedido)
                 .HasForeignKey(d => d.IdProductoMenu)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__DETALLE_P__IdPro__6D2D2E85");
+                .HasConstraintName("FK__DETALLE_P__IdPro__2ACB39A2");
         });
 
         modelBuilder.Entity<EspacioEvento>(entity =>
         {
-            entity.HasKey(e => e.IdEspacio).HasName("PK__ESPACIO___CA4C08890376F286");
+            entity.HasKey(e => e.IdEspacio).HasName("PK__ESPACIO___CA4C0889760C7FD9");
 
             entity.ToTable("ESPACIO_EVENTO");
 
-            entity.HasIndex(e => e.NombreEspacio, "UQ__ESPACIO___585163C02F85A6D2").IsUnique();
+            entity.HasIndex(e => e.NombreEspacio, "UQ__ESPACIO___585163C09A11C461").IsUnique();
 
             entity.Property(e => e.Descripcion).HasMaxLength(250);
             entity.Property(e => e.EstadoEspacio)
@@ -210,7 +210,7 @@ public partial class HotelColibriContext : DbContext
 
         modelBuilder.Entity<Evento>(entity =>
         {
-            entity.HasKey(e => e.IdEvento).HasName("PK__EVENTO__034EFC0440C8DB53");
+            entity.HasKey(e => e.IdEvento).HasName("PK__EVENTO__034EFC04229A7E58");
 
             entity.ToTable("EVENTO");
 
@@ -230,17 +230,17 @@ public partial class HotelColibriContext : DbContext
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Evento)
                 .HasForeignKey(d => d.IdCliente)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__EVENTO__IdClient__51851410");
+                .HasConstraintName("FK__EVENTO__IdClient__0F231F2D");
 
             entity.HasOne(d => d.IdEspacioNavigation).WithMany(p => p.Evento)
                 .HasForeignKey(d => d.IdEspacio)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__EVENTO__IdEspaci__52793849");
+                .HasConstraintName("FK__EVENTO__IdEspaci__10174366");
         });
 
         modelBuilder.Entity<Factura>(entity =>
         {
-            entity.HasKey(e => e.IdFactura).HasName("PK__FACTURA__50E7BAF1AFFA23BD");
+            entity.HasKey(e => e.IdFactura).HasName("PK__FACTURA__50E7BAF1A2DAF560");
 
             entity.ToTable("FACTURA");
 
@@ -252,26 +252,31 @@ public partial class HotelColibriContext : DbContext
                 .HasMaxLength(20)
                 .HasDefaultValue("Pendiente");
             entity.Property(e => e.FechaEmision).HasDefaultValueSql("(sysdatetime())");
+            entity.Property(e => e.MontoIva)
+                .HasColumnType("decimal(12, 2)")
+                .HasColumnName("MontoIVA");
+            entity.Property(e => e.MontoServicio).HasColumnType("decimal(12, 2)");
             entity.Property(e => e.MontoTotal).HasColumnType("decimal(12, 2)");
             entity.Property(e => e.MotivoAnulacion).HasMaxLength(250);
             entity.Property(e => e.NumeroFactura)
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasComputedColumnSql("('FAC-'+right('000000'+CONVERT([varchar](6),[IdFactura]),(6)))", true);
+            entity.Property(e => e.Subtotal).HasColumnType("decimal(12, 2)");
             entity.Property(e => e.TipoFactura).HasMaxLength(20);
 
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Factura)
                 .HasForeignKey(d => d.IdCliente)
-                .HasConstraintName("FK__FACTURA__IdClien__7A8729A3");
+                .HasConstraintName("FK__FACTURA__IdClien__382534C0");
         });
 
         modelBuilder.Entity<Habitacion>(entity =>
         {
-            entity.HasKey(e => e.IdHabitacion).HasName("PK__HABITACI__8BBBF901979A897D");
+            entity.HasKey(e => e.IdHabitacion).HasName("PK__HABITACI__8BBBF9013F6FD881");
 
             entity.ToTable("HABITACION");
 
-            entity.HasIndex(e => e.NumeroHabitacion, "UQ__HABITACI__08B8232F73425556").IsUnique();
+            entity.HasIndex(e => e.NumeroHabitacion, "UQ__HABITACI__08B8232F76B141E2").IsUnique();
 
             entity.Property(e => e.CantidadCamas).HasDefaultValue(1);
             entity.Property(e => e.Descripcion).HasMaxLength(250);
@@ -289,13 +294,13 @@ public partial class HotelColibriContext : DbContext
 
         modelBuilder.Entity<HabitacionImagen>(entity =>
         {
-            entity.HasKey(e => e.IdImagen).HasName("PK__HABITACI__B42D8F2ACDFE835D");
+            entity.HasKey(e => e.IdImagen).HasName("PK__HABITACI__B42D8F2A245C10EC");
 
             entity.ToTable("HABITACION_IMAGEN");
 
             entity.HasIndex(e => e.IdHabitacion, "IX_HabitacionImagen_Habitacion");
 
-            entity.HasIndex(e => e.RutaArchivo, "UQ__HABITACI__8B47300C4090A880").IsUnique();
+            entity.HasIndex(e => e.RutaArchivo, "UQ__HABITACI__8B47300C952F902B").IsUnique();
 
             entity.Property(e => e.FechaSubida).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.NombreOriginal).HasMaxLength(150);
@@ -304,12 +309,12 @@ public partial class HotelColibriContext : DbContext
             entity.HasOne(d => d.IdHabitacionNavigation).WithMany(p => p.HabitacionImagen)
                 .HasForeignKey(d => d.IdHabitacion)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__HABITACIO__IdHab__09FE775D");
+                .HasConstraintName("FK__HABITACIO__IdHab__46A85E41");
         });
 
         modelBuilder.Entity<Housekeeping>(entity =>
         {
-            entity.HasKey(e => e.IdTarea).HasName("PK__HOUSEKEE__EADE9098B9F0EB9B");
+            entity.HasKey(e => e.IdTarea).HasName("PK__HOUSEKEE__EADE9098DAA96F62");
 
             entity.ToTable("HOUSEKEEPING");
 
@@ -323,19 +328,19 @@ public partial class HotelColibriContext : DbContext
                 .HasMaxLength(20)
                 .HasDefaultValue("Pendiente");
             entity.Property(e => e.FechaAsignacion).HasDefaultValueSql("(sysdatetime())");
-            entity.Property(e => e.Observaciones).HasMaxLength(250);
             entity.Property(e => e.MotivoCancelacion).HasMaxLength(250);
+            entity.Property(e => e.Observaciones).HasMaxLength(250);
             entity.Property(e => e.TipoTarea).HasMaxLength(50);
 
             entity.HasOne(d => d.IdHabitacionNavigation).WithMany(p => p.Housekeeping)
                 .HasForeignKey(d => d.IdHabitacion)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__HOUSEKEEP__IdHab__49E3F248");
+                .HasConstraintName("FK__HOUSEKEEP__IdHab__068DD92C");
         });
 
         modelBuilder.Entity<Inventario>(entity =>
         {
-            entity.HasKey(e => e.IdProducto).HasName("PK__INVENTAR__09889210716F58DD");
+            entity.HasKey(e => e.IdProducto).HasName("PK__INVENTAR__0988921099CEECE2");
 
             entity.ToTable("INVENTARIO");
 
@@ -343,7 +348,7 @@ public partial class HotelColibriContext : DbContext
 
             entity.HasIndex(e => e.IdProveedor, "IX_Inventario_Proveedor");
 
-            entity.HasIndex(e => e.NombreProducto, "UQ__INVENTAR__74F263DE820CEFD4").IsUnique();
+            entity.HasIndex(e => e.NombreProducto, "UQ__INVENTAR__74F263DE9C0241F1").IsUnique();
 
             entity.Property(e => e.Descripcion).HasMaxLength(250);
             entity.Property(e => e.EstadoProducto)
@@ -360,20 +365,20 @@ public partial class HotelColibriContext : DbContext
             entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.Inventario)
                 .HasForeignKey(d => d.IdCategoria)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__INVENTARI__IdCat__278EDA44");
+                .HasConstraintName("FK__INVENTARI__IdCat__6438C128");
 
             entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.Inventario)
                 .HasForeignKey(d => d.IdProveedor)
-                .HasConstraintName("FK__INVENTARI__IdPro__2882FE7D");
+                .HasConstraintName("FK__INVENTARI__IdPro__652CE561");
         });
 
         modelBuilder.Entity<Menu>(entity =>
         {
-            entity.HasKey(e => e.IdProductoMenu).HasName("PK__MENU__1BE1B888C4985D83");
+            entity.HasKey(e => e.IdProductoMenu).HasName("PK__MENU__1BE1B888F37A3E21");
 
             entity.ToTable("MENU");
 
-            entity.HasIndex(e => e.NombreProducto, "UQ__MENU__74F263DE55A0CC8E").IsUnique();
+            entity.HasIndex(e => e.NombreProducto, "UQ__MENU__74F263DE6BB69A36").IsUnique();
 
             entity.Property(e => e.CategoriaMenu).HasMaxLength(50);
             entity.Property(e => e.Descripcion).HasMaxLength(250);
@@ -386,11 +391,11 @@ public partial class HotelColibriContext : DbContext
 
         modelBuilder.Entity<Mesa>(entity =>
         {
-            entity.HasKey(e => e.IdMesa).HasName("PK__MESA__4D7E81B1ED34DA78");
+            entity.HasKey(e => e.IdMesa).HasName("PK__MESA__4D7E81B1F41A301F");
 
             entity.ToTable("MESA");
 
-            entity.HasIndex(e => e.NumeroMesa, "UQ__MESA__A5588DD2E32FFCA4").IsUnique();
+            entity.HasIndex(e => e.NumeroMesa, "UQ__MESA__A5588DD26A00F9B9").IsUnique();
 
             entity.Property(e => e.Descripcion).HasMaxLength(250);
             entity.Property(e => e.EstadoMesa)
@@ -400,7 +405,7 @@ public partial class HotelColibriContext : DbContext
 
         modelBuilder.Entity<MovimientoInventario>(entity =>
         {
-            entity.HasKey(e => e.IdMovimiento).HasName("PK__MOVIMIEN__881A6AE07F44189E");
+            entity.HasKey(e => e.IdMovimiento).HasName("PK__MOVIMIEN__881A6AE089E1AAD2");
 
             entity.ToTable("MOVIMIENTO_INVENTARIO");
 
@@ -418,17 +423,17 @@ public partial class HotelColibriContext : DbContext
 
             entity.HasOne(d => d.IdPedidoNavigation).WithMany(p => p.MovimientoInventario)
                 .HasForeignKey(d => d.IdPedido)
-                .HasConstraintName("FK__MOVIMIENT__IdPed__73DA2C14");
+                .HasConstraintName("FK__MOVIMIENT__IdPed__31783731");
 
             entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.MovimientoInventario)
                 .HasForeignKey(d => d.IdProducto)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MOVIMIENT__IdPro__71F1E3A2");
+                .HasConstraintName("FK__MOVIMIENT__IdPro__2F8FEEBF");
         });
 
         modelBuilder.Entity<Pago>(entity =>
         {
-            entity.HasKey(e => e.IdPago).HasName("PK__PAGO__FC851A3A33C293D2");
+            entity.HasKey(e => e.IdPago).HasName("PK__PAGO__FC851A3A1A49612D");
 
             entity.ToTable("PAGO");
 
@@ -454,12 +459,12 @@ public partial class HotelColibriContext : DbContext
             entity.HasOne(d => d.IdFacturaNavigation).WithMany(p => p.Pago)
                 .HasForeignKey(d => d.IdFactura)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PAGO__IdFactura__0F824689");
+                .HasConstraintName("FK__PAGO__IdFactura__53CD4F35");
         });
 
         modelBuilder.Entity<Pedido>(entity =>
         {
-            entity.HasKey(e => e.IdPedido).HasName("PK__PEDIDO__9D335DC3FADBB3D5");
+            entity.HasKey(e => e.IdPedido).HasName("PK__PEDIDO__9D335DC3CFF3A17C");
 
             entity.ToTable("PEDIDO");
 
@@ -486,28 +491,28 @@ public partial class HotelColibriContext : DbContext
 
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Pedido)
                 .HasForeignKey(d => d.IdCliente)
-                .HasConstraintName("FK__PEDIDO__IdClient__60C757A0");
+                .HasConstraintName("FK__PEDIDO__IdClient__1E6562BD");
 
             entity.HasOne(d => d.IdHabitacionNavigation).WithMany(p => p.Pedido)
                 .HasForeignKey(d => d.IdHabitacion)
-                .HasConstraintName("FK__PEDIDO__IdHabita__63A3C44B");
+                .HasConstraintName("FK__PEDIDO__IdHabita__2141CF68");
 
             entity.HasOne(d => d.IdMesaNavigation).WithMany(p => p.Pedido)
                 .HasForeignKey(d => d.IdMesa)
-                .HasConstraintName("FK__PEDIDO__IdMesa__62AFA012");
+                .HasConstraintName("FK__PEDIDO__IdMesa__204DAB2F");
 
             entity.HasOne(d => d.IdReservaNavigation).WithMany(p => p.Pedido)
                 .HasForeignKey(d => d.IdReserva)
-                .HasConstraintName("FK__PEDIDO__IdReserv__6497E884");
+                .HasConstraintName("FK__PEDIDO__IdReserv__2235F3A1");
         });
 
         modelBuilder.Entity<Proveedor>(entity =>
         {
-            entity.HasKey(e => e.IdProveedor).HasName("PK__PROVEEDO__E8B631AF3E4A58DA");
+            entity.HasKey(e => e.IdProveedor).HasName("PK__PROVEEDO__E8B631AF27094DA0");
 
             entity.ToTable("PROVEEDOR");
 
-            entity.HasIndex(e => e.NombreProveedor, "UQ__PROVEEDO__C20DF5534479FA5B").IsUnique();
+            entity.HasIndex(e => e.NombreProveedor, "UQ__PROVEEDO__C20DF5532FC74CA9").IsUnique();
 
             entity.Property(e => e.CorreoElectronico).HasMaxLength(150);
             entity.Property(e => e.Descripcion).HasMaxLength(250);
@@ -521,7 +526,7 @@ public partial class HotelColibriContext : DbContext
 
         modelBuilder.Entity<RecetaProducto>(entity =>
         {
-            entity.HasKey(e => e.IdRecetaProducto).HasName("PK__RECETA_P__89735AAD18B7B8AB");
+            entity.HasKey(e => e.IdRecetaProducto).HasName("PK__RECETA_P__89735AADB83A2A7D");
 
             entity.ToTable("RECETA_PRODUCTO");
 
@@ -534,17 +539,17 @@ public partial class HotelColibriContext : DbContext
             entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.RecetaProducto)
                 .HasForeignKey(d => d.IdProducto)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RECETA_PR__IdPro__5CF6C6BC");
+                .HasConstraintName("FK__RECETA_PR__IdPro__1A94D1D9");
 
             entity.HasOne(d => d.IdProductoMenuNavigation).WithMany(p => p.RecetaProducto)
                 .HasForeignKey(d => d.IdProductoMenu)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RECETA_PR__IdPro__5C02A283");
+                .HasConstraintName("FK__RECETA_PR__IdPro__19A0ADA0");
         });
 
         modelBuilder.Entity<Reserva>(entity =>
         {
-            entity.HasKey(e => e.IdReserva).HasName("PK__RESERVA__0E49C69D2CB06972");
+            entity.HasKey(e => e.IdReserva).HasName("PK__RESERVA__0E49C69D547B9895");
 
             entity.ToTable("RESERVA");
 
@@ -567,17 +572,17 @@ public partial class HotelColibriContext : DbContext
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Reserva)
                 .HasForeignKey(d => d.IdCliente)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RESERVA__IdClien__38B96646");
+                .HasConstraintName("FK__RESERVA__IdClien__75634D2A");
 
             entity.HasOne(d => d.IdHabitacionNavigation).WithMany(p => p.Reserva)
                 .HasForeignKey(d => d.IdHabitacion)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RESERVA__IdHabit__39AD8A7F");
+                .HasConstraintName("FK__RESERVA__IdHabit__76577163");
         });
 
         modelBuilder.Entity<ReservaMesa>(entity =>
         {
-            entity.HasKey(e => e.IdReservaMesa).HasName("PK__RESERVA___9086E2E8F61940F4");
+            entity.HasKey(e => e.IdReservaMesa).HasName("PK__RESERVA___9086E2E87DFE0FE6");
 
             entity.ToTable("RESERVA_MESA");
 
@@ -594,12 +599,12 @@ public partial class HotelColibriContext : DbContext
 
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.ReservaMesa)
                 .HasForeignKey(d => d.IdCliente)
-                .HasConstraintName("FK__RESERVA_M__IdCli__4336F4B9");
+                .HasConstraintName("FK__RESERVA_M__IdCli__7FE0DB9D");
 
             entity.HasOne(d => d.IdMesaNavigation).WithMany(p => p.ReservaMesa)
                 .HasForeignKey(d => d.IdMesa)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RESERVA_M__IdMes__4242D080");
+                .HasConstraintName("FK__RESERVA_M__IdMes__7EECB764");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -22,8 +22,10 @@ public class ObtenerPedidosAbiertosDA : IObtenerPedidosAbiertosDA
             .Include(pedido => pedido.IdClienteNavigation)
             .Include(pedido => pedido.DetallePedido)
                 .ThenInclude(detalle => detalle.IdProductoMenuNavigation)
-            .Where(pedido => (pedido.EstadoPedido == Estados.Pedido.Pendiente || pedido.EstadoPedido == Estados.Pedido.Confirmado)
-                          && !pedido.DetalleFactura.Any())
+            // Igual que en Facturación: una cuenta abierta es un pedido pendiente sin factura vigente
+            // (si su factura se anuló, la cuenta vuelve a estar abierta).
+            .Where(pedido => pedido.EstadoPedido == Estados.Pedido.Pendiente
+                          && !pedido.DetalleFactura.Any(d => d.IdFacturaNavigation.EstadoFactura != Estados.Factura.Anulada))
             .OrderBy(pedido => pedido.FechaHoraPedido)
             .ToListAsync();
 

@@ -3,12 +3,14 @@
 @{
     ViewData["Title"] = $"Cobrar · {Model.Titulo}";
     var cuenta = Model.Cuenta!;
+    var totales = Model.Totales!;
+    var total = totales.Total;
     var iconos = new Dictionary<string, string>
     {
-        [Catalogos.MetodoPago.Efectivo] = "bi-cash-stack",
-        [Catalogos.MetodoPago.Tarjeta] = "bi-credit-card",
-        [Catalogos.MetodoPago.Sinpe] = "bi-phone",
-        [Catalogos.MetodoPago.Transferencia] = "bi-bank"
+        [Facturacion.MetodoPago.Efectivo] = "bi-cash-stack",
+        [Facturacion.MetodoPago.Tarjeta] = "bi-credit-card",
+        [Facturacion.MetodoPago.Sinpe] = "bi-phone",
+        [Facturacion.MetodoPago.Transferencia] = "bi-bank"
     };
 }
 
@@ -54,10 +56,24 @@
             {
                 <p class="texto-suave mb-3"><i class="bi bi-chat-left-text"></i> @cuenta.Observaciones</p>
             }
+            <dl class="totales-factura mb-3">
+                <dt>Subtotal</dt>
+                <dd>@Formato.Colones(totales.Subtotal)</dd>
+                <dt>Servicio (10 %)</dt>
+                <dd>@Formato.Colones(totales.Servicio)</dd>
+                <dt>IVA (13 %)</dt>
+                <dd>@Formato.Colones(totales.Iva)</dd>
+            </dl>
             <div class="pos-cuenta-total">
                 <span>Total a cobrar</span>
-                <strong>@Formato.Colones(cuenta.Total)</strong>
+                <strong>@Formato.Colones(total)</strong>
             </div>
+            @if (Model.Tipo == Catalogos.TipoPedido.Habitacion && cuenta.IdReserva != null)
+            {
+                <p class="texto-suave mt-3 mb-0">
+                    <i class="bi bi-info-circle"></i> Si el huésped prefiere, dejá la cuenta abierta: en Facturación se puede sumar a la factura del hospedaje.
+                </p>
+            }
         </section>
     </div>
 
@@ -76,7 +92,7 @@
 
             <label class="form-label">Método de pago</label>
             <div class="metodos-pago mb-3">
-                @foreach (var metodo in Catalogos.MetodoPago.Todos)
+                @foreach (var metodo in Facturacion.MetodoPago.Todos)
                 {
                     <label class="metodo-pago">
                         <input type="radio" name="MetodoPago" value="@metodo" checked="@(Model.MetodoPago == metodo)" />
@@ -85,15 +101,15 @@
                 }
             </div>
 
-            <div class="campos-pago" data-metodo="@Catalogos.MetodoPago.Efectivo">
+            <div class="campos-pago" data-metodo="@Facturacion.MetodoPago.Efectivo">
                 <label asp-for="MontoRecibido" class="form-label"></label>
                 <div class="input-group mb-2">
                     <span class="input-group-text">₡</span>
                     <input asp-for="MontoRecibido" type="number" min="0" step="any" class="form-control form-control-lg" id="montoRecibido" placeholder="0" />
                 </div>
                 <div class="d-flex flex-wrap gap-2 mb-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-monto="@cuenta.Total.ToString(System.Globalization.CultureInfo.InvariantCulture)">Monto exacto</button>
-                    @foreach (var billete in new[] { 5000, 10000, 20000, 50000 }.Where(b => b >= cuenta.Total))
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-monto="@total.ToString(System.Globalization.CultureInfo.InvariantCulture)">Monto exacto</button>
+                    @foreach (var billete in new[] { 5000, 10000, 20000, 50000 }.Where(b => b >= total))
                     {
                         <button type="button" class="btn btn-sm btn-outline-secondary" data-monto="@billete">@Formato.Colones(billete)</button>
                     }
@@ -102,11 +118,11 @@
                 <div class="vuelto">Vuelto: <strong id="vuelto">₡ 0.00</strong></div>
             </div>
 
-            <div class="campos-pago" data-metodo="@Catalogos.MetodoPago.Tarjeta">
+            <div class="campos-pago" data-metodo="@Facturacion.MetodoPago.Tarjeta">
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <label asp-for="TipoTarjeta" class="form-label"></label>
-                        <select asp-for="TipoTarjeta" class="form-select" asp-items="@(new SelectList(Catalogos.TiposTarjeta))">
+                        <select asp-for="TipoTarjeta" class="form-select" asp-items="@(new SelectList(Facturacion.TiposTarjeta))">
                             <option value="">Elegí una</option>
                         </select>
                     </div>
@@ -118,14 +134,14 @@
                 </div>
             </div>
 
-            <div class="campos-pago" data-metodo="@Catalogos.MetodoPago.Sinpe @Catalogos.MetodoPago.Transferencia">
+            <div class="campos-pago" data-metodo="@Facturacion.MetodoPago.Sinpe @Facturacion.MetodoPago.Transferencia">
                 <label asp-for="NumeroReferencia" class="form-label"></label>
                 <input asp-for="NumeroReferencia" class="form-control" maxlength="50" placeholder="Número del comprobante" />
                 <span asp-validation-for="NumeroReferencia" class="text-danger"></span>
             </div>
 
             <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">
-                <i class="bi bi-check2-circle"></i> Cobrar @Formato.Colones(cuenta.Total) y generar factura
+                <i class="bi bi-check2-circle"></i> Cobrar @Formato.Colones(total) y generar factura
             </button>
         </form>
     </div>
@@ -134,7 +150,7 @@
 @section Scripts {
     <script>
         (function () {
-            const total = @cuenta.Total.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            const total = @total.ToString(System.Globalization.CultureInfo.InvariantCulture);
             const radios = document.querySelectorAll('input[name="MetodoPago"]');
             const grupos = document.querySelectorAll('.campos-pago');
             const monto = document.getElementById('montoRecibido');

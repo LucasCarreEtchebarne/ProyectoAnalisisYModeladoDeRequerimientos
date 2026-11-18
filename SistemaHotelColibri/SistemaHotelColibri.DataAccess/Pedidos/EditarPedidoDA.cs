@@ -89,6 +89,6 @@ public class EditarPedidoDA : IEditarPedidoDA
         return _contexto.Pedido.Where(pedido =>
             pedido.IdPedido == idPedido &&
             pedido.EstadoPedido == Estados.Pedido.Pendiente &&
-            !pedido.DetalleFactura.Any());
+            !pedido.DetalleFactura.Any(d => d.IdFacturaNavigation.EstadoFactura != Estados.Factura.Anulada));
     }
 }

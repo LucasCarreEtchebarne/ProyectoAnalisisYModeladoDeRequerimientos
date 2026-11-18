@@ -34,7 +34,8 @@ public class SalonController : ControladorBase
     private readonly IObtenerMenuBL _obtenerMenuBL;
     private readonly IObtenerPedidoBL _obtenerPedidoBL;
     private readonly ICuentaPedidoBL _cuentaBL;
-    private readonly IFacturarPedidoBL _facturarBL;
+    private readonly IRegistrarFacturaRestauranteBL _facturarBL;
+    private readonly IRegistrarPagoBL _registrarPagoBL;
     private readonly IObtenerFacturaPorIdBL _obtenerFacturaBL;
     private readonly IObtenerClienteBL _obtenerClienteBL;
 
@@ -47,7 +48,8 @@ public class SalonController : ControladorBase
         IObtenerMenuBL obtenerMenuBL,
         IObtenerPedidoBL obtenerPedidoBL,
         ICuentaPedidoBL cuentaBL,
-        IFacturarPedidoBL facturarBL,
+        IRegistrarFacturaRestauranteBL facturarBL,
+        IRegistrarPagoBL registrarPagoBL,
         IObtenerFacturaPorIdBL obtenerFacturaBL,
         IObtenerClienteBL obtenerClienteBL)
     {
@@ -60,6 +62,7 @@ public class SalonController : ControladorBase
         _obtenerPedidoBL = obtenerPedidoBL;
         _cuentaBL = cuentaBL;
         _facturarBL = facturarBL;
+        _registrarPagoBL = registrarPagoBL;
         _obtenerFacturaBL = obtenerFacturaBL;
         _obtenerClienteBL = obtenerClienteBL;
     }
@@ -264,42 +267,98 @@ public class SalonController : ControladorBase
             return RedirectToAction(nameof(Index), new { vista = CuentaViewModel.VistaDe(tipo) });
         }
 
+        // El total lleva servicio (10 %) e IVA (13 %), igual que en Facturación.
+        var totales = TotalesDe(destino.Cuenta);
+        var errorPago = ValidarPagoAntesDeFacturar(modelo, totales.Total);
+        if (errorPago != null)
+        {
+            ModelState.AddModelError(string.Empty, errorPago);
+        }
+
         if (ModelState.IsValid)
         {
-            var resultado = await _facturarBL.FacturarAsync(new SolicitudCobroDto
+            var cliente = await _cuentaBL.AsignarClienteAsync(destino.Cuenta.IdPedido, modelo.IdCliente);
+            if (!cliente.Exito)
             {
-                IdPedido = destino.Cuenta.IdPedido,
-                IdUsuario = IdUsuarioActual,
-                IdCliente = modelo.IdCliente,
+                ModelState.AddModelError(string.Empty, cliente.Mensaje);
+                return await MostrarCobroAsync(tipo, id, modelo);
+            }
+
+            // 1) La factura se registra con la facturación del módulo de Facturas.
+            var factura = await _facturarBL.RegistrarAsync(destino.Cuenta.IdPedido, IdUsuarioActual);
+            if (!factura.Exito)
+            {
+                ModelState.AddModelError(string.Empty, factura.Mensaje);
+                return await MostrarCobroAsync(tipo, id, modelo);
+            }
+
+            // 2) Se paga completa en el mismo momento.
+            var emitida = await _obtenerFacturaBL.ObtenerPorIdAsync(factura.IdGenerado);
+            var pago = await _registrarPagoBL.RegistrarAsync(new PagoDto
+            {
+                IdFactura = factura.IdGenerado,
                 MetodoPago = modelo.MetodoPago,
+                MontoPagado = emitida?.Saldo ?? totales.Total,
                 MontoRecibido = modelo.MontoRecibido,
                 TipoTarjeta = modelo.TipoTarjeta,
                 UltimosCuatroDigitos = modelo.UltimosCuatroDigitos,
                 NumeroReferencia = modelo.NumeroReferencia
-            });
+            }, IdUsuarioActual);
 
-            if (resultado.Exito)
+            if (pago.Exito)
             {
-                MensajeExito(resultado.Mensaje);
-                return RedirectToAction(nameof(Factura), new { id = resultado.IdGenerado });
+                MensajeExito($"{factura.Mensaje} {pago.Mensaje}");
+            }
+            else
+            {
+                MensajeError($"La factura se generó pero el pago no se registró: {pago.Mensaje} Registralo desde Facturación.");
             }
 
-            ModelState.AddModelError(string.Empty, resultado.Mensaje);
+            return RedirectToAction(nameof(Factura), new { id = factura.IdGenerado });
         }
 
         return await MostrarCobroAsync(tipo, id, modelo);
     }
 
+    // Comprobante de la factura para el personal del restaurante (los meseros no entran a Facturación).
     public async Task<IActionResult> Factura(int id)
     {
         var factura = await _obtenerFacturaBL.ObtenerPorIdAsync(id);
-        if (factura == null)
+        if (factura == null || factura.TipoFactura != Facturacion.Tipo.Restaurante)
         {
             MensajeError(Mensajes.NoEncontrado);
             return RedirectToAction(nameof(Index));
         }
 
         return View(factura);
+    }
+
+    private static TotalesFactura TotalesDe(PedidoDto cuenta)
+    {
+        var subtotal = cuenta.Detalles.Sum(d => Facturacion.Redondear(d.Cantidad * d.PrecioUnitario));
+        return Facturacion.CalcularTotales(subtotal, subtotal);
+    }
+
+    // Se revisa antes de crear la factura para no dejar facturas a medio cobrar.
+    private static string? ValidarPagoAntesDeFacturar(CobroViewModel modelo, decimal total)
+    {
+        if (!Facturacion.MetodoPago.Todos.Contains(modelo.MetodoPago))
+        {
+            return "Elegí un método de pago válido.";
+        }
+
+        return modelo.MetodoPago switch
+        {
+            Facturacion.MetodoPago.Efectivo when modelo.MontoRecibido is not { } recibido || recibido < total =>
+                $"El efectivo recibido debe cubrir el total de {Formato.Colones(total)}.",
+            Facturacion.MetodoPago.Tarjeta when modelo.TipoTarjeta == null || !Facturacion.TiposTarjeta.Contains(modelo.TipoTarjeta) =>
+                "Elegí el tipo de tarjeta.",
+            Facturacion.MetodoPago.Tarjeta when modelo.UltimosCuatroDigitos is not { Length: 4 } digitos || !digitos.All(char.IsAsciiDigit) =>
+                "Escribí los últimos 4 dígitos de la tarjeta.",
+            Facturacion.MetodoPago.Sinpe or Facturacion.MetodoPago.Transferencia when string.IsNullOrWhiteSpace(modelo.NumeroReferencia) =>
+                "Escribí el número de comprobante.",
+            _ => null
+        };
     }
 
     private async Task<IActionResult> MostrarCobroAsync(string tipo, int id, CobroViewModel modelo)
@@ -319,6 +378,7 @@ public class SalonController : ControladorBase
         modelo.Id = destino.Id;
         modelo.Titulo = destino.Titulo;
         modelo.Cuenta = destino.Cuenta;
+        modelo.Totales = TotalesDe(destino.Cuenta);
         modelo.IdCliente ??= destino.Cuenta.IdCliente;
         modelo.Clientes = clientes
             .Select(c => new SelectListItem($"{c.NombreMostrar} · {c.Identificacion}", c.IdCliente.ToString()))

@@ -1,0 +1,123 @@
+@model SistemaHotelColibri.ViewModels.Facturas.ConsolidadaViewModel
+@{
+    ViewData["Title"] = "Factura consolidada";
+    var r = Model.Reserva;
+    var cultura = System.Globalization.CultureInfo.InvariantCulture;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Factura consolidada</h1>
+        <p>Paso 2 de 2: marque los pedidos del huésped que se incluyen junto al hospedaje.</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Consolidada"><i class="bi bi-arrow-left"></i> Cambiar reserva</a>
+</div>
+
+<form asp-action="Consolidada" method="post" id="formConsolidada"
+      data-tasa-iva="@Facturacion.TasaIva.ToString(cultura)" data-tasa-servicio="@Facturacion.TasaServicio.ToString(cultura)"
+      data-confirmar="¿Emitir la factura consolidada de @r.NombreCliente?" data-confirmar-boton="Emitir factura">
+    <input type="hidden" name="idReserva" value="@r.IdReserva" />
+
+    <div class="row g-3">
+        <div class="col-12 col-lg-8">
+            <div class="tarjeta tarjeta-cuerpo mb-3">
+                <div class="dato-etiqueta mb-2">Hospedaje</div>
+                <div class="d-flex flex-wrap justify-content-between gap-2">
+                    <div>
+                        <div class="fw-semibold">@r.NombreCliente · Habitación @r.NumeroHabitacion</div>
+                        <div class="small text-secondary">@Formato.Fecha(r.FechaEntrada) al @Formato.Fecha(r.FechaSalida) · @r.CantidadNoches noche(s) × @Formato.Colones(r.PrecioNoche) · @r.EstadoReserva</div>
+                    </div>
+                    <div class="fw-semibold text-nowrap" id="montoHospedaje" data-monto="@r.MontoHospedaje.ToString(cultura)">@Formato.Colones(r.MontoHospedaje)</div>
+                </div>
+            </div>
+
+            <div class="tarjeta">
+                <div class="table-responsive">
+                    <table class="table tabla-datos">
+                        <thead>
+                            <tr>
+                                <th style="width: 2.5rem;"></th>
+                                <th>Pedido</th>
+                                <th>Productos</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Pedidos.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center text-secondary py-4">
+                                        El huésped no tiene pedidos pendientes. Use la factura de hospedaje.
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var p in Model.Pedidos)
+                            {
+                                <tr>
+                                    <td>
+                                        <input class="form-check-input pedido-consolidado" type="checkbox" name="idPedidos" value="@p.IdPedido"
+                                               id="pedido-@p.IdPedido" data-monto="@p.Total.ToString(cultura)" checked />
+                                    </td>
+                                    <td>
+                                        <label for="pedido-@p.IdPedido" class="fw-semibold">@p.Origen</label>
+                                        <span class="d-block small text-secondary">@Formato.FechaHora(p.FechaHoraPedido)</span>
+                                    </td>
+                                    <td class="small">@string.Join(", ", p.Lineas.Select(l => $"{l.Cantidad} × {l.NombreProducto}"))</td>
+                                    <td class="text-end text-nowrap">@Formato.Colones(p.Total)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="tarjeta tarjeta-cuerpo">
+                <dl class="totales-factura">
+                    <dt>Hospedaje</dt><dd id="totHospedaje"></dd>
+                    <dt>Restaurante</dt><dd id="totRestaurante"></dd>
+                    <dt>Subtotal</dt><dd id="totSubtotal"></dd>
+                    <dt>Servicio (10 %, restaurante)</dt><dd id="totServicio"></dd>
+                    <dt>IVA (13 %)</dt><dd id="totIva"></dd>
+                    <dt class="totales-factura-total">Total</dt><dd class="totales-factura-total" id="totTotal"></dd>
+                </dl>
+                <button type="submit" class="btn btn-primary w-100 mt-3" id="btnEmitir" @(Model.Pedidos.Count == 0 ? "disabled" : "")>
+                    <i class="bi bi-receipt"></i> Emitir factura consolidada
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        (function () {
+            const form = document.getElementById('formConsolidada');
+            const tasaIva = parseFloat(form.dataset.tasaIva);
+            const tasaServicio = parseFloat(form.dataset.tasaServicio);
+            const hospedaje = parseFloat(document.getElementById('montoHospedaje').dataset.monto);
+            const casillas = [...form.querySelectorAll('.pedido-consolidado')];
+            const redondear = n => Math.round((n + Number.EPSILON) * 100) / 100;
+            const colones = n => '₡ ' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const poner = (id, n) => document.getElementById(id).textContent = colones(n);
+
+            function recalcular() {
+                const restaurante = casillas.filter(c => c.checked).reduce((s, c) => s + parseFloat(c.dataset.monto), 0);
+                const subtotal = redondear(hospedaje + restaurante);
+                const servicio = redondear(restaurante * tasaServicio);
+                const iva = redondear(subtotal * tasaIva);
+                poner('totHospedaje', hospedaje);
+                poner('totRestaurante', restaurante);
+                poner('totSubtotal', subtotal);
+                poner('totServicio', servicio);
+                poner('totIva', iva);
+                poner('totTotal', subtotal + servicio + iva);
+                document.getElementById('btnEmitir').disabled = !casillas.some(c => c.checked);
+            }
+
+            casillas.forEach(c => c.addEventListener('change', recalcular));
+            recalcular();
+        })();
+    </script>
+}

@@ -46,6 +46,6 @@ public class CancelarTareaBL : ICancelarTareaBL
             return ResultadoOperacion.Error(Mensajes.ErrorModificarTarea);
         }
 
-        return ResultadoOperacion.Ok(string.Format(Mensajes.TareaCancelada, idTarea), idTarea);
+        return ResultadoOperacion.Ok(Mensajes.TareaCancelada, idTarea);
     }
 }
