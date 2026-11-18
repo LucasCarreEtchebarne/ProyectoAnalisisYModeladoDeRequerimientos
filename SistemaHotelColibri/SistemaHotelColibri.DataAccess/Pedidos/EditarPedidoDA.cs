@@ -20,6 +20,11 @@ public class EditarPedidoDA : IEditarPedidoDA
     {
         await using var transaccion = await _contexto.Database.BeginTransactionAsync();
 
+        var mesaAnterior = await _contexto.Pedido
+            .Where(p => p.IdPedido == pedido.IdPedido)
+            .Select(p => p.IdMesa)
+            .FirstOrDefaultAsync();
+
         var afectados = await PendienteSinFactura(pedido.IdPedido)
             .ExecuteUpdateAsync(cambios => cambios
                 .SetProperty(p => p.TipoPedido, pedido.TipoPedido)
@@ -47,6 +52,14 @@ public class EditarPedidoDA : IEditarPedidoDA
         }));
 
         await _contexto.SaveChangesAsync();
+
+        // Si el pedido cambió de mesa, la anterior se libera y la nueva queda ocupada.
+        if (mesaAnterior != pedido.IdMesa)
+        {
+            await SincronizadorMesaPedido.LiberarAsync(_contexto, mesaAnterior, pedido.IdPedido);
+        }
+
+        await SincronizadorMesaPedido.OcuparAsync(_contexto, pedido.IdMesa);
         await transaccion.CommitAsync();
 
         return true;
@@ -54,9 +67,19 @@ public class EditarPedidoDA : IEditarPedidoDA
 
     public async Task<bool> InactivarAsync(int idPedido)
     {
+        var idMesa = await _contexto.Pedido
+            .Where(p => p.IdPedido == idPedido)
+            .Select(p => p.IdMesa)
+            .FirstOrDefaultAsync();
+
         var afectados = await PendienteSinFactura(idPedido)
             .ExecuteUpdateAsync(cambios => cambios
                 .SetProperty(p => p.EstadoPedido, Estados.Pedido.Inactivo));
+
+        if (afectados > 0)
+        {
+            await SincronizadorMesaPedido.LiberarAsync(_contexto, idMesa, idPedido);
+        }
 
         return afectados > 0;
     }

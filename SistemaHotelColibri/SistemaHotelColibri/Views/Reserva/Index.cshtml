@@ -13,6 +13,8 @@
     <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nueva reserva</a>
 </div>
 
+<partial name="_TarjetasResumen" model="(List<TarjetaResumenViewModel>)ViewBag.Resumen" />
+
 <partial name="_BarraBusqueda" model="barraBusqueda" />
 
 <div class="tarjeta">
@@ -53,8 +55,8 @@
                         <td class="text-end text-nowrap">@Formato.Colones(r.MontoHospedaje)</td>
                         <td><partial name="_EstadoReserva" model="r" /></td>
                         <td class="text-end text-nowrap">
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@r.IdReserva" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@r.IdReserva" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@r.IdReserva" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i> Ver</a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@r.IdReserva" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i> Editar</a>
                             @if (r.EstadoReserva != Estados.Reserva.Cancelada && r.EstadoReserva != Estados.Reserva.CheckIn && r.EstadoReserva != Estados.Reserva.CheckOut)
                             {
                                 <form asp-action="Eliminar" asp-route-id="@r.IdReserva" method="post" class="d-inline"

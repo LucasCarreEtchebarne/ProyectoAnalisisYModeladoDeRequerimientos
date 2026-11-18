@@ -16,6 +16,7 @@ public class ReservaController : ControladorBase
     private readonly IEditarReservaBL _editarBL;
     private readonly IEliminarReservaBL _eliminarBL;
     private readonly IObtenerOpcionesReservaBL _opcionesBL;
+    private readonly IClienteReservaBL _clienteReservaBL;
 
     public ReservaController(
         IAgregarReservaBL agregarBL,
@@ -23,8 +24,10 @@ public class ReservaController : ControladorBase
         IObtenerReservaPorIdBL obtenerPorIdBL,
         IEditarReservaBL editarBL,
         IEliminarReservaBL eliminarBL,
-        IObtenerOpcionesReservaBL opcionesBL)
+        IObtenerOpcionesReservaBL opcionesBL,
+        IClienteReservaBL clienteReservaBL)
     {
+        _clienteReservaBL = clienteReservaBL;
         _agregarBL = agregarBL;
         _obtenerBL = obtenerBL;
         _obtenerPorIdBL = obtenerPorIdBL;
@@ -55,6 +58,17 @@ public class ReservaController : ControladorBase
                     estadoSeleccionado)
             ]
         };
+        async Task<int> Contar(string estadoContar) =>
+            (await _obtenerBL.ObtenerAsync(new FiltroListado { Estado = estadoContar, TamanoPagina = 1 })).TotalRegistros;
+
+        ViewBag.Resumen = new List<TarjetaResumenViewModel>
+        {
+            TarjetaEstado("Pendientes", await Contar(Estados.Reserva.Pendiente), "bi-hourglass-split", "ambar", Estados.Reserva.Pendiente, estadoSeleccionado, "por confirmar"),
+            TarjetaEstado("Confirmadas", await Contar(Estados.Reserva.Confirmada), "bi-calendar-check", "cielo", Estados.Reserva.Confirmada, estadoSeleccionado, "listas para llegar"),
+            TarjetaEstado("En check-in", await Contar(Estados.Reserva.CheckIn), "bi-box-arrow-in-right", "verde", Estados.Reserva.CheckIn, estadoSeleccionado, "huéspedes en el hotel"),
+            TarjetaEstado("Canceladas", await Contar(Estados.Reserva.Cancelada), "bi-x-circle", "coral", Estados.Reserva.Cancelada, estadoSeleccionado, "reservas")
+        };
+
         return View(await _obtenerBL.ObtenerAsync(filtro));
     }
 
@@ -85,14 +99,44 @@ public class ReservaController : ControladorBase
     {
         if (ModelState.IsValid)
         {
-            var resultado = await _agregarBL.AgregarAsync(modelo.ADto());
-            if (resultado.Exito)
+            var clienteListo = true;
+
+            // Cliente escrito en la reserva: se deja listo para poder reservar.
+            if (modelo.ClienteNuevo)
             {
-                MensajeExito(resultado.Mensaje);
-                return RedirectToAction(nameof(Index));
+                var cliente = await _clienteReservaBL.PrepararAsync(modelo.ClienteADto());
+                if (cliente.Exito)
+                {
+                    modelo.IdCliente = cliente.IdGenerado;
+                }
+                else
+                {
+                    clienteListo = false;
+                    ModelState.AddModelError(string.Empty, cliente.Mensaje);
+                }
             }
 
-            ModelState.AddModelError(string.Empty, resultado.Mensaje);
+            if (clienteListo)
+            {
+                var resultado = await _agregarBL.AgregarAsync(modelo.ADto());
+
+                // Si dijeron que no se guarde, el cliente se oculta de Clientes (salga bien o no la reserva).
+                if (modelo.ClienteNuevo)
+                {
+                    await _clienteReservaBL.FinalizarAsync(modelo.IdCliente ?? 0, modelo.GuardarCliente);
+                }
+
+                if (resultado.Exito)
+                {
+                    var mensajeCliente = !modelo.ClienteNuevo ? string.Empty
+                        : modelo.GuardarCliente ? " El cliente quedó guardado en Clientes."
+                        : " El cliente no se guardó en Clientes.";
+                    MensajeExito(resultado.Mensaje + mensajeCliente);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                ModelState.AddModelError(string.Empty, resultado.Mensaje);
+            }
         }
 
         await CargarListasAsync(modelo.IdCliente ?? 0, modelo.IdHabitacion ?? 0);

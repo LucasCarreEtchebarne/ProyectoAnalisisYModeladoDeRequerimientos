@@ -18,4 +18,13 @@ public class HabitacionOpcionDto
     public string Texto { get; set; } = string.Empty;
     public decimal Precio { get; set; }
     public int Capacidad { get; set; }
+    public List<RangoOcupadoDto> Ocupado { get; set; } = [];
+}
+
+public class RangoOcupadoDto
+{
+    public int IdReserva { get; set; }
+    public DateOnly FechaEntrada { get; set; }
+    public DateOnly FechaSalida { get; set; }
+    public string Cliente { get; set; } = string.Empty;
 }

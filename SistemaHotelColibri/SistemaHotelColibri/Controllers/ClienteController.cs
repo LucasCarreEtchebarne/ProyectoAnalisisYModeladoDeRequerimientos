@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Clientes;
 using SistemaHotelColibri.ViewModels.Clientes;
+using SistemaHotelColibri.ViewModels.Comun;
 
 namespace SistemaHotelColibri.Controllers;
 
@@ -49,6 +50,15 @@ public class ClienteController : ControladorBase
         var clientes = string.IsNullOrWhiteSpace(busqueda)
             ? await _obtenerBL.ObtenerAsync(filtro)
             : await _buscarBL.BuscarAsync(busqueda, filtro);
+
+        var activos = (await _obtenerBL.ObtenerAsync(Estados.Cliente.Activo)).Count;
+        var inactivos = (await _obtenerBL.ObtenerAsync(Estados.Cliente.Inactivo)).Count;
+        ViewBag.Resumen = new List<TarjetaResumenViewModel>
+        {
+            TarjetaEstado("Clientes activos", activos, "bi-person-check", "verde", Estados.Cliente.Activo, estadoSeleccionado, "registrados"),
+            TarjetaEstado("Inactivos", inactivos, "bi-person-dash", "gris", Estados.Cliente.Inactivo, estadoSeleccionado, "clientes"),
+            TarjetaEstado("Total", activos + inactivos, "bi-people", "cielo", TodosLosEstados, estadoSeleccionado, "clientes en el sistema")
+        };
 
         return View(clientes);
     }

@@ -1,8 +1,10 @@
 ﻿using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Pedidos;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Clientes;
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Menus;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Mesas;
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Pedidos;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Reservas;
 using SistemaHotelColibri.Abstract.Modelos.Pedidos;
 
@@ -14,17 +16,23 @@ public class ValidadorPedidoBL : IValidadorPedidoBL
     private readonly IObtenerReservaPorIdDA _obtenerReservaDA;
     private readonly IObtenerClientePorIdDA _obtenerClienteDA;
     private readonly IObtenerMenuPorIdDA _obtenerMenuDA;
+    private readonly IObtenerHabitacionPorIdDA _obtenerHabitacionDA;
+    private readonly IObtenerPedidoPorIdDA _obtenerPedidoDA;
 
     public ValidadorPedidoBL(
         IObtenerMesaPorIdDA obtenerMesaDA,
         IObtenerReservaPorIdDA obtenerReservaDA,
         IObtenerClientePorIdDA obtenerClienteDA,
-        IObtenerMenuPorIdDA obtenerMenuDA)
+        IObtenerMenuPorIdDA obtenerMenuDA,
+        IObtenerHabitacionPorIdDA obtenerHabitacionDA,
+        IObtenerPedidoPorIdDA obtenerPedidoDA)
     {
+        _obtenerPedidoDA = obtenerPedidoDA;
         _obtenerMesaDA = obtenerMesaDA;
         _obtenerReservaDA = obtenerReservaDA;
         _obtenerClienteDA = obtenerClienteDA;
         _obtenerMenuDA = obtenerMenuDA;
+        _obtenerHabitacionDA = obtenerHabitacionDA;
     }
 
     public async Task<string?> ValidarAsync(PedidoDto pedido)
@@ -63,6 +71,14 @@ public class ValidadorPedidoBL : IValidadorPedidoBL
             }
         }
 
+        // Al editar, lo que ya estaba en el pedido conserva el precio con que se pidió y se puede
+        // mantener o quitar aunque el producto ya no esté disponible; solo no se puede pedir más de él.
+        var original = pedido.IdPedido > 0 ? await _obtenerPedidoDA.ObtenerPorIdAsync(pedido.IdPedido) : null;
+        var yaPedidos = original?.Detalles
+            .GroupBy(d => d.IdProductoMenu)
+            .ToDictionary(g => g.Key, g => (Cantidad: g.Sum(d => d.Cantidad), Precio: g.First().PrecioUnitario))
+            ?? [];
+
         foreach (var detalle in pedido.Detalles)
         {
             var producto = await _obtenerMenuDA.ObtenerPorIdAsync(detalle.IdProductoMenu);
@@ -72,12 +88,15 @@ public class ValidadorPedidoBL : IValidadorPedidoBL
                 return "Uno de los productos seleccionados no existe.";
             }
 
-            if (producto.EstadoProductoMenu != Estados.ProductoMenu.Disponible)
+            var estaba = yaPedidos.TryGetValue(detalle.IdProductoMenu, out var anterior);
+
+            if (producto.EstadoProductoMenu != Estados.ProductoMenu.Disponible
+                && (!estaba || detalle.Cantidad > anterior.Cantidad))
             {
                 return $"El producto «{producto.NombreProducto}» no está disponible.";
             }
 
-            detalle.PrecioUnitario = producto.Precio;
+            detalle.PrecioUnitario = estaba ? anterior.Precio : producto.Precio;
         }
 
         return null;
@@ -107,6 +126,20 @@ public class ValidadorPedidoBL : IValidadorPedidoBL
 
             case Catalogos.TipoPedido.Habitacion:
                 {
+                    // Desde el salón se puede pedir a una habitación aunque no tenga una reserva en check-in.
+                    if (pedido.IdReserva is not > 0 && pedido.IdHabitacion is > 0)
+                    {
+                        var habitacion = await _obtenerHabitacionDA.ObtenerPorIdAsync(pedido.IdHabitacion.Value);
+                        if (habitacion == null || habitacion.EstadoHabitacion == Estados.Habitacion.Inactiva)
+                        {
+                            return "La habitación seleccionada no existe o está inactiva.";
+                        }
+
+                        pedido.IdMesa = null;
+                        pedido.IdReserva = null;
+                        return null;
+                    }
+
                     if (pedido.IdReserva is not > 0)
                     {
                         return "Seleccioná una reserva con check-in para el pedido.";

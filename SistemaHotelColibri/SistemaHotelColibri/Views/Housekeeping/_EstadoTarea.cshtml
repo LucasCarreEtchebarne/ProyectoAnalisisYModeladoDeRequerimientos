@@ -2,19 +2,19 @@
 @model TareaHousekeepingDto
 @if (Model.EstadoTarea == Estados.Tarea.Completada)
 {
-    <span class="estado estado-activo">Completada</span>
+    <span class="estado estado-activo"><i class="bi bi-check2-circle"></i> Completada</span>
 }
 else if (Model.EstadoTarea == Estados.Tarea.Cancelada)
 {
-    <span class="estado estado-cancelado">Cancelada</span>
+    <span class="estado estado-cancelado"><i class="bi bi-x-circle"></i> Cancelada</span>
 }
 else if (Model.EstadoTarea == Estados.Tarea.EnProceso)
 {
-    <span class="estado estado-proceso">En proceso</span>
+    <span class="estado estado-proceso"><i class="bi bi-arrow-repeat"></i> En proceso</span>
 }
 else
 {
-    <span class="estado estado-alerta">Pendiente</span>
+    <span class="estado estado-alerta"><i class="bi bi-hourglass-split"></i> Pendiente</span>
 }
 @if (Model.EstaVencida)
 {

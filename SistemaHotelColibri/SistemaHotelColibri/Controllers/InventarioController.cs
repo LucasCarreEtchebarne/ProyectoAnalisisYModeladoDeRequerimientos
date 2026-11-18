@@ -63,7 +63,19 @@ public class InventarioController : ControladorBase
                     Estados.ProductoInventario.Todos.Append(FiltroListado.TodosLosEstados), estadoSeleccionado)
             ]
         };
-        ViewBag.TotalAlertas = (await _obtenerAlertasBL.ObtenerAlertasAsync()).Count;
+        async Task<int> Contar(string estadoContar) =>
+            (await _obtenerBL.ObtenerAsync(new FiltroListado { Estado = estadoContar, TamanoPagina = 1 })).TotalRegistros;
+
+        var alertas = await _obtenerAlertasBL.ObtenerAlertasAsync();
+        ViewBag.TotalAlertas = alertas.Count;
+        ViewBag.Alertas = alertas;
+        ViewBag.Resumen = new List<TarjetaResumenViewModel>
+        {
+            TarjetaEstado("Productos activos", await Contar(Estados.ProductoInventario.Activo), "bi-box-seam", "verde", Estados.ProductoInventario.Activo, estadoSeleccionado, "en inventario"),
+            TarjetaResumenViewModel.Crear("Stock bajo", alertas.Count, "bi-exclamation-triangle", "ambar", Url.Action(nameof(Alertas)), false, "productos por reponer"),
+            TarjetaResumenViewModel.Crear("Sin existencias", alertas.Count(p => p.Stock <= 0), "bi-dash-circle", "coral", Url.Action(nameof(Alertas)), false, "productos agotados"),
+            TarjetaEstado("Inactivos", await Contar(Estados.ProductoInventario.Inactivo), "bi-archive", "gris", Estados.ProductoInventario.Inactivo, estadoSeleccionado, "productos")
+        };
         return View(await _obtenerBL.ObtenerAsync(filtro));
     }
 

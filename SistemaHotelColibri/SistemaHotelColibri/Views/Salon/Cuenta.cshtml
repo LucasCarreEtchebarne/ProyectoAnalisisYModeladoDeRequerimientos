@@ -1,0 +1,190 @@
+@using SistemaHotelColibri.ViewModels.Salon
+@model CuentaViewModel
+@{
+    ViewData["Title"] = Model.Titulo;
+    var cuenta = Model.Cuenta;
+    var categoriasConTodas = Model.Categorias.Prepend(CuentaViewModel.TodasLasCategorias).ToList();
+}
+
+<div class="encabezado-pagina">
+    <div class="d-flex align-items-center gap-3">
+        <a class="btn btn-outline-secondary btn-volver" asp-action="Index" asp-route-vista="@Model.VistaRegreso" title="Volver a pedidos" aria-label="Volver a pedidos"><i class="bi bi-arrow-left"></i></a>
+        <div>
+            <h1>@Model.Titulo</h1>
+            <p>
+                @Model.Subtitulo
+                @if (cuenta != null)
+                {
+                    <span>· Cuenta abierta desde las @cuenta.FechaHoraPedido.ToString("HH:mm")</span>
+                }
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="pos">
+    <section class="pos-menu tarjeta tarjeta-cuerpo">
+        <div class="pos-buscar input-group mb-3">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="search" class="form-control" id="buscarProducto" placeholder="Buscar en el menú..." autocomplete="off" aria-label="Buscar en el menú" />
+        </div>
+
+        <nav class="pos-categorias" aria-label="Categorías del menú">
+            @foreach (var categoria in categoriasConTodas)
+            {
+                var cantidad = categoria == CuentaViewModel.TodasLasCategorias
+                    ? Model.Productos.Count
+                    : Model.Productos.Count(p => p.CategoriaMenu == categoria);
+                <a class="pos-categoria @(categoria == Model.CategoriaSeleccionada ? "activa" : "")"
+                   asp-action="Cuenta" asp-route-tipo="@Model.Tipo" asp-route-id="@Model.Id"
+                   asp-route-categoria="@(categoria == CuentaViewModel.TodasLasCategorias ? null : categoria)">
+                    <i class="bi @CuentaViewModel.IconoCategoria(categoria)"></i>
+                    <span>@categoria</span>
+                    <small>@cantidad</small>
+                </a>
+            }
+        </nav>
+
+        @if (Model.Productos.Count == 0)
+        {
+            <div class="vacio">
+                <i class="bi bi-journal-x"></i>
+                <span>No hay productos disponibles en el menú. Agregalos desde el módulo de Menú.</span>
+            </div>
+        }
+
+        <form asp-action="Agregar" method="post" class="pos-productos">
+            <input type="hidden" name="tipo" value="@Model.Tipo" />
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="hidden" name="categoria" value="@Model.CategoriaRuta" />
+            @foreach (var producto in Model.ProductosVisibles)
+            {
+                var enCuenta = Model.CantidadEnCuenta(producto.IdProductoMenu);
+                <button type="submit" name="idProducto" value="@producto.IdProductoMenu"
+                        class="pos-producto borde-@CuentaViewModel.ColorCategoria(producto.CategoriaMenu)"
+                        data-nombre="@producto.NombreProducto.ToLowerInvariant()">
+                    @if (enCuenta > 0)
+                    {
+                        <span class="pos-producto-cantidad">@enCuenta</span>
+                    }
+                    <span class="pos-producto-nombre">@producto.NombreProducto</span>
+                    <span class="pos-producto-categoria">@producto.CategoriaMenu</span>
+                    <span class="pos-producto-precio">@Formato.Colones(producto.Precio)</span>
+                </button>
+            }
+        </form>
+        <div class="vacio d-none" id="sinResultados">
+            <i class="bi bi-search"></i>
+            <span>No hay productos con ese nombre en esta categoría.</span>
+        </div>
+    </section>
+
+    <aside class="pos-cuenta tarjeta">
+        <div class="pos-cuenta-encabezado">
+            <div>
+                <div class="pos-cuenta-titulo"><i class="bi bi-receipt"></i> Cuenta · @Model.Titulo</div>
+                <div class="texto-suave">@(cuenta == null ? "Sin productos todavía" : $"Pedido #{cuenta.IdPedido}")</div>
+            </div>
+            @if (cuenta != null)
+            {
+                <span class="estado estado-alerta"><i class="bi bi-people-fill"></i> En uso</span>
+            }
+            else
+            {
+                <span class="estado estado-activo"><i class="bi bi-check2-circle"></i> Libre</span>
+            }
+        </div>
+
+        <div class="pos-cuenta-lineas">
+            @if (cuenta == null || cuenta.Detalles.Count == 0)
+            {
+                <div class="vacio">
+                    <i class="bi bi-hand-index"></i>
+                    <span>Tocá los productos del menú para agregarlos a la cuenta.</span>
+                </div>
+            }
+            else
+            {
+                foreach (var linea in cuenta.Detalles)
+                {
+                    <div class="pos-linea">
+                        <div class="pos-linea-texto">
+                            <div class="fw-semibold">@linea.NombreProducto</div>
+                            <div class="texto-suave">@Formato.Colones(linea.PrecioUnitario) c/u</div>
+                        </div>
+                        <div class="pos-linea-cantidad">
+                            <form asp-action="Cantidad" method="post">
+                                <input type="hidden" name="tipo" value="@Model.Tipo" />
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <input type="hidden" name="idProducto" value="@linea.IdProductoMenu" />
+                                <input type="hidden" name="categoria" value="@Model.CategoriaRuta" />
+                                <button class="btn btn-sm btn-outline-secondary" name="cambio" value="-1" type="submit" aria-label="Quitar uno"><i class="bi bi-dash"></i></button>
+                                <span>@linea.Cantidad</span>
+                                <button class="btn btn-sm btn-outline-secondary" name="cambio" value="1" type="submit" aria-label="Agregar uno"><i class="bi bi-plus"></i></button>
+                                <button class="btn btn-sm btn-link text-danger" name="cambio" value="@(-linea.Cantidad)" type="submit" title="Quitar de la cuenta" aria-label="Quitar de la cuenta"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                        <div class="pos-linea-subtotal">@Formato.Colones(linea.Subtotal)</div>
+                    </div>
+                }
+            }
+        </div>
+
+        @if (cuenta != null)
+        {
+            <form asp-action="Nota" method="post" class="pos-nota">
+                <input type="hidden" name="tipo" value="@Model.Tipo" />
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="hidden" name="categoria" value="@Model.CategoriaRuta" />
+                <label class="form-label" for="observaciones">Nota para cocina</label>
+                <div class="input-group">
+                    <input class="form-control" id="observaciones" name="observaciones" maxlength="250" value="@cuenta.Observaciones" placeholder="Ej.: sin cebolla, término medio..." />
+                    <button class="btn btn-outline-secondary" type="submit" aria-label="Guardar nota"><i class="bi bi-save"></i></button>
+                </div>
+            </form>
+        }
+
+        <div class="pos-cuenta-total">
+            <span>Total</span>
+            <strong>@Formato.Colones(cuenta?.Total ?? 0)</strong>
+        </div>
+
+        <div class="pos-cuenta-acciones">
+            @if (cuenta != null)
+            {
+                <a class="btn btn-primary btn-lg w-100" asp-action="Cobrar" asp-route-tipo="@Model.Tipo" asp-route-id="@Model.Id">
+                    <i class="bi bi-cash-coin"></i> Cobrar y facturar
+                </a>
+            }
+            else
+            {
+                <button class="btn btn-primary btn-lg w-100" type="button" disabled>
+                    <i class="bi bi-cash-coin"></i> Cobrar y facturar
+                </button>
+            }
+            <a class="btn btn-outline-secondary w-100" asp-action="Index" asp-route-vista="@Model.VistaRegreso"><i class="bi bi-arrow-left"></i> Volver a pedidos</a>
+        </div>
+    </aside>
+</div>
+
+@section Scripts {
+    <script>
+        // Filtra los productos por nombre mientras se escribe.
+        (function () {
+            const buscador = document.getElementById('buscarProducto');
+            const productos = document.querySelectorAll('.pos-producto');
+            const sinResultados = document.getElementById('sinResultados');
+
+            buscador.addEventListener('input', function () {
+                const texto = buscador.value.trim().toLowerCase();
+                let visibles = 0;
+                productos.forEach(function (producto) {
+                    const coincide = producto.dataset.nombre.includes(texto);
+                    producto.classList.toggle('d-none', !coincide);
+                    if (coincide) visibles++;
+                });
+                sinResultados.classList.toggle('d-none', visibles > 0 || productos.length === 0);
+            });
+        })();
+    </script>
+}

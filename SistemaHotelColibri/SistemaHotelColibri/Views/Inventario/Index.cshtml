@@ -14,12 +14,23 @@
     <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nuevo producto</a>
 </div>
 
+<partial name="_TarjetasResumen" model="(List<TarjetaResumenViewModel>)ViewBag.Resumen" />
+
 @if (totalAlertas > 0)
 {
+    var alertas = (List<InventarioDto>)ViewBag.Alertas;
+    var primera = alertas.OrderBy(p => p.Stock - p.StockMinimo).First();
     <div class="alert alert-warning d-flex flex-wrap align-items-center gap-2">
         <i class="bi bi-exclamation-triangle-fill"></i>
-        <span><strong>@totalAlertas</strong> producto(s) están en o por debajo del stock mínimo.</span>
-        <a class="alert-link ms-auto" asp-action="Alertas">Ver alertas</a>
+        <span>
+            <strong>@primera.NombreProducto necesita reposición:</strong>
+            @Formato.Cantidad(primera.Stock) @primera.UnidadMedida disponibles, mínimo @Formato.Cantidad(primera.StockMinimo).
+            @if (totalAlertas > 1)
+            {
+                <span>Hay @(totalAlertas - 1) producto(s) más con stock bajo.</span>
+            }
+        </span>
+        <a class="btn btn-sm btn-outline-secondary ms-auto" asp-action="Alertas">Ver alertas</a>
     </div>
 }
 
@@ -59,8 +70,8 @@
                         <td class="text-end">@Formato.Cantidad(p.StockMinimo)</td>
                         <td><partial name="_EstadoProducto" model="p" /></td>
                         <td class="text-end text-nowrap">
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@p.IdProducto" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@p.IdProducto" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@p.IdProducto" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i> Ver</a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@p.IdProducto" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i> Editar</a>
                             @if (p.EstadoProducto == Estados.ProductoInventario.Activo)
                             {
                                 <form asp-action="Eliminar" asp-route-id="@p.IdProducto" method="post" class="d-inline"

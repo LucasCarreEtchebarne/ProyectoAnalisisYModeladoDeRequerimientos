@@ -19,6 +19,8 @@ using SistemaHotelColibri.BusinessLogic.TareasHousekeeping;
 using SistemaHotelColibri.BusinessLogic.Usuarios;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Pedidos;
 using SistemaHotelColibri.BusinessLogic.Pedidos;
+using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Facturas;
+using SistemaHotelColibri.BusinessLogic.Facturas;
 
 namespace SistemaHotelColibri.BusinessLogic;
 
@@ -50,6 +52,12 @@ public static class DependencyInjection
         services.AddScoped<IObtenerPedidoPorIdBL, ObtenerPedidoPorIdBL>();
         services.AddScoped<IValidadorPedidoBL, ValidadorPedidoBL>();
         services.AddScoped<IEditarPedidoBL, EditarPedidoBL>();
+        services.AddScoped<ICuentaPedidoBL, CuentaPedidoBL>();
+        services.AddScoped<IClienteReservaBL, ClienteReservaBL>();
+        services.AddScoped<IObtenerOcupacionHabitacionBL, ObtenerOcupacionHabitacionBL>();
+
+        services.AddScoped<IFacturarPedidoBL, FacturarPedidoBL>();
+        services.AddScoped<IObtenerFacturaPorIdBL, ObtenerFacturaPorIdBL>();
 
         services.AddScoped<IAgregarHabitacionBL, AgregarHabitacionBL>();
         services.AddScoped<IObtenerHabitacionBL, ObtenerHabitacionBL>();

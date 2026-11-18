@@ -59,6 +59,16 @@ public class EventoController : ControladorBase
                     estadoSeleccionado)
             ]
         };
+        async Task<int> Contar(string estadoContar) =>
+            (await _obtenerBL.ObtenerAsync(new FiltroListado { Estado = estadoContar, TamanoPagina = 1 })).TotalRegistros;
+
+        ViewBag.Resumen = new List<TarjetaResumenViewModel>
+        {
+            TarjetaEstado("Programados", await Contar(Estados.Evento.Programado), "bi-calendar-event", "cielo", Estados.Evento.Programado, estadoSeleccionado, "próximos eventos"),
+            TarjetaEstado("Realizados", await Contar(Estados.Evento.Realizado), "bi-check2-circle", "verde", Estados.Evento.Realizado, estadoSeleccionado, "eventos"),
+            TarjetaEstado("Cancelados", await Contar(Estados.Evento.Cancelado), "bi-x-circle", "coral", Estados.Evento.Cancelado, estadoSeleccionado, "eventos")
+        };
+
         return View(await _obtenerBL.ObtenerAsync(filtro));
     }
 

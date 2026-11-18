@@ -2,17 +2,17 @@
 @model MesaDto
 @if (Model.EstadoMesa == Estados.Mesa.Ocupada)
 {
-    <span class="estado estado-alerta">Ocupada</span>
+    <span class="estado estado-cancelado"><i class="bi bi-people-fill"></i> Ocupada</span>
 }
 else if (Model.EstadoMesa == Estados.Mesa.Reservada)
 {
-    <span class="estado estado-alerta">Reservada</span>
+    <span class="estado estado-proceso"><i class="bi bi-bookmark-fill"></i> Reservada</span>
 }
 else if (Model.EstadoMesa == Estados.Mesa.Inactiva)
 {
-    <span class="estado estado-inactivo">Inactiva</span>
+    <span class="estado estado-inactivo"><i class="bi bi-slash-circle"></i> Inactiva</span>
 }
 else
 {
-    <span class="estado estado-activo">Disponible</span>
+    <span class="estado estado-activo"><i class="bi bi-check2-circle"></i> Disponible</span>
 }

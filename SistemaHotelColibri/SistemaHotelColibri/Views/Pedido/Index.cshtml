@@ -11,10 +11,17 @@
         <h1>Pedidos</h1>
         <p>Consultá los pedidos registrados del restaurante.</p>
     </div>
-    <a asp-action="Crear" class="btn btn-primary">
-        <i class="bi bi-plus-lg"></i> Nuevo pedido
-    </a>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-action="Crear" class="btn btn-outline-secondary">
+            <i class="bi bi-bag"></i> Para llevar o habitación
+        </a>
+        <a asp-controller="Salon" asp-action="Index" class="btn btn-primary">
+            <i class="bi bi-shop"></i> Ir al salón de mesas
+        </a>
+    </div>
 </div>
+
+<partial name="_TarjetasResumen" model="(List<TarjetaResumenViewModel>)ViewBag.Resumen" />
 
 <partial name="_BarraBusqueda" model="barraBusqueda" />
 
@@ -52,10 +59,10 @@
                         <td>@pedido.EstadoPedido</td>
                         <td class="text-end">@Formato.Colones(pedido.Total)</td>
                         <td class="text-end text-nowrap">
-                            <a asp-action="Detalle" asp-route-id="@pedido.IdPedido" class="btn btn-sm btn-outline-secondary" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
+                            <a asp-action="Detalle" asp-route-id="@pedido.IdPedido" class="btn btn-sm btn-outline-secondary" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i> Ver</a>
                             @if (pedido.EstadoPedido == Estados.Pedido.Pendiente)
                             {
-                                <a asp-action="Editar" asp-route-id="@pedido.IdPedido" class="btn btn-sm btn-outline-secondary" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                                <a asp-action="Editar" asp-route-id="@pedido.IdPedido" class="btn btn-sm btn-outline-secondary" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i> Editar</a>
                                 <form asp-action="Inactivar" asp-route-id="@pedido.IdPedido" method="post" class="d-inline"
                                       data-confirmar="¿Desea cancelar el pedido #@pedido.IdPedido?"
                                       data-confirmar-boton="Inactivar">

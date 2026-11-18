@@ -16,6 +16,8 @@
     <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nuevo cliente</a>
 </div>
 
+<partial name="_TarjetasResumen" model="(List<TarjetaResumenViewModel>)ViewBag.Resumen" />
+
 <form method="get" class="d-flex flex-wrap align-items-center gap-2 mb-3" role="search">
     <div class="input-group input-group-sm" style="max-width: 360px;">
         <span class="input-group-text"><i class="bi bi-search"></i></span>
@@ -76,8 +78,8 @@
                         <td>@(c.CorreoElectronico ?? "—")</td>
                         <td><partial name="_EstadoCliente" model="c" /></td>
                         <td class="text-end text-nowrap">
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@c.IdCliente" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@c.IdCliente" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@c.IdCliente" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i> Ver</a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@c.IdCliente" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i> Editar</a>
                             @if (c.EstadoCliente == Estados.Cliente.Activo)
                             {
                                 <form asp-action="Eliminar" asp-route-id="@c.IdCliente" method="post" class="d-inline"

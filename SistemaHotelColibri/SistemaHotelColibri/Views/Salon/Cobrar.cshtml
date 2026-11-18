@@ -1,0 +1,174 @@
+@using SistemaHotelColibri.ViewModels.Salon
+@model CobroViewModel
+@{
+    ViewData["Title"] = $"Cobrar · {Model.Titulo}";
+    var cuenta = Model.Cuenta!;
+    var iconos = new Dictionary<string, string>
+    {
+        [Catalogos.MetodoPago.Efectivo] = "bi-cash-stack",
+        [Catalogos.MetodoPago.Tarjeta] = "bi-credit-card",
+        [Catalogos.MetodoPago.Sinpe] = "bi-phone",
+        [Catalogos.MetodoPago.Transferencia] = "bi-bank"
+    };
+}
+
+<div class="encabezado-pagina">
+    <div class="d-flex align-items-center gap-3">
+        <a class="btn btn-outline-secondary btn-volver" asp-action="Cuenta" asp-route-tipo="@Model.Tipo" asp-route-id="@Model.Id" title="Volver a la cuenta" aria-label="Volver a la cuenta"><i class="bi bi-arrow-left"></i></a>
+        <div>
+            <h1>Cobrar · @Model.Titulo</h1>
+            <p>Revisá la cuenta, elegí cómo paga el cliente y se genera la factura.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-lg-5">
+        <section class="tarjeta tarjeta-cuerpo h-100">
+            <h2 class="titulo-tarjeta"><i class="bi bi-receipt"></i> Cuenta · Pedido #@cuenta.IdPedido</h2>
+            <div class="table-responsive">
+                <table class="table tabla-datos tabla-compacta">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th class="text-end">Cant.</th>
+                            <th class="text-end">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var linea in cuenta.Detalles)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">@linea.NombreProducto</div>
+                                    <div class="texto-suave">@Formato.Colones(linea.PrecioUnitario) c/u</div>
+                                </td>
+                                <td class="text-end">@linea.Cantidad</td>
+                                <td class="text-end text-nowrap">@Formato.Colones(linea.Subtotal)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(cuenta.Observaciones))
+            {
+                <p class="texto-suave mb-3"><i class="bi bi-chat-left-text"></i> @cuenta.Observaciones</p>
+            }
+            <div class="pos-cuenta-total">
+                <span>Total a cobrar</span>
+                <strong>@Formato.Colones(cuenta.Total)</strong>
+            </div>
+        </section>
+    </div>
+
+    <div class="col-12 col-lg-7">
+        <form asp-action="Cobrar" asp-route-tipo="@Model.Tipo" asp-route-id="@Model.Id" method="post" class="tarjeta tarjeta-cuerpo h-100" id="formCobro">
+            <h2 class="titulo-tarjeta"><i class="bi bi-wallet2"></i> Pago</h2>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="IdCliente" class="form-label"></label>
+                <select asp-for="IdCliente" asp-items="Model.Clientes" class="form-select">
+                    <option value="">Consumidor final</option>
+                </select>
+                <div class="form-text">Opcional. Elegilo si el cliente quiere la factura a su nombre.</div>
+            </div>
+
+            <label class="form-label">Método de pago</label>
+            <div class="metodos-pago mb-3">
+                @foreach (var metodo in Catalogos.MetodoPago.Todos)
+                {
+                    <label class="metodo-pago">
+                        <input type="radio" name="MetodoPago" value="@metodo" checked="@(Model.MetodoPago == metodo)" />
+                        <span><i class="bi @iconos[metodo]"></i> @metodo</span>
+                    </label>
+                }
+            </div>
+
+            <div class="campos-pago" data-metodo="@Catalogos.MetodoPago.Efectivo">
+                <label asp-for="MontoRecibido" class="form-label"></label>
+                <div class="input-group mb-2">
+                    <span class="input-group-text">₡</span>
+                    <input asp-for="MontoRecibido" type="number" min="0" step="any" class="form-control form-control-lg" id="montoRecibido" placeholder="0" />
+                </div>
+                <div class="d-flex flex-wrap gap-2 mb-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-monto="@cuenta.Total.ToString(System.Globalization.CultureInfo.InvariantCulture)">Monto exacto</button>
+                    @foreach (var billete in new[] { 5000, 10000, 20000, 50000 }.Where(b => b >= cuenta.Total))
+                    {
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-monto="@billete">@Formato.Colones(billete)</button>
+                    }
+                </div>
+                <span asp-validation-for="MontoRecibido" class="text-danger"></span>
+                <div class="vuelto">Vuelto: <strong id="vuelto">₡ 0.00</strong></div>
+            </div>
+
+            <div class="campos-pago" data-metodo="@Catalogos.MetodoPago.Tarjeta">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label asp-for="TipoTarjeta" class="form-label"></label>
+                        <select asp-for="TipoTarjeta" class="form-select" asp-items="@(new SelectList(Catalogos.TiposTarjeta))">
+                            <option value="">Elegí una</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="UltimosCuatroDigitos" class="form-label"></label>
+                        <input asp-for="UltimosCuatroDigitos" class="form-control" maxlength="4" inputmode="numeric" placeholder="1234" />
+                        <span asp-validation-for="UltimosCuatroDigitos" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="campos-pago" data-metodo="@Catalogos.MetodoPago.Sinpe @Catalogos.MetodoPago.Transferencia">
+                <label asp-for="NumeroReferencia" class="form-label"></label>
+                <input asp-for="NumeroReferencia" class="form-control" maxlength="50" placeholder="Número del comprobante" />
+                <span asp-validation-for="NumeroReferencia" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">
+                <i class="bi bi-check2-circle"></i> Cobrar @Formato.Colones(cuenta.Total) y generar factura
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const total = @cuenta.Total.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            const radios = document.querySelectorAll('input[name="MetodoPago"]');
+            const grupos = document.querySelectorAll('.campos-pago');
+            const monto = document.getElementById('montoRecibido');
+            const vuelto = document.getElementById('vuelto');
+
+            function mostrarCampos() {
+                const metodo = document.querySelector('input[name="MetodoPago"]:checked')?.value;
+                grupos.forEach(function (grupo) {
+                    const activo = grupo.dataset.metodo.split(' ').includes(metodo);
+                    grupo.classList.toggle('d-none', !activo);
+                    grupo.querySelectorAll('input, select').forEach(function (campo) { campo.disabled = !activo; });
+                });
+            }
+
+            function calcularVuelto() {
+                const recibido = parseFloat(monto.value) || 0;
+                const cambio = recibido - total;
+                vuelto.textContent = cambio >= 0
+                    ? '₡ ' + cambio.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                    : 'Falta ₡ ' + (-cambio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                vuelto.classList.toggle('text-danger', cambio < 0);
+            }
+
+            radios.forEach(function (radio) { radio.addEventListener('change', mostrarCampos); });
+            monto.addEventListener('input', calcularVuelto);
+            document.querySelectorAll('[data-monto]').forEach(function (boton) {
+                boton.addEventListener('click', function () {
+                    monto.value = boton.dataset.monto;
+                    calcularVuelto();
+                });
+            });
+
+            mostrarCampos();
+            calcularVuelto();
+        })();
+    </script>
+}

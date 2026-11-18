@@ -1,0 +1,108 @@
+@using SistemaHotelColibri.Abstract.Modelos.Facturas
+@model FacturaDto
+@{
+    ViewData["Title"] = $"Factura {Model.NumeroFactura}";
+}
+
+<div class="encabezado-pagina no-imprimir">
+    <div>
+        <h1>Factura @Model.NumeroFactura</h1>
+        <p>La cuenta quedó cobrada y ya se puede usar de nuevo.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="btn btn-outline-secondary" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
+        <a class="btn btn-primary" asp-action="Index" asp-route-vista="@SistemaHotelColibri.ViewModels.Salon.CuentaViewModel.VistaDe(Model.TipoPedido ?? "")"><i class="bi bi-arrow-left"></i> Volver a pedidos</a>
+    </div>
+</div>
+
+<article class="tarjeta factura">
+    <header class="factura-encabezado">
+        <img src="~/img/logo-colibri.png" alt="Cabinas El Colibrí" />
+        <div class="text-end">
+            <div class="factura-numero">@Model.NumeroFactura</div>
+            <div class="texto-suave">@Model.FechaEmision.ToString("dd/MM/yyyy hh:mm tt")</div>
+            <span class="estado estado-activo"><i class="bi bi-check2-circle"></i> @Model.EstadoFactura</span>
+        </div>
+    </header>
+
+    <div class="factura-datos">
+        <div>
+            <div class="dato-etiqueta">Cliente</div>
+            <div class="dato-valor">@(Model.NombreCliente ?? "Consumidor final")</div>
+            @if (Model.IdentificacionCliente != null)
+            {
+                <div class="texto-suave">Identificación: @Model.IdentificacionCliente</div>
+            }
+        </div>
+        <div>
+            <div class="dato-etiqueta">Servicio</div>
+            <div class="dato-valor">
+                Restaurante@(Model.NumeroMesa != null ? $" · Mesa {Model.NumeroMesa}"
+                    : Model.NumeroHabitacion != null ? $" · Habitación {Model.NumeroHabitacion}"
+                    : Model.TipoPedido == Catalogos.TipoPedido.Llevar ? " · Para llevar" : "")
+            </div>
+            @if (Model.IdPedido != null)
+            {
+                <div class="texto-suave">Pedido #@Model.IdPedido</div>
+            }
+        </div>
+        <div>
+            <div class="dato-etiqueta">Atendido por</div>
+            <div class="dato-valor">@Model.NombreUsuario</div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table tabla-datos">
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th class="text-end">Cantidad</th>
+                    <th class="text-end">Precio</th>
+                    <th class="text-end">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var linea in Model.Detalles)
+                {
+                    <tr>
+                        <td>@linea.Descripcion</td>
+                        <td class="text-end">@Formato.Cantidad(linea.Cantidad)</td>
+                        <td class="text-end text-nowrap">@Formato.Colones(linea.PrecioUnitario)</td>
+                        <td class="text-end text-nowrap">@Formato.Colones(linea.Subtotal)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="factura-pie">
+        <div class="factura-pagos">
+            @foreach (var pago in Model.Pagos)
+            {
+                <div class="dato-etiqueta">Pago</div>
+                <div class="fw-semibold">
+                    @pago.MetodoPago
+                    @if (pago.TipoTarjeta != null)
+                    {
+                        <span>· @pago.TipoTarjeta terminada en @pago.UltimosCuatroDigitos</span>
+                    }
+                    @if (pago.NumeroReferencia != null)
+                    {
+                        <span>· Comprobante @pago.NumeroReferencia</span>
+                    }
+                </div>
+                @if (pago.MontoRecibido != null)
+                {
+                    <div class="texto-suave">Recibido @Formato.Colones(pago.MontoRecibido.Value) · Vuelto @Formato.Colones(pago.CambioDevuelto ?? 0)</div>
+                }
+            }
+        </div>
+        <div class="factura-total">
+            <span>Total</span>
+            <strong>@Formato.Colones(Model.MontoTotal)</strong>
+        </div>
+    </div>
+
+    <p class="factura-gracias">¡Gracias por su visita! Pura Vida.</p>
+</article>

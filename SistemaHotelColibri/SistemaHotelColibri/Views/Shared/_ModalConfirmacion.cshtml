@@ -1,14 +1,16 @@
 <div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionTitulo" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalConfirmacionTitulo">Confirmar acción</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            <div class="modal-body text-center p-4">
+                <div class="modal-confirmacion-icono">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <h5 class="modal-title mb-2" id="modalConfirmacionTitulo">Confirmar acción</h5>
+                <p class="mb-0 text-secondary" id="modalConfirmacionTexto"></p>
             </div>
-            <div class="modal-body" id="modalConfirmacionTexto"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="modalConfirmacionAceptar">Confirmar</button>
+            <div class="modal-footer justify-content-center border-0 pt-0 pb-4 gap-2">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger px-4" id="modalConfirmacionAceptar">Confirmar</button>
             </div>
         </div>
     </div>

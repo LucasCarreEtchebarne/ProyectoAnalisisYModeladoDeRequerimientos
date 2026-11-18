@@ -7,11 +7,11 @@
 <div class="encabezado-pagina">
     <div>
         <h1>Nueva reserva</h1>
-        <p>Complete los datos para registrar una reserva de hospedaje.</p>
+        <p>Elegí un cliente registrado o escribí los datos de un cliente nuevo, y completá la reserva.</p>
     </div>
 </div>
 
-<form asp-action="Crear" method="post" class="tarjeta tarjeta-cuerpo">
+<form asp-action="Crear" method="post" class="tarjeta tarjeta-cuerpo" id="FormReserva">
     <partial name="_Formulario" model="Model" />
     <div class="d-flex gap-2 justify-content-end mt-4">
         <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
@@ -19,6 +19,73 @@
     </div>
 </form>
 
+<div class="modal fade" id="modalGuardarCliente" tabindex="-1" aria-labelledby="modalGuardarClienteTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-4">
+                <div class="modal-confirmacion-icono icono-pregunta">
+                    <i class="bi bi-person-plus"></i>
+                </div>
+                <h5 class="modal-title mb-2" id="modalGuardarClienteTitulo">¿Guardar la información del cliente?</h5>
+                <p class="mb-0 text-secondary">
+                    Si elegís <strong>Sí</strong>, <span id="nombreClienteNuevo">el cliente</span> queda guardado en <strong>Clientes</strong> para la próxima vez.
+                    Si elegís <strong>No</strong>, la reserva se guarda igual pero el cliente no aparece en la lista de Clientes.
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center border-0 pt-0 pb-4 gap-2">
+                <button type="button" class="btn btn-outline-secondary px-4" data-guardar="false">No guardar</button>
+                <button type="button" class="btn btn-primary px-4" data-guardar="true"><i class="bi bi-check-lg"></i> Sí, guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const formulario = document.getElementById('FormReserva');
+            const radios = document.querySelectorAll('input[name="ClienteNuevo"]');
+            const bloqueNuevo = document.getElementById('BloqueClienteNuevo');
+            const bloqueRegistrado = document.getElementById('BloqueClienteRegistrado');
+            const guardar = document.getElementById('GuardarCliente');
+            const modal = new bootstrap.Modal(document.getElementById('modalGuardarCliente'));
+
+            function esClienteNuevo() {
+                return document.querySelector('input[name="ClienteNuevo"]:checked')?.value === 'true';
+            }
+
+            // Muestra los campos del cliente nuevo o la lista de clientes registrados.
+            function mostrar() {
+                const nuevo = esClienteNuevo();
+                bloqueNuevo.classList.toggle('d-none', !nuevo);
+                bloqueRegistrado.classList.toggle('d-none', nuevo);
+                bloqueNuevo.querySelectorAll('input').forEach(function (campo) { campo.disabled = !nuevo; });
+                bloqueRegistrado.querySelector('select').disabled = nuevo;
+            }
+
+            radios.forEach(function (radio) { radio.addEventListener('change', mostrar); });
+            mostrar();
+
+            // Con cliente nuevo, antes de guardar se pregunta si se guarda en Clientes.
+            formulario.addEventListener('submit', function (evento) {
+                if (!esClienteNuevo() || formulario.dataset.respondido === 'si') return;
+                if (window.jQuery && jQuery(formulario).valid && !jQuery(formulario).valid()) return;
+
+                evento.preventDefault();
+                const nombre = [formulario.ClienteNombre.value, formulario.ClientePrimerApellido.value].join(' ').trim();
+                document.getElementById('nombreClienteNuevo').textContent = nombre || 'el cliente';
+                modal.show();
+            });
+
+            document.querySelectorAll('[data-guardar]').forEach(function (boton) {
+                boton.addEventListener('click', function () {
+                    guardar.value = boton.dataset.guardar;
+                    formulario.dataset.respondido = 'si';
+                    modal.hide();
+                    formulario.submit();
+                });
+            });
+        })();
+    </script>
 }

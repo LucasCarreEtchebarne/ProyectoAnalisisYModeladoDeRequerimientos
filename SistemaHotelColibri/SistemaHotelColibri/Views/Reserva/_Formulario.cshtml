@@ -9,8 +9,58 @@
 
 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
+@if (Model.IdReserva == 0)
+{
+    <input type="hidden" asp-for="GuardarCliente" id="GuardarCliente" />
+    <div class="selector-cliente mb-3" role="radiogroup" aria-label="Cliente de la reserva">
+        <label class="metodo-pago">
+            <input type="radio" name="ClienteNuevo" value="false" checked="@(!Model.ClienteNuevo)" />
+            <span><i class="bi bi-person-check"></i> Cliente registrado</span>
+        </label>
+        <label class="metodo-pago">
+            <input type="radio" name="ClienteNuevo" value="true" checked="@Model.ClienteNuevo" />
+            <span><i class="bi bi-person-plus"></i> Cliente nuevo</span>
+        </label>
+    </div>
+
+    <div class="tarjeta tarjeta-cuerpo bloque-cliente-nuevo mb-3" id="BloqueClienteNuevo">
+        <div class="row g-3">
+            <div class="col-12 col-md-4">
+                <label asp-for="ClienteIdentificacion" class="form-label">Identificación *</label>
+                <input asp-for="ClienteIdentificacion" class="form-control" maxlength="30" placeholder="Cédula o pasaporte" />
+                <span asp-validation-for="ClienteIdentificacion" class="text-danger"></span>
+            </div>
+            <div class="col-12 col-md-4">
+                <label asp-for="ClienteNombre" class="form-label">Nombre *</label>
+                <input asp-for="ClienteNombre" class="form-control" maxlength="100" />
+                <span asp-validation-for="ClienteNombre" class="text-danger"></span>
+            </div>
+            <div class="col-6 col-md-2">
+                <label asp-for="ClientePrimerApellido" class="form-label">Primer apellido *</label>
+                <input asp-for="ClientePrimerApellido" class="form-control" maxlength="50" />
+                <span asp-validation-for="ClientePrimerApellido" class="text-danger"></span>
+            </div>
+            <div class="col-6 col-md-2">
+                <label asp-for="ClienteSegundoApellido" class="form-label">Segundo apellido</label>
+                <input asp-for="ClienteSegundoApellido" class="form-control" maxlength="50" />
+                <span asp-validation-for="ClienteSegundoApellido" class="text-danger"></span>
+            </div>
+            <div class="col-12 col-md-6">
+                <label asp-for="ClienteTelefono" class="form-label">Teléfono</label>
+                <input asp-for="ClienteTelefono" class="form-control" maxlength="20" placeholder="8888-8888" />
+                <span asp-validation-for="ClienteTelefono" class="text-danger"></span>
+            </div>
+            <div class="col-12 col-md-6">
+                <label asp-for="ClienteCorreo" class="form-label">Correo electrónico</label>
+                <input asp-for="ClienteCorreo" class="form-control" type="email" maxlength="150" />
+                <span asp-validation-for="ClienteCorreo" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="row g-3">
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-6" id="BloqueClienteRegistrado">
         <label asp-for="IdCliente" class="form-label">Cliente *</label>
         <select asp-for="IdCliente" class="form-select">
             <option value="">Seleccione un cliente</option>
@@ -27,10 +77,14 @@
             <option value="">Seleccione una habitación</option>
             @foreach (var h in opciones.Habitaciones)
             {
-                <option value="@h.IdHabitacion" data-precio="@h.Precio.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-capacidad="@h.Capacidad" selected="@(Model.IdHabitacion == h.IdHabitacion)">@h.Texto</option>
+                var ocupado = System.Text.Json.JsonSerializer.Serialize(h.Ocupado
+                    .Where(r => r.IdReserva != Model.IdReserva)
+                    .Select(r => new { e = r.FechaEntrada.ToString("yyyy-MM-dd"), s = r.FechaSalida.ToString("yyyy-MM-dd"), c = r.Cliente }));
+                <option value="@h.IdHabitacion" data-precio="@h.Precio.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-capacidad="@h.Capacidad" data-ocupado="@ocupado" selected="@(Model.IdHabitacion == h.IdHabitacion)">@h.Texto</option>
             }
         </select>
         <span asp-validation-for="IdHabitacion" class="text-danger"></span>
+        <div id="FechasOcupadas" class="fechas-ocupadas d-none"></div>
     </div>
     <div class="col-6 col-md-3">
         <label asp-for="FechaEntrada" class="form-label">Fecha de entrada *</label>
@@ -105,6 +159,29 @@
                 var total = noches * (parseFloat(precio.value) || 0);
                 resumen.textContent = noches + ' noche(s) · ₡ ' + total.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
+            mostrarOcupadas(opcion);
+        }
+
+        // Muestra las fechas que ya tiene reservadas la habitación y avisa si las elegidas se cruzan.
+        var cajaOcupadas = document.getElementById('FechasOcupadas');
+        function formato(valor) { var p = valor.split('-'); return p[2] + '/' + p[1]; }
+        function mostrarOcupadas(opcion) {
+            var rangos = opcion && opcion.dataset.ocupado ? JSON.parse(opcion.dataset.ocupado) : [];
+            if (rangos.length === 0) { cajaOcupadas.classList.add('d-none'); return; }
+
+            var choque = rangos.find(function (r) {
+                return entrada.value && salida.value && entrada.value < r.s && salida.value > r.e;
+            });
+            cajaOcupadas.classList.remove('d-none');
+            cajaOcupadas.classList.toggle('choque', !!choque);
+            cajaOcupadas.innerHTML =
+                (choque
+                    ? '<strong><i class="bi bi-exclamation-triangle"></i> Esas fechas chocan con la reserva de ' + choque.c + '.</strong>'
+                    : '<strong><i class="bi bi-calendar-x"></i> Fechas ya reservadas:</strong>') +
+                '<ul>' + rangos.map(function (r) {
+                    return '<li>' + formato(r.e) + ' al ' + formato(r.s) + ' · ' + r.c + '</li>';
+                }).join('') + '</ul>' +
+                '<small>El día de salida de una reserva puede ser el día de entrada de otra.</small>';
         }
 
         hab.addEventListener('change', function () {

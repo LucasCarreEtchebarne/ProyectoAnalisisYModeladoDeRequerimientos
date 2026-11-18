@@ -1,0 +1,39 @@
+@model List<TarjetaResumenViewModel>
+@if (Model != null && Model.Count > 0)
+{
+    <div class="row g-3 mb-3">
+        @foreach (var tarjeta in Model)
+        {
+            <div class="col-6 col-xl">
+                @if (tarjeta.Url != null)
+                {
+                    <a href="@tarjeta.Url" class="tarjeta resumen @(tarjeta.Seleccionada ? "seleccionada" : "")">
+                        <span class="resumen-icono icono-@tarjeta.Color"><i class="bi @tarjeta.Icono"></i></span>
+                        <span>
+                            <span class="resumen-titulo">@tarjeta.Titulo</span>
+                            <span class="resumen-valor color-@tarjeta.Color">@tarjeta.Valor</span>
+                            @if (tarjeta.Detalle != null)
+                            {
+                                <span class="resumen-detalle">@tarjeta.Detalle</span>
+                            }
+                        </span>
+                    </a>
+                }
+                else
+                {
+                    <div class="tarjeta resumen">
+                        <span class="resumen-icono icono-@tarjeta.Color"><i class="bi @tarjeta.Icono"></i></span>
+                        <span>
+                            <span class="resumen-titulo">@tarjeta.Titulo</span>
+                            <span class="resumen-valor color-@tarjeta.Color">@tarjeta.Valor</span>
+                            @if (tarjeta.Detalle != null)
+                            {
+                                <span class="resumen-detalle">@tarjeta.Detalle</span>
+                            }
+                        </span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}

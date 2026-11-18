@@ -15,6 +15,8 @@
     <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nueva tarea</a>
 </div>
 
+<partial name="_TarjetasResumen" model="(List<TarjetaResumenViewModel>)ViewBag.Resumen" />
+
 @if (vencidas > 0)
 {
     <div class="alert alert-warning d-flex align-items-center gap-2">
@@ -70,10 +72,10 @@
                         <td><partial name="_EstadoTarea" model="t" /></td>
                         <td class="text-end text-nowrap">
                             <partial name="_AccionesEstado" model="t" />
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@t.IdTarea" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@t.IdTarea" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i> Ver</a>
                             @if (t.EstaActiva)
                             {
-                                <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@t.IdTarea" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@t.IdTarea" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i> Editar</a>
                                 <a class="btn btn-sm btn-outline-danger" asp-action="Cancelar" asp-route-id="@t.IdTarea" title="Cancelar tarea" aria-label="Cancelar tarea"><i class="bi bi-x-circle"></i></a>
                             }
                         </td>

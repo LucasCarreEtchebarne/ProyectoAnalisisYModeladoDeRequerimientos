@@ -4,6 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] · Hotel El Colibrí</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -13,16 +16,23 @@
         var controlador = ViewContext.RouteData.Values["controller"]?.ToString();
         string Activo(string nombre) => string.Equals(controlador, nombre, StringComparison.OrdinalIgnoreCase) ? "active" : "";
         bool TieneRol(string roles) => roles.Split(',').Any(User.IsInRole);
-        var nombreUsuario = User.FindFirst(Reclamos.NombreCompleto)?.Value ?? User.Identity?.Name;
+        var nombreUsuario = User.FindFirst(Reclamos.NombreCompleto)?.Value ?? User.Identity?.Name ?? "Usuario";
         var rolUsuario = Roles.Todos.FirstOrDefault(User.IsInRole);
+
+        var iniciales = string.Concat(nombreUsuario
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Take(2)
+            .Select(parte => char.ToUpper(parte[0])));
     }
 
     <div class="app">
         <aside class="offcanvas-lg offcanvas-start sidebar" tabindex="-1" id="menuLateral" aria-labelledby="menuLateralTitulo">
             <div class="sidebar-marca">
                 <a asp-controller="Home" asp-action="Index" class="sidebar-logo" id="menuLateralTitulo">
-                    <i class="bi bi-feather"></i>
-                    <span>El Colibrí<small>Gestión hotelera</small></span>
+                    <span class="sidebar-logo-imagen">
+                        <img src="~/img/logo-colibri.png" alt="Cabinas El Colibrí" />
+                    </span>
+                    <small>Gestión hotelera</small>
                 </a>
                 <button type="button" class="btn-close btn-close-white d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#menuLateral" aria-label="Cerrar"></button>
             </div>
@@ -71,7 +81,7 @@
                         <i class="bi bi-journal-richtext"></i> Menú
                     </a>
 
-                    <a class="sidebar-link @Activo("Pedido")" asp-controller="Pedido" asp-action="Index">
+                    <a class="sidebar-link @(Activo("Pedido") + Activo("Salon"))" asp-controller="Salon" asp-action="Index">
                         <i class="bi bi-receipt"></i> Pedidos
                     </a>
                 }
@@ -95,7 +105,7 @@
                 {
                     <div class="sidebar-seccion">Administración</div>
                     <a class="sidebar-link @Activo("Usuario")" asp-controller="Usuario" asp-action="Index">
-                        <i class="bi bi-people"></i> Usuarios
+                        <i class="bi bi-person-gear"></i> Usuarios
                     </a>
                 }
             </nav>
@@ -103,13 +113,6 @@
             @if (User.Identity?.IsAuthenticated == true)
             {
                 <div class="sidebar-usuario">
-                    <div class="sidebar-usuario-datos">
-                        <i class="bi bi-person-circle"></i>
-                        <div>
-                            <div class="sidebar-usuario-nombre">@nombreUsuario</div>
-                            <div class="sidebar-usuario-rol">@rolUsuario</div>
-                        </div>
-                    </div>
                     <div class="sidebar-usuario-acciones">
                         <a class="sidebar-link" asp-controller="Cuenta" asp-action="CambiarContrasena">
                             <i class="bi bi-key"></i> Cambiar contraseña
@@ -125,11 +128,48 @@
         </aside>
 
         <div class="contenido">
-            <header class="barra-superior d-lg-none">
-                <button class="btn btn-icono" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral" aria-controls="menuLateral" aria-label="Abrir menú">
+            <header class="barra-superior">
+                <button class="btn btn-icono d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral" aria-controls="menuLateral" aria-label="Abrir menú">
                     <i class="bi bi-list"></i>
                 </button>
-                <span class="barra-titulo">El Colibrí</span>
+
+                <nav aria-label="Ruta" class="migas">
+                    <a asp-controller="Home" asp-action="Index">Inicio</a>
+                    @if (ViewData["Title"] as string != "Inicio")
+                    {
+                        <i class="bi bi-chevron-right"></i>
+                        <span>@ViewData["Title"]</span>
+                    }
+                </nav>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="dropdown ms-auto">
+                        <button class="barra-usuario" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="avatar">@iniciales</span>
+                            <span class="d-none d-sm-block text-start">
+                                <span class="barra-usuario-nombre">@nombreUsuario</span>
+                                <span class="barra-usuario-rol">@rolUsuario</span>
+                            </span>
+                            <i class="bi bi-chevron-down small text-secondary"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Cuenta" asp-action="CambiarContrasena">
+                                    <i class="bi bi-key me-2"></i> Cambiar contraseña
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <form asp-controller="Cuenta" asp-action="CerrarSesion" method="post">
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                }
             </header>
 
             <main class="pagina" role="main">
