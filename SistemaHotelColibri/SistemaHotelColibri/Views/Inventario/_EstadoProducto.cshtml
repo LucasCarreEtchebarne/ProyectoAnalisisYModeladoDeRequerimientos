@@ -2,13 +2,17 @@
 @model InventarioDto
 @if (Model.EstadoProducto == Estados.ProductoInventario.Inactivo)
 {
-    <span class="estado estado-inactivo">Inactivo</span>
+    <span class="estado estado-inactivo"><i class="bi bi-archive"></i> Inactivo</span>
+}
+else if (Model.RequiereAlerta && Model.Stock <= 0)
+{
+    <span class="estado estado-cancelado"><i class="bi bi-dash-circle"></i> Sin existencias</span>
 }
 else if (Model.RequiereAlerta)
 {
-    <span class="estado estado-alerta"><i class="bi bi-exclamation-triangle"></i> Stock mínimo</span>
+    <span class="estado estado-alerta"><i class="bi bi-exclamation-triangle"></i> Stock bajo</span>
 }
 else
 {
-    <span class="estado estado-activo">Activo</span>
+    <span class="estado estado-activo"><i class="bi bi-check2-circle"></i> Disponible</span>
 }

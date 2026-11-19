@@ -2,21 +2,21 @@
 @model HabitacionDto
 @if (Model.EstadoHabitacion == Estados.Habitacion.Ocupada)
 {
-    <span class="estado estado-alerta">Ocupada</span>
+    <span class="estado estado-cancelado"><i class="bi bi-person-fill"></i> Ocupada</span>
 }
 else if (Model.EstadoHabitacion == Estados.Habitacion.Limpieza)
 {
-    <span class="estado estado-inactivo">Limpieza</span>
+    <span class="estado estado-proceso"><i class="bi bi-stars"></i> En limpieza</span>
 }
 else if (Model.EstadoHabitacion == Estados.Habitacion.Mantenimiento)
 {
-    <span class="estado estado-inactivo">Mantenimiento</span>
+    <span class="estado estado-alerta"><i class="bi bi-tools"></i> Mantenimiento</span>
 }
 else if (Model.EstadoHabitacion == Estados.Habitacion.Inactiva)
 {
-    <span class="estado estado-inactivo">Inactiva</span>
+    <span class="estado estado-inactivo"><i class="bi bi-slash-circle"></i> Inactiva</span>
 }
 else
 {
-    <span class="estado estado-activo">Disponible</span>
+    <span class="estado estado-activo"><i class="bi bi-door-open"></i> Disponible</span>
 }

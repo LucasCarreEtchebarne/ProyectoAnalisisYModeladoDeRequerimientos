@@ -1,6 +1,8 @@
 using SistemaHotelColibri.Abstract.Comun;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Habitaciones;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Habitaciones;
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Pedidos;
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Reservas;
 using SistemaHotelColibri.Abstract.Modelos.Habitaciones;
 
 namespace SistemaHotelColibri.BusinessLogic.Habitaciones;
@@ -10,15 +12,21 @@ public class EditarHabitacionBL : IEditarHabitacionBL
     private readonly IEditarHabitacionDA _editarDA;
     private readonly IObtenerHabitacionPorIdDA _obtenerPorIdDA;
     private readonly IExisteNumeroHabitacionDA _existeNumeroDA;
+    private readonly IObtenerReservasVigentesDA _reservasDA;
+    private readonly IObtenerPedidosAbiertosDA _pedidosDA;
 
     public EditarHabitacionBL(
         IEditarHabitacionDA editarDA,
         IObtenerHabitacionPorIdDA obtenerPorIdDA,
-        IExisteNumeroHabitacionDA existeNumeroDA)
+        IExisteNumeroHabitacionDA existeNumeroDA,
+        IObtenerReservasVigentesDA reservasDA,
+        IObtenerPedidosAbiertosDA pedidosDA)
     {
         _editarDA = editarDA;
         _obtenerPorIdDA = obtenerPorIdDA;
         _existeNumeroDA = existeNumeroDA;
+        _reservasDA = reservasDA;
+        _pedidosDA = pedidosDA;
     }
 
     public async Task<ResultadoOperacion> EditarAsync(HabitacionDto datos)
@@ -40,6 +48,15 @@ public class EditarHabitacionBL : IEditarHabitacionBL
         if (await _existeNumeroDA.ExisteNumeroAsync(datos.NumeroHabitacion, datos.IdHabitacion))
         {
             return ResultadoOperacion.Error(Mensajes.HabitacionDuplicada);
+        }
+
+        if (datos.EstadoHabitacion == Estados.Habitacion.Inactiva && habitacion.EstadoHabitacion != Estados.Habitacion.Inactiva)
+        {
+            var motivo = await UsoHabitacion.MotivoParaNoInactivarAsync(datos.IdHabitacion, _reservasDA, _pedidosDA);
+            if (motivo != null)
+            {
+                return ResultadoOperacion.Error(motivo);
+            }
         }
 
         var cambioNumeroHabitacion = !string.Equals(habitacion.NumeroHabitacion, datos.NumeroHabitacion, StringComparison.OrdinalIgnoreCase);

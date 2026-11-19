@@ -40,7 +40,8 @@ public class ObtenerHabitacionDA : IObtenerHabitacionDA
         }
 
         var pagina = await consulta
-            .OrderBy(h => h.NumeroHabitacion)
+            .OrderBy(h => h.NumeroHabitacion.Length)
+            .ThenBy(h => h.NumeroHabitacion)
             .PaginarAsync(filtro.Pagina, filtro.TamanoPagina);
 
         return pagina.Mapear(h => h.ADto());

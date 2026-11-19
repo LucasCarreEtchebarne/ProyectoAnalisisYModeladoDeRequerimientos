@@ -34,10 +34,23 @@ public class AnularFacturaDA : IAnularFacturaDA
             .Where(p => p.IdFactura == idFactura && p.EstadoPago == Estados.Pago.Aprobado)
             .ExecuteUpdateAsync(s => s.SetProperty(p => p.EstadoPago, Estados.Pago.Reversado));
 
+        var mesasDeLaFactura = await _contexto.Pedido
+            .Where(p => p.EstadoPedido == Estados.Pedido.Entregado
+                     && p.IdMesa != null
+                     && p.DetalleFactura.Any(d => d.IdFactura == idFactura))
+            .Select(p => p.IdMesa)
+            .ToListAsync();
+
         await _contexto.Pedido
             .Where(p => p.EstadoPedido == Estados.Pedido.Entregado
                      && p.DetalleFactura.Any(d => d.IdFactura == idFactura))
             .ExecuteUpdateAsync(s => s.SetProperty(p => p.EstadoPedido, Estados.Pedido.Pendiente));
+
+        // Al anular, la cuenta de la mesa vuelve a estar abierta, así que la mesa queda ocupada otra vez.
+        foreach (var idMesa in mesasDeLaFactura.Distinct())
+        {
+            await Pedidos.SincronizadorMesaPedido.OcuparAsync(_contexto, idMesa);
+        }
 
         await transaccion.CommitAsync();
         return true;

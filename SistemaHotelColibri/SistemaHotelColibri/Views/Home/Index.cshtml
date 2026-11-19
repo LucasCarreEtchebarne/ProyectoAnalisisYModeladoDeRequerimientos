@@ -1,96 +1,233 @@
+@using System.Globalization
+@using SistemaHotelColibri.ViewModels.Inicio
+@model InicioViewModel
 @{
-    ViewData["Title"] = "Inicio";
+    ViewData["Title"] = "Resumen del hotel";
     bool TieneRol(string roles) => roles.Split(',').Any(User.IsInRole);
-    var nombre = User.FindFirst(Reclamos.NombreCompleto)?.Value ?? User.Identity?.Name;
+
+    var nombre = User.FindFirst(Reclamos.NombreCompleto)?.Value ?? User.Identity?.Name ?? string.Empty;
+    var primerNombre = nombre.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? nombre;
+    var hora = DateTime.Now.Hour;
+    var saludo = hora < 12 ? "Buenos días" : hora < 19 ? "Buenas tardes" : "Buenas noches";
+
+    var fechaHoy = DateTime.Now.ToString("dddd, d 'de' MMMM 'de' yyyy", new CultureInfo("es-CR"));
+    fechaHoy = char.ToUpper(fechaHoy[0]) + fechaHoy[1..];
+
+    string Vence(DateTime? fecha)
+    {
+        if (fecha == null) return "Sin fecha límite";
+        if (fecha.Value.Date == DateTime.Today) return "Hoy a las " + fecha.Value.ToString("HH:mm");
+        return fecha.Value.ToString("dd/MM/yyyy HH:mm");
+    }
+
+    var accesos = new List<(string Controlador, string Accion, string Icono, string Titulo, string Descripcion)>();
+    if (TieneRol(Roles.AccesoHospedaje))
+    {
+        accesos.Add(("Reserva", "Crear", "bi-calendar-plus", "Nueva reserva", "Crear una reserva de huésped"));
+        accesos.Add(("Cliente", "Crear", "bi-person-plus", "Nuevo cliente", "Registrar un huésped nuevo"));
+    }
+    if (TieneRol(Roles.AccesoMenu))
+    {
+        accesos.Add(("Salon", "Index", "bi-receipt", "Pedidos", "Mesas, habitaciones y para llevar"));
+    }
+    if (TieneRol(Roles.AccesoFacturacion))
+    {
+        accesos.Add(("Factura", "Index", "bi-cash-coin", "Facturación", "Facturas de hospedaje y restaurante, y pagos"));
+    }
+    if (TieneRol(Roles.AccesoHousekeeping))
+    {
+        accesos.Add(("Housekeeping", "Crear", "bi-stars", "Nueva tarea", "Asignar una tarea de limpieza"));
+    }
+    if (TieneRol(Roles.AccesoInventario))
+    {
+        accesos.Add(("Inventario", "Crear", "bi-box-seam", "Registrar producto", "Agregar un producto al inventario"));
+    }
 }
 
 <div class="encabezado-pagina">
     <div>
-        <h1>Bienvenido, @nombre</h1>
-        <p>Gestión de hospedaje, restaurante e inventario.</p>
+        <h1>Resumen del hotel</h1>
+        <p>@fechaHoy · @saludo, @primerNombre</p>
+    </div>
+    <div class="sello-pura-vida">
+        <i class="bi bi-tree"></i>
+        <div>
+            <strong>Pura Vida</strong>
+            <small>Hospitalidad que deja huella</small>
+        </div>
     </div>
 </div>
 
-<div class="row g-3">
-    @if (TieneRol(Roles.AccesoHospedaje))
+<partial name="_TarjetasResumen" model="Model.Tarjetas" />
+
+<div class="row g-3 mb-3">
+    @if (Model.MostrarActividad)
     {
-        <div class="col-12 col-md-6 col-xl-4">
-            <a class="tarjeta indicador" asp-controller="Habitacion" asp-action="Index">
-                <div class="indicador-icono"><i class="bi bi-door-closed"></i></div>
-                <div>
-                    <div class="fw-semibold">Habitaciones</div>
-                    <div class="indicador-etiqueta">Consulta y gestión de habitaciones</div>
+        <div class="@(Model.MostrarPendientes ? "col-12 col-xl-7" : "col-12")">
+            <section class="tarjeta tarjeta-cuerpo h-100">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+                    <h2 class="titulo-tarjeta mb-0"><i class="bi bi-calendar-week"></i> Actividad de hoy</h2>
+                    <a class="enlace-ver-todo" asp-controller="Reserva" asp-action="Index">Ver todas las reservas <i class="bi bi-arrow-right"></i></a>
                 </div>
-            </a>
-        </div>
-        <div class="col-12 col-md-6 col-xl-4">
-            <a class="tarjeta indicador" asp-controller="Cliente" asp-action="Index">
-                <div class="indicador-icono"><i class="bi bi-people"></i></div>
-                <div>
-                    <div class="fw-semibold">Clientes</div>
-                    <div class="indicador-etiqueta">Registro y consulta de clientes</div>
+
+                <ul class="nav pestanas" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#llegadas" type="button" role="tab">
+                            Llegadas (@Model.Llegadas.Count)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#salidas" type="button" role="tab">
+                            Salidas (@Model.Salidas.Count)
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    @foreach (var (id, lista, vacio) in new[]
+                    {
+                        ("llegadas", Model.Llegadas, "No hay llegadas programadas para hoy."),
+                        ("salidas", Model.Salidas, "No hay salidas pendientes para hoy.")
+                    })
+                    {
+                        <div class="tab-pane fade @(id == "llegadas" ? "show active" : "")" id="@id" role="tabpanel">
+                            @if (lista.Count == 0)
+                            {
+                                <div class="vacio">
+                                    <i class="bi bi-cup-hot"></i>
+                                    <span>@vacio</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover tabla-datos tabla-compacta">
+                                        <thead>
+                                            <tr>
+                                                <th>Huésped</th>
+                                                <th>Habitación</th>
+                                                <th>@(id == "llegadas" ? "Salida" : "Entrada")</th>
+                                                <th>Estado</th>
+                                                <th class="text-end">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var r in lista)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="fw-semibold">@r.NombreCliente</div>
+                                                        <div class="texto-suave">@r.CantidadHuespedes huésped(es) · @r.CantidadNoches noche(s)</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="fw-semibold">@r.NumeroHabitacion</div>
+                                                        <div class="texto-suave">@r.TipoHabitacion</div>
+                                                    </td>
+                                                    <td>@Formato.Fecha(id == "llegadas" ? r.FechaSalida : r.FechaEntrada)</td>
+                                                    <td><partial name="~/Views/Reserva/_EstadoReserva.cshtml" model="r" /></td>
+                                                    <td class="text-end">
+                                                        <a class="btn btn-sm btn-outline-primary" asp-controller="Reserva" asp-action="Detalle" asp-route-id="@r.IdReserva">Ver reserva</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </div>
+                    }
                 </div>
-            </a>
+            </section>
         </div>
     }
-    @if (TieneRol(Roles.AccesoMesas))
+
+    @if (Model.MostrarPendientes)
     {
-        <div class="col-12 col-md-6 col-xl-4">
-            <a class="tarjeta indicador" asp-controller="Mesa" asp-action="Index">
-                <div class="indicador-icono"><i class="bi bi-grid-3x3-gap"></i></div>
-                <div>
-                    <div class="fw-semibold">Mesas</div>
-                    <div class="indicador-etiqueta">Consulta y gestión de mesas del restaurante</div>
+        <div class="@(Model.MostrarActividad ? "col-12 col-xl-5" : "col-12")">
+            <section class="tarjeta tarjeta-cuerpo h-100">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                    <h2 class="titulo-tarjeta mb-0"><i class="bi bi-list-check"></i> Pendientes</h2>
+                    @if (Model.MostrarTareas)
+                    {
+                        <a class="enlace-ver-todo" asp-controller="Housekeeping" asp-action="Index">Ver todas las tareas <i class="bi bi-arrow-right"></i></a>
+                    }
+                    else
+                    {
+                        <a class="enlace-ver-todo" asp-controller="Inventario" asp-action="Alertas">Ver alertas <i class="bi bi-arrow-right"></i></a>
+                    }
                 </div>
-            </a>
-        </div>
-    }
-    @if (TieneRol(Roles.AccesoMenu))
-    {
-        <div class="col-12 col-md-6 col-xl-4">
-            <a class="tarjeta indicador" asp-controller="Menu" asp-action="Index">
-                <div class="indicador-icono"><i class="bi bi-journal-text"></i></div>
-                <div>
-                    <div class="fw-semibold">Menú</div>
-                    <div class="indicador-etiqueta">Productos y precios del menú</div>
+
+                @if (Model.Tareas.Count == 0 && Model.Alertas.Count == 0)
+                {
+                    <div class="vacio">
+                        <i class="bi bi-emoji-smile"></i>
+                        <span>¡Todo al día! No hay tareas ni alertas pendientes.</span>
+                    </div>
+                }
+
+                <div class="lista-pendientes">
+                    @foreach (var t in Model.Tareas)
+                    {
+                        <div class="pendiente">
+                            <span class="pendiente-icono @(t.EstaVencida ? "icono-coral" : "icono-cielo")"><i class="bi bi-stars"></i></span>
+                            <div class="pendiente-texto">
+                                <div class="fw-semibold">@t.TipoTarea · Habitación @t.NumeroHabitacion</div>
+                                <div class="texto-suave">Asignada a @t.NombreUsuario</div>
+                                <div class="texto-suave"><i class="bi bi-clock"></i> @Vence(t.FechaLimite)</div>
+                            </div>
+                            <div class="pendiente-acciones">
+                                @if (t.EstaVencida)
+                                {
+                                    <span class="estado estado-cancelado"><i class="bi bi-alarm"></i> Vencida</span>
+                                }
+                                else
+                                {
+                                    <partial name="~/Views/Housekeeping/_EstadoTarea.cshtml" model="t" />
+                                }
+                                <a class="btn btn-sm btn-outline-primary" asp-controller="Housekeeping" asp-action="Detalle" asp-route-id="@t.IdTarea">Ver tarea</a>
+                            </div>
+                        </div>
+                    }
+
+                    @foreach (var p in Model.Alertas)
+                    {
+                        <div class="pendiente">
+                            <span class="pendiente-icono icono-ambar"><i class="bi bi-box-seam"></i></span>
+                            <div class="pendiente-texto">
+                                <div class="fw-semibold">@p.NombreProducto · @Formato.Cantidad(p.Stock) de @Formato.Cantidad(p.StockMinimo) @p.UnidadMedida</div>
+                                <div class="texto-suave">Inventario de @p.NombreCategoria.ToLower()</div>
+                                <div class="texto-suave">Faltan @Formato.Cantidad(Math.Max(p.StockMinimo - p.Stock, 0)) para el mínimo</div>
+                            </div>
+                            <div class="pendiente-acciones">
+                                <span class="estado @(p.Stock <= 0 ? "estado-cancelado" : "estado-alerta")">@(p.Stock <= 0 ? "Sin existencias" : "Stock bajo")</span>
+                                <a class="btn btn-sm btn-outline-primary" asp-controller="Inventario" asp-action="Detalle" asp-route-id="@p.IdProducto">Revisar</a>
+                            </div>
+                        </div>
+                    }
                 </div>
-            </a>
-        </div>
-    }
-    @if (TieneRol(Roles.AccesoInventario))
-    {
-        <div class="col-12 col-md-6 col-xl-4">
-            <a class="tarjeta indicador" asp-controller="Inventario" asp-action="Index">
-                <div class="indicador-icono"><i class="bi bi-box-seam"></i></div>
-                <div>
-                    <div class="fw-semibold">Inventario</div>
-                    <div class="indicador-etiqueta">Productos e insumos del restaurante y de las habitaciones</div>
-                </div>
-            </a>
-        </div>
-    }
-    @if (TieneRol(Roles.AccesoFacturacion))
-    {
-        <div class="col-12 col-md-6 col-xl-4">
-            <a class="tarjeta indicador" asp-controller="Factura" asp-action="Index">
-                <div class="indicador-icono"><i class="bi bi-receipt"></i></div>
-                <div>
-                    <div class="fw-semibold">Facturación</div>
-                    <div class="indicador-etiqueta">Facturas de hospedaje y restaurante, y pagos</div>
-                </div>
-            </a>
-        </div>
-    }
-    @if (User.IsInRole(Roles.Administrador))
-    {
-        <div class="col-12 col-md-6 col-xl-4">
-            <a class="tarjeta indicador" asp-controller="Usuario" asp-action="Index">
-                <div class="indicador-icono"><i class="bi bi-person-gear"></i></div>
-                <div>
-                    <div class="fw-semibold">Usuarios</div>
-                    <div class="indicador-etiqueta">Usuarios, roles y seguridad</div>
-                </div>
-            </a>
+            </section>
         </div>
     }
 </div>
+
+@if (accesos.Count > 0)
+{
+    <section class="tarjeta tarjeta-cuerpo">
+        <h2 class="titulo-tarjeta"><i class="bi bi-lightning-charge"></i> Accesos rápidos</h2>
+        <div class="row g-3">
+            @foreach (var acceso in accesos)
+            {
+                <div class="col-12 col-md-6 col-xl">
+                    <a class="acceso-rapido" asp-controller="@acceso.Controlador" asp-action="@acceso.Accion">
+                        <i class="bi @acceso.Icono acceso-rapido-icono"></i>
+                        <div>
+                            <div class="acceso-rapido-titulo">@acceso.Titulo</div>
+                            <div class="acceso-rapido-texto">@acceso.Descripcion</div>
+                        </div>
+                        <i class="bi bi-chevron-right acceso-rapido-flecha"></i>
+                    </a>
+                </div>
+            }
+        </div>
+    </section>
+}

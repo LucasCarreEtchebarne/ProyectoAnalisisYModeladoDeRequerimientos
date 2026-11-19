@@ -4,20 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] · Hotel El Colibrí</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body class="pagina-cuenta">
     <main class="cuenta-contenedor">
-        <div class="cuenta-marca">
-            <i class="bi bi-feather"></i>
-            <div>
-                <div class="cuenta-marca-nombre">El Colibrí</div>
-                <div class="cuenta-marca-sub">Gestión hotelera</div>
-            </div>
-        </div>
         <div class="tarjeta cuenta-tarjeta">
+            <div class="cuenta-logo">
+                <img src="~/img/logo-colibri.png" alt="Cabinas El Colibrí" />
+            </div>
             <partial name="_Mensajes" />
             @RenderBody()
         </div>

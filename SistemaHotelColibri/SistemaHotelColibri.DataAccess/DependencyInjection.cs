@@ -100,6 +100,8 @@ public static class DependencyInjection
         services.AddScoped<IObtenerPedidoDA, ObtenerPedidoDA>();
         services.AddScoped<IObtenerPedidoPorIdDA, ObtenerPedidoPorIdDA>();
         services.AddScoped<IEditarPedidoDA, EditarPedidoDA>();
+        services.AddScoped<IObtenerPedidosAbiertosDA, ObtenerPedidosAbiertosDA>();
+        services.AddScoped<IObtenerReservasVigentesDA, ObtenerReservasVigentesDA>();
 
         services.AddScoped<IAgregarHabitacionDA, AgregarHabitacionDA>();
         services.AddScoped<IExisteNumeroHabitacionDA, ExisteNumeroHabitacionDA>();

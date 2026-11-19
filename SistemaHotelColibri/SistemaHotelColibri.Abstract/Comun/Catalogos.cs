@@ -6,7 +6,7 @@ public static class Catalogos
         ["Unidad", "Kilogramo", "Gramo", "Litro", "Mililitro", "Paquete", "Caja", "Botella"];
 
     public static readonly string[] TiposHabitacion =
-        ["Estándar", "Doble", "Suite", "Familiar"];
+        ["Estándar", "Suite", "Mini apartamento"];
 
         
     public static readonly string[] TiposTareaHousekeeping =

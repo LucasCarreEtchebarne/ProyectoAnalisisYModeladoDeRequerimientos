@@ -2,13 +2,13 @@
 @model MenuDto
 @if (Model.EstadoProductoMenu == Estados.ProductoMenu.Inactivo)
 {
-    <span class="estado estado-inactivo">Inactivo</span>
+    <span class="estado estado-inactivo"><i class="bi bi-archive"></i> Inactivo</span>
 }
 else if (Model.EstadoProductoMenu == Estados.ProductoMenu.Agotado)
 {
-    <span class="estado estado-alerta">Agotado</span>
+    <span class="estado estado-cancelado"><i class="bi bi-x-octagon"></i> Agotado</span>
 }
 else
 {
-    <span class="estado estado-activo">Disponible</span>
+    <span class="estado estado-activo"><i class="bi bi-check2-circle"></i> Disponible</span>
 }

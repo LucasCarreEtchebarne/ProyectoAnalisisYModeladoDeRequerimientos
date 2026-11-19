@@ -76,6 +76,17 @@ public class UsuarioController : ControladorBase
                 FiltroSeleccion.Crear("rol", "Rol", roles.Prepend(TodosLosRoles), rolSeleccionado)
             ]
         };
+
+        async Task<int> Contar(string estadoContar) =>
+            (await _obtenerBL.ObtenerAsync(new FiltroUsuario { Estado = estadoContar, TamanoPagina = 1 })).TotalRegistros;
+
+        ViewBag.Resumen = new List<TarjetaResumenViewModel>
+        {
+            TarjetaEstado("Activos", await Contar(Estados.Usuario.Activo), "bi-person-check", "verde", Estados.Usuario.Activo, estadoSeleccionado, "pueden ingresar"),
+            TarjetaEstado("Bloqueados", await Contar(Estados.Usuario.Bloqueado), "bi-lock-fill", "coral", Estados.Usuario.Bloqueado, estadoSeleccionado, "por intentos fallidos"),
+            TarjetaEstado("Inactivos", await Contar(Estados.Usuario.Inactivo), "bi-person-dash", "gris", Estados.Usuario.Inactivo, estadoSeleccionado, "sin acceso")
+        };
+
         ViewBag.IdUsuarioActual = IdUsuarioActual;
         return View(await _obtenerBL.ObtenerAsync(filtro));
     }

@@ -64,6 +64,16 @@ public class MenuController : ControladorBase
             ]
         };
         ViewBag.EsAdministrador = EsAdministrador;
+        async Task<int> Contar(string estadoContar) =>
+            (await _obtenerBL.ObtenerAsync(new FiltroListado { Estado = estadoContar, TamanoPagina = 1 })).TotalRegistros;
+
+        ViewBag.Resumen = new List<TarjetaResumenViewModel>
+        {
+            TarjetaEstado("Disponibles", await Contar(Estados.ProductoMenu.Disponible), "bi-check2-circle", "verde", Estados.ProductoMenu.Disponible, estadoSeleccionado, "productos a la venta"),
+            TarjetaEstado("Agotados", await Contar(Estados.ProductoMenu.Agotado), "bi-x-octagon", "coral", Estados.ProductoMenu.Agotado, estadoSeleccionado, "sin existencias"),
+            TarjetaEstado("Inactivos", await Contar(Estados.ProductoMenu.Inactivo), "bi-archive", "gris", Estados.ProductoMenu.Inactivo, estadoSeleccionado, "fuera del menú")
+        };
+
         return View(await _obtenerBL.ObtenerAsync(filtro));
     }
 

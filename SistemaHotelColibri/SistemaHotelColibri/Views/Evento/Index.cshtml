@@ -13,6 +13,8 @@
     <a class="btn btn-primary" asp-action="Crear"><i class="bi bi-plus-lg"></i> Nuevo evento</a>
 </div>
 
+<partial name="_TarjetasResumen" model="(List<TarjetaResumenViewModel>)ViewBag.Resumen" />
+
 <partial name="_BarraBusqueda" model="barraBusqueda" />
 
 <div class="tarjeta">
@@ -53,8 +55,8 @@
                         <td class="text-end text-nowrap">@Formato.Colones(e.MontoAcordado)</td>
                         <td><partial name="_EstadoEvento" model="e" /></td>
                         <td class="text-end text-nowrap">
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@e.IdEvento" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i></a>
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@e.IdEvento" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@e.IdEvento" title="Ver detalle" aria-label="Ver detalle"><i class="bi bi-eye"></i> Ver</a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@e.IdEvento" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i> Editar</a>
                             @if (e.EstadoEvento == Estados.Evento.Programado)
                             {
                                 <form asp-action="Eliminar" asp-route-id="@e.IdEvento" method="post" class="d-inline"

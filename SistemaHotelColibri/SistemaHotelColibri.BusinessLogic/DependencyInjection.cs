@@ -52,6 +52,9 @@ public static class DependencyInjection
         services.AddScoped<IObtenerPedidoPorIdBL, ObtenerPedidoPorIdBL>();
         services.AddScoped<IValidadorPedidoBL, ValidadorPedidoBL>();
         services.AddScoped<IEditarPedidoBL, EditarPedidoBL>();
+        services.AddScoped<ICuentaPedidoBL, CuentaPedidoBL>();
+        services.AddScoped<IClienteReservaBL, ClienteReservaBL>();
+        services.AddScoped<IObtenerOcupacionHabitacionBL, ObtenerOcupacionHabitacionBL>();
 
         services.AddScoped<IAgregarHabitacionBL, AgregarHabitacionBL>();
         services.AddScoped<IObtenerHabitacionBL, ObtenerHabitacionBL>();

@@ -40,6 +40,8 @@ public class AgregarPedidoDA : IAgregarPedidoDA
         _contexto.Pedido.Add(entidad);
         await _contexto.SaveChangesAsync();
 
+        await SincronizadorMesaPedido.OcuparAsync(_contexto, entidad.IdMesa);
+
         return entidad.IdPedido;
     }
 }

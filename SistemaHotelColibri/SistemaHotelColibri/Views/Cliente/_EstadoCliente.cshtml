@@ -2,9 +2,9 @@
 @model ClienteDto
 @if (Model.EstadoCliente == Estados.Cliente.Inactivo)
 {
-    <span class="estado estado-inactivo">Inactivo</span>
+    <span class="estado estado-inactivo"><i class="bi bi-person-dash"></i> Inactivo</span>
 }
 else
 {
-    <span class="estado estado-activo">Activo</span>
+    <span class="estado estado-activo"><i class="bi bi-person-check"></i> Activo</span>
 }
