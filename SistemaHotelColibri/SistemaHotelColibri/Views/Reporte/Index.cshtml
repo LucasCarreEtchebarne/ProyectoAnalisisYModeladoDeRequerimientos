@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Reportes";
+    var esAdmin = User.IsInRole(Roles.Administrador);
+    var reportes = new List<(string Accion, string Codigo, string Icono, string Color, string Titulo, string Descripcion, bool Visible)>
+    {
+        ("Ocupacion", "REP-001", "bi-door-open", "verde", "Ocupación de habitaciones", "Porcentaje de ocupación por habitación, por tipo y por día.", true),
+        ("Reservas", "REP-005", "bi-calendar-check", "cielo", "Reservas", "Listado de reservas con filtros por fecha, estado, tipo y cliente.", true),
+        ("Ventas", "REP-002", "bi-cup-hot", "ambar", "Ventas del restaurante", "Productos más vendidos, ventas por categoría, por origen y por día.", esAdmin),
+        ("Ingresos", "REP-003", "bi-cash-coin", "violeta", "Ingresos totales", "Hospedaje, restaurante y eventos: lo facturado, lo cobrado y lo pendiente.", esAdmin),
+        ("Inventario", "REP-004", "bi-box-seam", "coral", "Inventario", "Existencias frente al mínimo y entradas y salidas del período.", esAdmin)
+    };
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Reportes</h1>
+        <p>Consultá la información del hotel y del restaurante y descargala en Excel o PDF.</p>
+    </div>
+</div>
+
+<div class="row g-3">
+    @foreach (var r in reportes.Where(r => r.Visible))
+    {
+        <div class="col-12 col-md-6 col-xl-4">
+            <a class="tarjeta indicador tarjeta-reporte" asp-action="@r.Accion">
+                <div class="indicador-icono icono-@r.Color"><i class="bi @r.Icono"></i></div>
+                <div>
+                    <div class="texto-suave">@r.Codigo</div>
+                    <div class="indicador-titulo">@r.Titulo</div>
+                    <div class="indicador-etiqueta">@r.Descripcion</div>
+                </div>
+                <i class="bi bi-arrow-right indicador-flecha"></i>
+            </a>
+        </div>
+    }
+</div>
+
+<p class="texto-suave mt-3">
+    <i class="bi bi-download"></i> En cada reporte están los botones <strong>Descargar Excel</strong> y <strong>Descargar PDF</strong>, que exportan lo mismo que ves en pantalla con los filtros elegidos.
+</p>

@@ -1,0 +1,106 @@
+@using SistemaHotelColibri.Abstract.Modelos.Reportes
+@using SistemaHotelColibri.ViewModels.Reportes
+@model ReporteIngresosDto
+@{
+    ViewData["Title"] = "Reporte de ingresos";
+    var filtro = (FiltroReporte)ViewBag.Filtro;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Ingresos totales</h1>
+        <p>REP-003 · Del @Formato.Fecha(Model.Desde) al @Formato.Fecha(Model.Hasta)</p>
+    </div>
+    <partial name="_Exportar" />
+</div>
+
+<form method="get" class="tarjeta tarjeta-cuerpo filtros-reporte mb-3">
+    <partial name="_RangoFechas" model="filtro" />
+    <div class="filtros-reporte-campos">
+        <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> Generar</button>
+    </div>
+</form>
+
+<partial name="_Kpis" model="@(new[]
+{
+    new KpiViewModel("Total facturado", Formato.Colones(Model.TotalFacturado), $"{Model.FacturasEmitidas} facturas", "bi-receipt", "verde"),
+    new KpiViewModel("Total cobrado", Formato.Colones(Model.TotalCobrado), "pagos aprobados", "bi-cash-stack", "cielo"),
+    new KpiViewModel("Pendiente por cobrar", Formato.Colones(Model.PendientePorCobrar), "saldo de las facturas", "bi-hourglass-split", "ambar"),
+    new KpiViewModel("IVA (13 %)", Formato.Colones(Model.Iva), $"Servicio: {Formato.Colones(Model.Servicio)}", "bi-bank", "violeta")
+})" />
+
+<div class="row g-3 mb-3">
+    <div class="col-12 col-xl-6">
+        <partial name="_Barras" model="@(new GraficoBarrasViewModel("Ingresos por concepto (subtotal)", "bi-pie-chart",
+            Model.PorConcepto.Select(c => new BarraViewModel(c.Concepto, c.Monto, $"{Formato.Colones(c.Monto)} · {c.Porcentaje:0.0} %")).ToList()))" />
+    </div>
+    <div class="col-12 col-xl-6">
+        <partial name="_Barras" model="@(new GraficoBarrasViewModel("Cobros por método de pago", "bi-wallet2",
+            Model.PorMetodoPago.Select(m => new BarraViewModel($"{m.MetodoPago} ({m.Pagos})", m.Monto, Formato.Colones(m.Monto))).ToList(),
+            "No hubo pagos en este período."))" />
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-xl-5">
+        <section class="tarjeta h-100">
+            <div class="tarjeta-cuerpo pb-0"><h2 class="titulo-tarjeta"><i class="bi bi-calendar3"></i> Por día</h2></div>
+            <div class="table-responsive">
+                <table class="table tabla-datos tabla-compacta">
+                    <thead><tr><th>Fecha</th><th class="text-end">Facturado</th><th class="text-end">Cobrado</th></tr></thead>
+                    <tbody>
+                        @if (Model.PorDia.Count == 0)
+                        {
+                            <tr><td colspan="3" class="text-center text-secondary py-4">Sin movimientos en este período.</td></tr>
+                        }
+                        @foreach (var d in Model.PorDia)
+                        {
+                            <tr>
+                                <td>@Formato.Fecha(d.Fecha)</td>
+                                <td class="text-end text-nowrap">@Formato.Colones(d.Facturado)</td>
+                                <td class="text-end text-nowrap">@Formato.Colones(d.Cobrado)</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <th class="text-end text-nowrap">@Formato.Colones(Model.TotalFacturado)</th>
+                            <th class="text-end text-nowrap">@Formato.Colones(Model.TotalCobrado)</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+    </div>
+    <div class="col-12 col-xl-7">
+        <section class="tarjeta h-100">
+            <div class="tarjeta-cuerpo pb-0"><h2 class="titulo-tarjeta"><i class="bi bi-receipt"></i> Facturas del período</h2></div>
+            <div class="table-responsive">
+                <table class="table table-hover tabla-datos tabla-compacta">
+                    <thead><tr><th>Factura</th><th>Fecha</th><th>Tipo</th><th>Cliente</th><th>Estado</th><th class="text-end">Total</th><th class="text-end">Saldo</th></tr></thead>
+                    <tbody>
+                        @if (Model.Facturas.Count == 0)
+                        {
+                            <tr><td colspan="7" class="text-center text-secondary py-4">No hay facturas en este período.</td></tr>
+                        }
+                        @foreach (var f in Model.Facturas)
+                        {
+                            <tr class="@(f.EstadoFactura == Estados.Factura.Anulada ? "fila-inactiva" : "")">
+                                <td class="fw-semibold text-nowrap">@f.NumeroFactura</td>
+                                <td class="text-nowrap">@Formato.Fecha(f.FechaEmision)</td>
+                                <td>@f.TipoFactura</td>
+                                <td>@f.ClienteMostrado</td>
+                                <td><partial name="~/Views/Factura/_EstadoFactura.cshtml" model="f" /></td>
+                                <td class="text-end text-nowrap">@Formato.Colones(f.MontoTotal)</td>
+                                <td class="text-end text-nowrap">@Formato.Colones(f.Saldo)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<p class="texto-suave mt-3"><i class="bi bi-info-circle"></i> Facturado: facturas emitidas en el período, sin las anuladas (@Model.FacturasAnuladas anulada(s)). Cobrado: pagos aprobados hechos en el período.</p>

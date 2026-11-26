@@ -1,0 +1,28 @@
+@using SistemaHotelColibri.ViewModels.Reportes
+@model GraficoBarrasViewModel
+@{
+    var maximo = Model.Barras.Count == 0 ? 0 : Model.Barras.Max(b => b.Valor);
+}
+<section class="tarjeta tarjeta-cuerpo h-100">
+    <h2 class="titulo-tarjeta"><i class="bi @Model.Icono"></i> @Model.Titulo</h2>
+    @if (Model.Barras.Count == 0)
+    {
+        <div class="vacio"><i class="bi bi-bar-chart"></i><span>@(Model.Vacio ?? "Sin datos para el período elegido.")</span></div>
+    }
+    else
+    {
+        <div class="barras">
+            @foreach (var barra in Model.Barras)
+            {
+                var ancho = maximo <= 0 ? 0 : Math.Round(barra.Valor * 100 / maximo, 1);
+                <div class="barra">
+                    <div class="barra-etiqueta" title="@barra.Etiqueta">@barra.Etiqueta</div>
+                    <div class="barra-pista">
+                        <div class="barra-relleno" style="width: @(ancho.ToString(System.Globalization.CultureInfo.InvariantCulture))%"></div>
+                    </div>
+                    <div class="barra-valor">@barra.Texto</div>
+                </div>
+            }
+        </div>
+    }
+</section>

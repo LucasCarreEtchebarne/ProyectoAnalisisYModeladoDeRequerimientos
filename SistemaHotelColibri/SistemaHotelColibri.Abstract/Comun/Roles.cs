@@ -15,4 +15,8 @@ public static class Roles
     public const string AccesoMenu = Administrador + "," + Recepcionista + "," + Mesero;
     public const string AccesoHousekeeping = Administrador + "," + Recepcionista + "," + Housekeeping;
     public const string AccesoFacturacion = Administrador + "," + Recepcionista;
+
+    // Reportes: recepción ve ocupación y reservas; los de dinero e inventario son solo del Administrador.
+    public const string AccesoReportes = Administrador + "," + Recepcionista;
+    public const string AccesoReportesFinancieros = Administrador;
 }

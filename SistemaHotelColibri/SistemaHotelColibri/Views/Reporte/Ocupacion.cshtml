@@ -1,0 +1,106 @@
+@using SistemaHotelColibri.Abstract.Modelos.Reportes
+@using SistemaHotelColibri.ViewModels.Reportes
+@model ReporteOcupacionDto
+@{
+    ViewData["Title"] = "Reporte de ocupación";
+    var filtro = (FiltroReporte)ViewBag.Filtro;
+    string Pct(decimal valor) => valor.ToString("0.0") + " %";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Ocupación de habitaciones</h1>
+        <p>REP-001 · Del @Formato.Fecha(Model.Desde) al @Formato.Fecha(Model.Hasta) (@Model.Dias días)</p>
+    </div>
+    <partial name="_Exportar" />
+</div>
+
+<form method="get" class="tarjeta tarjeta-cuerpo filtros-reporte mb-3">
+    <partial name="_RangoFechas" model="filtro" />
+    <div class="filtros-reporte-campos">
+        <div>
+            <label class="form-label" for="tipoHabitacion">Tipo de habitación</label>
+            <select class="form-select" id="tipoHabitacion" name="tipoHabitacion">
+                <option value="">Todos</option>
+                @foreach (var tipo in Catalogos.TiposHabitacion)
+                {
+                    <option value="@tipo" selected="@(filtro.TipoHabitacion == tipo)">@tipo</option>
+                }
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> Generar</button>
+    </div>
+</form>
+
+<partial name="_Kpis" model="@(new[]
+{
+    new KpiViewModel("Ocupación", Pct(Model.PorcentajeOcupacion), $"{Model.NochesOcupadas} de {Model.NochesDisponibles} noches", "bi-pie-chart", "verde"),
+    new KpiViewModel("Reservas", Model.CantidadReservas.ToString(), $"{Model.TotalHabitaciones} habitaciones", "bi-calendar-check", "cielo"),
+    new KpiViewModel("Ingreso de hospedaje", Formato.Colones(Model.IngresoHospedaje), "estimado por noches ocupadas", "bi-cash-coin", "violeta"),
+    new KpiViewModel("Tarifa promedio", Formato.Colones(Model.TarifaPromedio), "por noche ocupada", "bi-tag", "ambar")
+})" />
+
+<div class="row g-3 mb-3">
+    <div class="col-12 col-xl-6">
+        <partial name="_Barras" model="@(new GraficoBarrasViewModel("Ocupación por tipo", "bi-building",
+            Model.PorTipo.Select(t => new BarraViewModel($"{t.TipoHabitacion} ({t.Habitaciones})", t.PorcentajeOcupacion, Pct(t.PorcentajeOcupacion))).ToList()))" />
+    </div>
+    <div class="col-12 col-xl-6">
+        <partial name="_Barras" model="@(new GraficoBarrasViewModel("Ocupación por día", "bi-calendar3",
+            Model.PorDia.Select(d => new BarraViewModel(d.Fecha.ToString("dd/MM ddd"), d.PorcentajeOcupacion, $"{d.Ocupadas}/{d.Total} · {Pct(d.PorcentajeOcupacion)}")).ToList()))" />
+    </div>
+</div>
+
+<section class="tarjeta">
+    <div class="tarjeta-cuerpo pb-0"><h2 class="titulo-tarjeta"><i class="bi bi-door-closed"></i> Ocupación por habitación</h2></div>
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Habitación</th>
+                    <th>Tipo</th>
+                    <th>Estado actual</th>
+                    <th class="text-end">Reservas</th>
+                    <th class="text-end">Noches ocupadas</th>
+                    <th>Ocupación</th>
+                    <th class="text-end">Ingreso estimado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Habitaciones.Count == 0)
+                {
+                    <tr><td colspan="7" class="text-center text-secondary py-4">No hay habitaciones activas con ese filtro.</td></tr>
+                }
+                @foreach (var h in Model.Habitaciones)
+                {
+                    <tr>
+                        <td class="fw-semibold">@h.NumeroHabitacion</td>
+                        <td>@h.TipoHabitacion</td>
+                        <td>@h.EstadoActual</td>
+                        <td class="text-end">@h.Reservas</td>
+                        <td class="text-end">@h.NochesOcupadas</td>
+                        <td class="celda-porcentaje">
+                            <div class="mini-barra"><div style="width: @(h.PorcentajeOcupacion.ToString(System.Globalization.CultureInfo.InvariantCulture))%"></div></div>
+                            <span>@Pct(h.PorcentajeOcupacion)</span>
+                        </td>
+                        <td class="text-end text-nowrap">@Formato.Colones(h.Ingreso)</td>
+                    </tr>
+                }
+            </tbody>
+            @if (Model.Habitaciones.Count > 0)
+            {
+                <tfoot>
+                    <tr>
+                        <th colspan="3">Total</th>
+                        <th class="text-end">@Model.CantidadReservas</th>
+                        <th class="text-end">@Model.NochesOcupadas</th>
+                        <th>@Pct(Model.PorcentajeOcupacion)</th>
+                        <th class="text-end text-nowrap">@Formato.Colones(Model.IngresoHospedaje)</th>
+                    </tr>
+                </tfoot>
+            }
+        </table>
+    </div>
+</section>
+
+<p class="texto-suave mt-3"><i class="bi bi-info-circle"></i> Cuenta las reservas que no están canceladas. La noche del día de salida no se cuenta como ocupada.</p>

@@ -21,6 +21,8 @@ using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Pedidos;
 using SistemaHotelColibri.BusinessLogic.Pedidos;
 using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Facturas;
 using SistemaHotelColibri.BusinessLogic.Facturas;
+using SistemaHotelColibri.Abstract.Interfaces.BusinessLogic.Reportes;
+using SistemaHotelColibri.BusinessLogic.Reportes;
 
 namespace SistemaHotelColibri.BusinessLogic;
 
@@ -55,6 +57,13 @@ public static class DependencyInjection
         services.AddScoped<ICuentaPedidoBL, CuentaPedidoBL>();
         services.AddScoped<IClienteReservaBL, ClienteReservaBL>();
         services.AddScoped<IObtenerOcupacionHabitacionBL, ObtenerOcupacionHabitacionBL>();
+
+        // Reportes (REP-001 a REP-005)
+        services.AddScoped<IObtenerReporteOcupacionBL, ObtenerReporteOcupacionBL>();
+        services.AddScoped<IObtenerReporteVentasBL, ObtenerReporteVentasBL>();
+        services.AddScoped<IObtenerReporteIngresosBL, ObtenerReporteIngresosBL>();
+        services.AddScoped<IObtenerReporteInventarioBL, ObtenerReporteInventarioBL>();
+        services.AddScoped<IObtenerReporteReservasBL, ObtenerReporteReservasBL>();
 
         services.AddScoped<IAgregarHabitacionBL, AgregarHabitacionBL>();
         services.AddScoped<IObtenerHabitacionBL, ObtenerHabitacionBL>();

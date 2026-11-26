@@ -1,0 +1,117 @@
+@using SistemaHotelColibri.Abstract.Modelos.Reportes
+@using SistemaHotelColibri.ViewModels.Reportes
+@model ReporteInventarioDto
+@{
+    ViewData["Title"] = "Reporte de inventario";
+    var filtro = (FiltroReporte)ViewBag.Filtro;
+
+    string ClaseEstado(string estado) => estado switch
+    {
+        ReporteInventarioDto.EstadoAgotado => "estado-cancelado",
+        ReporteInventarioDto.EstadoBajo => "estado-alerta",
+        _ => "estado-activo"
+    };
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Inventario</h1>
+        <p>REP-004 · Existencias al @Formato.Fecha(DateOnly.FromDateTime(DateTime.Today)) · Movimientos del @Formato.Fecha(Model.Desde) al @Formato.Fecha(Model.Hasta)</p>
+    </div>
+    <partial name="_Exportar" />
+</div>
+
+<form method="get" class="tarjeta tarjeta-cuerpo filtros-reporte mb-3">
+    <partial name="_RangoFechas" model="filtro" />
+    <div class="filtros-reporte-campos">
+        <div>
+            <label class="form-label" for="area">Área</label>
+            <select class="form-select" id="area" name="area">
+                <option value="">Todas</option>
+                @foreach (var area in Catalogos.AreasInventario)
+                {
+                    <option value="@area" selected="@(filtro.Area == area)">@area</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label class="form-label" for="busqueda">Producto o categoría</label>
+            <input class="form-control" id="busqueda" name="busqueda" value="@filtro.Busqueda" placeholder="Buscar..." />
+        </div>
+        <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="soloStockBajo" name="soloStockBajo" value="true" checked="@filtro.SoloStockBajo" />
+            <label class="form-check-label" for="soloStockBajo">Solo por reponer</label>
+        </div>
+        <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> Generar</button>
+    </div>
+</form>
+
+<partial name="_Kpis" model="@(new[]
+{
+    new KpiViewModel("Productos activos", Model.TotalProductos.ToString(), "en el inventario", "bi-box-seam", "verde"),
+    new KpiViewModel("Con stock bajo", Model.ConStockBajo.ToString(), "en o bajo el mínimo", "bi-exclamation-triangle", "ambar"),
+    new KpiViewModel("Sin existencias", Model.SinExistencias.ToString(), "hay que reponer ya", "bi-x-octagon", "coral"),
+    new KpiViewModel("Salidas del período", Formato.Cantidad(Model.TotalSalidas), $"Entradas: {Formato.Cantidad(Model.TotalEntradas)}", "bi-arrow-left-right", "cielo")
+})" />
+
+<section class="tarjeta mb-3">
+    <div class="tarjeta-cuerpo pb-0"><h2 class="titulo-tarjeta"><i class="bi bi-list-check"></i> Existencias</h2></div>
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th class="text-end">Stock</th>
+                    <th class="text-end">Mínimo</th>
+                    <th class="text-end">Faltante</th>
+                    <th class="text-end">Entradas</th>
+                    <th class="text-end">Salidas</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Productos.Count == 0)
+                {
+                    <tr><td colspan="8" class="text-center text-secondary py-4">No hay productos con esos filtros.</td></tr>
+                }
+                @foreach (var p in Model.Productos)
+                {
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">@p.Producto</div>
+                            <div class="texto-suave">@p.Area@(p.Proveedor != null ? $" · {p.Proveedor}" : "")</div>
+                        </td>
+                        <td>@p.Categoria</td>
+                        <td class="text-end text-nowrap">@Formato.Cantidad(p.Stock) @p.UnidadMedida</td>
+                        <td class="text-end text-nowrap">@Formato.Cantidad(p.StockMinimo)</td>
+                        <td class="text-end text-nowrap @(p.Faltante > 0 ? "text-danger fw-semibold" : "")">@Formato.Cantidad(p.Faltante)</td>
+                        <td class="text-end">@Formato.Cantidad(p.Entradas)</td>
+                        <td class="text-end">@Formato.Cantidad(p.Salidas)</td>
+                        <td><span class="estado @ClaseEstado(p.Estado)">@p.Estado</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="tarjeta">
+    <div class="tarjeta-cuerpo pb-0"><h2 class="titulo-tarjeta"><i class="bi bi-tags"></i> Resumen por categoría</h2></div>
+    <div class="table-responsive">
+        <table class="table tabla-datos tabla-compacta">
+            <thead><tr><th>Categoría</th><th>Área</th><th class="text-end">Productos</th><th class="text-end">Por reponer</th></tr></thead>
+            <tbody>
+                @foreach (var c in Model.PorCategoria)
+                {
+                    <tr>
+                        <td class="fw-semibold">@c.Categoria</td>
+                        <td>@c.Area</td>
+                        <td class="text-end">@c.Productos</td>
+                        <td class="text-end @(c.ConStockBajo > 0 ? "text-danger fw-semibold" : "")">@c.ConStockBajo</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

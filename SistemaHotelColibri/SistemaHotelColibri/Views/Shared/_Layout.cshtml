@@ -109,6 +109,14 @@
                     </a>
                 }
 
+                @if (TieneRol(Roles.AccesoReportes))
+                {
+                    <div class="sidebar-seccion">Reportes</div>
+                    <a class="sidebar-link @Activo("Reporte")" asp-controller="Reporte" asp-action="Index">
+                        <i class="bi bi-bar-chart-line"></i> Reportes
+                    </a>
+                }
+
                 @if (User.IsInRole(Roles.Administrador))
                 {
                     <div class="sidebar-seccion">Administración</div>

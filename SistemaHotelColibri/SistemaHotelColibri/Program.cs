@@ -14,6 +14,12 @@ builder.Services
     .AddDataAccess(builder.Configuration)
     .AddBusinessLogic();
 
+// REP-006: exportación de reportes a Excel y PDF.
+// QuestPDF es gratis con la licencia Community para proyectos como este.
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+builder.Services.AddSingleton<SistemaHotelColibri.Reportes.ExportadorExcel>();
+builder.Services.AddSingleton<SistemaHotelColibri.Reportes.ExportadorPdf>();
+
 builder.Services.ConfigureApplicationCookie(opciones =>
 {
     opciones.Cookie.Name = "Colibri.Sesion";

@@ -1,0 +1,20 @@
+@using SistemaHotelColibri.ViewModels.Reportes
+@model IEnumerable<KpiViewModel>
+<div class="row g-3 mb-3">
+    @foreach (var kpi in Model)
+    {
+        <div class="col-6 col-xl">
+            <div class="tarjeta resumen">
+                <span class="resumen-icono icono-@kpi.Color"><i class="bi @kpi.Icono"></i></span>
+                <span>
+                    <span class="resumen-titulo">@kpi.Titulo</span>
+                    <span class="resumen-valor kpi-valor color-@kpi.Color">@kpi.Valor</span>
+                    @if (kpi.Detalle != null)
+                    {
+                        <span class="resumen-detalle">@kpi.Detalle</span>
+                    }
+                </span>
+            </div>
+        </div>
+    }
+</div>

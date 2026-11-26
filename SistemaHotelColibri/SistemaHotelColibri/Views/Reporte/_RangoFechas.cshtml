@@ -1,0 +1,33 @@
+@using SistemaHotelColibri.Abstract.Modelos.Reportes
+@model FiltroReporte
+@{
+    var hoy = DateOnly.FromDateTime(DateTime.Today);
+    var inicioMes = new DateOnly(hoy.Year, hoy.Month, 1);
+    var accion = ViewContext.RouteData.Values["action"]?.ToString();
+    var rapidos = new[]
+    {
+        ("Hoy", hoy, hoy),
+        ("Últimos 7 días", hoy.AddDays(-6), hoy),
+        ("Este mes", inicioMes, inicioMes.AddMonths(1).AddDays(-1)),
+        ("Mes pasado", inicioMes.AddMonths(-1), inicioMes.AddDays(-1)),
+        ("Este año", new DateOnly(hoy.Year, 1, 1), new DateOnly(hoy.Year, 12, 31))
+    };
+}
+<div class="rango-fechas">
+    <div>
+        <label class="form-label" for="desde">Desde</label>
+        <input class="form-control" type="date" id="desde" name="desde" value="@Model.Desde.ToString("yyyy-MM-dd")" />
+    </div>
+    <div>
+        <label class="form-label" for="hasta">Hasta</label>
+        <input class="form-control" type="date" id="hasta" name="hasta" value="@Model.Hasta.ToString("yyyy-MM-dd")" />
+    </div>
+</div>
+<div class="rangos-rapidos">
+    @foreach (var (texto, desde, hasta) in rapidos)
+    {
+        var activo = Model.Desde == desde && Model.Hasta == hasta;
+        <a class="rango-rapido @(activo ? "activo" : "")" asp-action="@accion"
+           asp-route-desde="@desde.ToString("yyyy-MM-dd")" asp-route-hasta="@hasta.ToString("yyyy-MM-dd")">@texto</a>
+    }
+</div>

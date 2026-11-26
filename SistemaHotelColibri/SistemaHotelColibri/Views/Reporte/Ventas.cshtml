@@ -1,0 +1,98 @@
+@using SistemaHotelColibri.Abstract.Modelos.Reportes
+@using SistemaHotelColibri.ViewModels.Reportes
+@model ReporteVentasDto
+@{
+    ViewData["Title"] = "Reporte de ventas";
+    var filtro = (FiltroReporte)ViewBag.Filtro;
+    string Pct(decimal valor) => valor.ToString("0.0") + " %";
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Ventas del restaurante</h1>
+        <p>REP-002 · Del @Formato.Fecha(Model.Desde) al @Formato.Fecha(Model.Hasta)</p>
+    </div>
+    <partial name="_Exportar" />
+</div>
+
+<form method="get" class="tarjeta tarjeta-cuerpo filtros-reporte mb-3">
+    <partial name="_RangoFechas" model="filtro" />
+    <div class="filtros-reporte-campos">
+        <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> Generar</button>
+    </div>
+</form>
+
+<partial name="_Kpis" model="@(new[]
+{
+    new KpiViewModel("Ventas", Formato.Colones(Model.Ventas), "sin servicio ni IVA", "bi-cash-coin", "verde"),
+    new KpiViewModel("Pedidos", Model.CantidadPedidos.ToString(), $"{Model.ProductosVendidos} productos vendidos", "bi-receipt", "cielo"),
+    new KpiViewModel("Ticket promedio", Formato.Colones(Model.TicketPromedio), "por pedido", "bi-tag", "ambar"),
+    new KpiViewModel("Servicio (10 %)", Formato.Colones(Model.Servicio), "cobrado sobre las ventas", "bi-person-heart", "violeta")
+})" />
+
+<div class="row g-3 mb-3">
+    <div class="col-12 col-xl-4">
+        <partial name="_Barras" model="@(new GraficoBarrasViewModel("Por categoría", "bi-grid",
+            Model.PorCategoria.Select(c => new BarraViewModel(c.Nombre, c.Monto, Formato.Colones(c.Monto))).ToList()))" />
+    </div>
+    <div class="col-12 col-xl-4">
+        <partial name="_Barras" model="@(new GraficoBarrasViewModel("Por origen", "bi-shop",
+            Model.PorOrigen.Select(o => new BarraViewModel($"{o.Nombre} ({o.Pedidos})", o.Monto, Formato.Colones(o.Monto))).ToList()))" />
+    </div>
+    <div class="col-12 col-xl-4">
+        <partial name="_Barras" model="@(new GraficoBarrasViewModel("Por día", "bi-calendar3",
+            Model.PorDia.Select(d => new BarraViewModel(d.Fecha.ToString("dd/MM ddd"), d.Monto, Formato.Colones(d.Monto))).ToList()))" />
+    </div>
+</div>
+
+<section class="tarjeta">
+    <div class="tarjeta-cuerpo pb-0"><h2 class="titulo-tarjeta"><i class="bi bi-trophy"></i> Productos vendidos</h2></div>
+    <div class="table-responsive">
+        <table class="table table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th class="text-end">Cantidad</th>
+                    <th class="text-end">Monto</th>
+                    <th>% de las ventas</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Productos.Count == 0)
+                {
+                    <tr><td colspan="6" class="text-center text-secondary py-4">No hay pedidos facturados en este período.</td></tr>
+                }
+                @{ var posicion = 1; }
+                @foreach (var p in Model.Productos)
+                {
+                    <tr>
+                        <td class="text-secondary">@(posicion++)</td>
+                        <td class="fw-semibold">@p.Producto</td>
+                        <td>@p.Categoria</td>
+                        <td class="text-end">@p.Cantidad</td>
+                        <td class="text-end text-nowrap">@Formato.Colones(p.Monto)</td>
+                        <td class="celda-porcentaje">
+                            <div class="mini-barra"><div style="width: @(p.Porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture))%"></div></div>
+                            <span>@Pct(p.Porcentaje)</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            @if (Model.Productos.Count > 0)
+            {
+                <tfoot>
+                    <tr>
+                        <th colspan="3">Total</th>
+                        <th class="text-end">@Model.ProductosVendidos</th>
+                        <th class="text-end text-nowrap">@Formato.Colones(Model.Ventas)</th>
+                        <th>100 %</th>
+                    </tr>
+                </tfoot>
+            }
+        </table>
+    </div>
+</section>
+
+<p class="texto-suave mt-3"><i class="bi bi-info-circle"></i> Solo cuenta pedidos ya facturados (las cuentas abiertas y las facturas anuladas no suman). La fecha es la de la factura.</p>

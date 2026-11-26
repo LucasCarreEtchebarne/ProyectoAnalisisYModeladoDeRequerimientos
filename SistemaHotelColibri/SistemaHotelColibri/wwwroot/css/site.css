@@ -1101,6 +1101,48 @@ section .pos-cuenta-total { margin: 0; }
     clip: rect(0 0 0 0);
 }
 
+/* ---------- Reportes ---------- */
+.filtros-reporte { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem 1.5rem; }
+.filtros-reporte .form-label { font-size: .8rem; color: var(--color-texto-suave); margin-bottom: .25rem; }
+.rango-fechas { display: flex; gap: .75rem; }
+.rango-fechas .form-control { min-width: 150px; }
+.rangos-rapidos { display: flex; flex-wrap: wrap; gap: .4rem; flex-basis: 100%; order: 3; }
+.rango-rapido {
+    padding: .25rem .7rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--color-texto-suave);
+    text-decoration: none;
+    background: #fff;
+}
+.rango-rapido:hover { border-color: var(--color-acento); color: var(--color-acento); }
+.rango-rapido.activo { background: var(--color-acento); border-color: var(--color-acento); color: #fff; }
+.filtros-reporte-campos { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .75rem; margin-left: auto; }
+.filtros-reporte-campos .form-select, .filtros-reporte-campos .form-control { min-width: 170px; }
+
+.kpi-valor { font-size: 1.45rem; white-space: nowrap; }
+
+.barras { display: flex; flex-direction: column; gap: .55rem; max-height: 420px; overflow-y: auto; padding-right: .25rem; }
+.barra { display: grid; grid-template-columns: minmax(90px, 32%) 1fr auto; align-items: center; gap: .6rem; font-size: .85rem; }
+.barra-etiqueta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-titulo); font-weight: 600; }
+.barra-pista { height: 10px; border-radius: 999px; background: #eef1f0; overflow: hidden; }
+.barra-relleno { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--color-acento), #34d399); }
+.barra-valor { font-size: .8rem; color: var(--color-texto-suave); white-space: nowrap; text-align: right; }
+
+.celda-porcentaje { display: flex; align-items: center; gap: .5rem; min-width: 150px; }
+.mini-barra { flex: 1; height: 8px; border-radius: 999px; background: #eef1f0; overflow: hidden; min-width: 60px; }
+.mini-barra > div { height: 100%; background: var(--color-acento); border-radius: 999px; }
+.celda-porcentaje span { font-size: .8rem; font-weight: 600; min-width: 48px; text-align: right; }
+
+@media (max-width: 575.98px) {
+    .rango-fechas { flex-direction: column; width: 100%; }
+    .filtros-reporte-campos { margin-left: 0; width: 100%; }
+    .barra { grid-template-columns: 1fr auto; }
+    .barra-pista { grid-column: 1 / -1; grid-row: 2; }
+}
+
 /* ---------- Facturación ---------- */
 .totales-factura {
     display: grid;

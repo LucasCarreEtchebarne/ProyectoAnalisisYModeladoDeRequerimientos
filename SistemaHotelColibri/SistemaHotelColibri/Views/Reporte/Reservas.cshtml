@@ -1,0 +1,102 @@
+@using SistemaHotelColibri.Abstract.Modelos.Reportes
+@using SistemaHotelColibri.ViewModels.Reportes
+@model ReporteReservasDto
+@{
+    ViewData["Title"] = "Reporte de reservas";
+    var filtro = (FiltroReporte)ViewBag.Filtro;
+}
+
+<div class="encabezado-pagina">
+    <div>
+        <h1>Reservas</h1>
+        <p>REP-005 · Entradas del @Formato.Fecha(Model.Desde) al @Formato.Fecha(Model.Hasta)</p>
+    </div>
+    <partial name="_Exportar" />
+</div>
+
+<form method="get" class="tarjeta tarjeta-cuerpo filtros-reporte mb-3">
+    <partial name="_RangoFechas" model="filtro" />
+    <div class="filtros-reporte-campos">
+        <div>
+            <label class="form-label" for="estado">Estado</label>
+            <select class="form-select" id="estado" name="estado">
+                <option value="">Todos</option>
+                @foreach (var estado in Estados.Reserva.Todos)
+                {
+                    <option value="@estado" selected="@(filtro.Estado == estado)">@estado</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label class="form-label" for="tipoHabitacion">Tipo de habitación</label>
+            <select class="form-select" id="tipoHabitacion" name="tipoHabitacion">
+                <option value="">Todos</option>
+                @foreach (var tipo in Catalogos.TiposHabitacion)
+                {
+                    <option value="@tipo" selected="@(filtro.TipoHabitacion == tipo)">@tipo</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label class="form-label" for="busqueda">Cliente o habitación</label>
+            <input class="form-control" id="busqueda" name="busqueda" value="@filtro.Busqueda" placeholder="Nombre, cédula o número" />
+        </div>
+        <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> Generar</button>
+    </div>
+</form>
+
+<partial name="_Kpis" model="@(new[]
+{
+    new KpiViewModel("Reservas", Model.TotalReservas.ToString(), "con esos filtros", "bi-calendar-check", "cielo"),
+    new KpiViewModel("Noches", Model.TotalNoches.ToString(), $"estancia promedio {Model.EstanciaPromedio} noches", "bi-moon-stars", "violeta"),
+    new KpiViewModel("Huéspedes", Model.TotalHuespedes.ToString(), "personas", "bi-people", "verde"),
+    new KpiViewModel("Monto de hospedaje", Formato.Colones(Model.MontoTotal), "sin contar canceladas", "bi-cash-coin", "ambar")
+})" />
+
+<div class="row g-3 mb-3">
+    <div class="col-12 col-xl-4">
+        <partial name="_Barras" model="@(new GraficoBarrasViewModel("Por estado", "bi-diagram-3",
+            Model.PorEstado.Select(e => new BarraViewModel(e.Estado, e.Reservas, $"{e.Reservas} · {Formato.Colones(e.Monto)}")).ToList()))" />
+    </div>
+    <div class="col-12 col-xl-8">
+        <section class="tarjeta h-100">
+            <div class="tarjeta-cuerpo pb-0"><h2 class="titulo-tarjeta"><i class="bi bi-list-ul"></i> Reservas</h2></div>
+            <div class="table-responsive">
+                <table class="table table-hover tabla-datos tabla-compacta">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Habitación</th>
+                            <th>Entrada</th>
+                            <th>Salida</th>
+                            <th class="text-end">Noches</th>
+                            <th class="text-end">Monto</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Reservas.Count == 0)
+                        {
+                            <tr><td colspan="7" class="text-center text-secondary py-4">No hay reservas con esos filtros.</td></tr>
+                        }
+                        @foreach (var r in Model.Reservas)
+                        {
+                            <tr class="@(r.EstadoReserva == Estados.Reserva.Cancelada ? "fila-inactiva" : "")">
+                                <td>
+                                    <a class="fw-semibold text-decoration-none" asp-controller="Reserva" asp-action="Detalle" asp-route-id="@r.IdReserva">@r.NombreCliente</a>
+                                    <div class="texto-suave">@r.IdentificacionCliente · @r.CantidadHuespedes huésped(es)</div>
+                                </td>
+                                <td>@r.NumeroHabitacion <span class="texto-suave">@r.TipoHabitacion</span></td>
+                                <td class="text-nowrap">@Formato.Fecha(r.FechaEntrada)</td>
+                                <td class="text-nowrap">@Formato.Fecha(r.FechaSalida)</td>
+                                <td class="text-end">@r.CantidadNoches</td>
+                                <td class="text-end text-nowrap">@Formato.Colones(r.MontoHospedaje)</td>
+                                <td><partial name="~/Views/Reserva/_EstadoReserva.cshtml" model="r" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>

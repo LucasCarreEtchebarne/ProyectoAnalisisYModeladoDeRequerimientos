@@ -1,0 +1,19 @@
+@using Microsoft.AspNetCore.Http
+@{
+    // Los botones descargan el mismo reporte con los mismos filtros, agregando ?formato=excel o ?formato=pdf.
+    var parametros = Context.Request.Query
+        .Where(p => p.Key != "formato")
+        .Select(p => new KeyValuePair<string, string?>(p.Key, p.Value.ToString()))
+        .ToList();
+
+    string Enlace(string formato) =>
+        Context.Request.Path + QueryString.Create(parametros.Append(new KeyValuePair<string, string?>("formato", formato)));
+}
+<div class="d-flex flex-wrap gap-2 no-imprimir">
+    <a class="btn btn-outline-secondary" href="@Enlace(SistemaHotelColibri.Controllers.ReporteController.FormatoExcel)">
+        <i class="bi bi-file-earmark-excel text-success"></i> Descargar Excel
+    </a>
+    <a class="btn btn-primary" href="@Enlace(SistemaHotelColibri.Controllers.ReporteController.FormatoPdf)">
+        <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
+    </a>
+</div>

@@ -28,6 +28,8 @@ using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Pedidos;
 using SistemaHotelColibri.DataAccess.Pedidos;
 using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Facturas;
 using SistemaHotelColibri.DataAccess.Facturas;
+using SistemaHotelColibri.Abstract.Interfaces.DataAccess.Reportes;
+using SistemaHotelColibri.DataAccess.Reportes;
 
 namespace SistemaHotelColibri.DataAccess;
 
@@ -102,6 +104,13 @@ public static class DependencyInjection
         services.AddScoped<IEditarPedidoDA, EditarPedidoDA>();
         services.AddScoped<IObtenerPedidosAbiertosDA, ObtenerPedidosAbiertosDA>();
         services.AddScoped<IObtenerReservasVigentesDA, ObtenerReservasVigentesDA>();
+
+        // Reportes (REP-001 a REP-005)
+        services.AddScoped<IObtenerDatosOcupacionDA, ObtenerDatosOcupacionDA>();
+        services.AddScoped<IObtenerDatosVentasDA, ObtenerDatosVentasDA>();
+        services.AddScoped<IObtenerDatosIngresosDA, ObtenerDatosIngresosDA>();
+        services.AddScoped<IObtenerDatosInventarioDA, ObtenerDatosInventarioDA>();
+        services.AddScoped<IObtenerDatosReservasDA, ObtenerDatosReservasDA>();
 
         services.AddScoped<IAgregarHabitacionDA, AgregarHabitacionDA>();
         services.AddScoped<IExisteNumeroHabitacionDA, ExisteNumeroHabitacionDA>();
